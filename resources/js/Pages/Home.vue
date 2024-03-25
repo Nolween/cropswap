@@ -16,7 +16,7 @@
         </div>
         <!-- 4 CARDS AT CENTER EXPLAINING PROS OF USING THE APP -->
         <div>
-            <div class="flex flex-wrap justify-center items-center p-5">
+            <div class="flex flex-wrap justify-center items-center px-5 lg:px-8">
                 <simple-card title="Partagez"
                              description="Partagez vos produits avec la communauté"
                              icon="Barley"
@@ -36,11 +36,12 @@
             </div>
         </div>
 
-        <!-- MAP OF FRANCE SHOWING DIFFERETN LOCATIONS -->
-
-
+        <!-- MAP OF FRANCE SHOWING DIFFERENT LOCATIONS -->
+        <div class="flex justify-center">
+            <leaflet-map height="600" :markers="markers"></leaflet-map>
+        </div>
         <!-- HISTORIC DESCRIPTION -->
-        <div class="bg-orange-500 p-5 mb-4">
+        <div class="bg-orange-500 p-5">
             <div class="flex flex-wrap justify-around items-center">
                 <div class="sm:w-full md:w-1/2">
                     <img
@@ -61,7 +62,7 @@
         </div>
 
         <!-- BLOG CAROUSEL ARTICLES  -->
-        <div class="flex w-full md:w-2/3 justify-center mx-auto mb-4">
+        <div class="flex w-full justify-center mx-auto mb-4">
             <blog-article :articles="articles"/>
         </div>
 
@@ -69,9 +70,12 @@
     </div>
 </template>
 <script setup>
+import {ref} from 'vue';
 import BlogArticle from "@/Components/Carousel/BlogArticle.vue";
 import NavigationMenu from '@/Layouts/NavigationMenu.vue';
 import SimpleCard from "@/Components/Cards/SimpleCard.vue";
+import LeafletMap from "@/Components/Maps/LeafletMap.vue";
+
 
 const articles = [
     {
@@ -95,6 +99,27 @@ const articles = [
         image: "https://images.unsplash.com/photo-1559884743-74a57598c6c7?q=80&w=3552&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     },
 ];
+
+const markers = ref([
+    {
+        icon: 'leaf-green',
+        position: [47.2184, -1.5536],
+        name: "User 1",
+        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed blandit libero volutpat sed cras ornare arcu.",
+    },
+    {
+        icon: 'leaf-green',
+        position: [48.8566, 2.3522],
+        name: "User 2",
+        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    },
+    {
+        icon: 'leaf-orange',
+        position: [43.7102, 7.2620],
+        name: "User 3",
+        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Fusce id velit ut tortor.",
+    }
+]);
 
 
 </script>
