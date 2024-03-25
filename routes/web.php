@@ -30,6 +30,12 @@ Route::get('/', function () {
         'title' => 'Home Page',
     ]);
 });
+Route::get('/blog', function () {
+    return Inertia::render('Blog/Index',
+    [
+        'title' => 'Blog Page',
+    ]);
+});
 
 
 require __DIR__.'/auth.php';
