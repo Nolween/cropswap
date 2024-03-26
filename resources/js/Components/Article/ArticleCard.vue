@@ -1,5 +1,5 @@
 <template>
-    <div class="space-y-2 p-2">
+    <div class="space-y-2 p-2 cursor-pointer" @click="goToArticle(props.id)">
         <img
             :src="props.image"
             alt="image" class="w-full object-cover max-h-40"/>
@@ -18,7 +18,14 @@ const props = defineProps({
     title: String,
     description: String,
     image: String,
+    id: Number,
 });
+
+const emit = defineEmits(['goToArticle']);
+
+const goToArticle = (id) => {
+    emit('goToArticle', id);
+};
 
 </script>
 <style scoped>

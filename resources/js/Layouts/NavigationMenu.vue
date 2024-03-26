@@ -1,16 +1,17 @@
 <template>
     <div
         class="bg-lime-500 min-h-16 text-black font-bold flex flex-wrap justify-around items-center gap-y-3 py-5 space-x-2">
-        <span class="text-4xl">
+        <Link class="text-4xl cursor-pointer" :href="route('home')">
             CROPSWAP
-        </span>
+        </Link>
         <div class="space-x-4">
         <span class="text-xl hover:text-white cursor-pointer">
             Admin
         </span>
-            <span class="text-xl hover:text-white cursor-pointer">
-            Le Blog
-        </span>
+            <Link :href="route('blog')" class="text-xl hover:text-white cursor-pointer">
+                LE BLOG
+            </Link>
+
             <span class="text-xl hover:text-white cursor-pointer">
             Trouver un crop
         </span>
@@ -20,8 +21,8 @@
         </button>
     </div>
 </template>
-<script>
-import MenuIcon from 'vue-material-design-icons/Menu.vue';
+<script setup>
+import {Link} from '@inertiajs/vue3';
 
 </script>
 <style scoped>

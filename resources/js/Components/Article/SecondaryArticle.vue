@@ -1,5 +1,6 @@
 <template>
-    <div class="h-52 space-x-2 flex">
+    <div class="h-52 space-x-2 flex cursor-pointer"
+    @click="goToArticle(props.id)">
         <img
             :src="props.image"
             alt="image" class="w-1/2 object-cover"/>
@@ -12,13 +13,20 @@
     </div>
 </template>
 <script setup>
-import { defineProps } from 'vue';
+import { defineProps, defineEmits } from 'vue';
 
 const props = defineProps({
     title: String,
     description: String,
     image: String,
+    id: Number,
 });
+
+const emit = defineEmits(['goToArticle']);
+const goToArticle = (id) => {
+    emit('goToArticle', id);
+};
+
 
 </script>
 

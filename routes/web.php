@@ -29,13 +29,20 @@ Route::get('/', function () {
     [
         'title' => 'Home Page',
     ]);
-});
+})->name('home');
 Route::get('/blog', function () {
     return Inertia::render('Blog/Index',
     [
         'title' => 'Blog Page',
     ]);
-});
+})->name('blog');
+Route::get('/blog/{id}', function ($id) {
+    return Inertia::render('Blog/Show',
+    [
+        'title' => 'Blog Page',
+        'id' => $id,
+    ]);
+})->name('blog.show');
 
 
 require __DIR__.'/auth.php';
