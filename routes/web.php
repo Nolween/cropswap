@@ -44,5 +44,13 @@ Route::get('/blog/{id}', function ($id) {
     ]);
 })->name('blog.show');
 
+Route::get('/crop/{id}', function ($id) {
+    return Inertia::render('Crop/Show',
+    [
+        'title' => 'Crop Page',
+        'id' => $id,
+    ]);
+})->name('crop.show');
+
 
 require __DIR__.'/auth.php';

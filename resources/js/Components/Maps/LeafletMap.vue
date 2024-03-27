@@ -7,6 +7,7 @@
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import {onMounted} from "vue";
+import {router} from "@inertiajs/vue3"
 
 const props = defineProps({
     height: {
@@ -26,7 +27,11 @@ const props = defineProps({
         type: Array,
         default: () => []
     }
-})
+});
+
+const goToCrop = (id) => {
+    router.visit(`/crop/${id}`);
+}
 
 
 onMounted(() => {
@@ -61,7 +66,15 @@ onMounted(() => {
         }
         let mark = L.marker(marker.position, {icon: oneIcon}).addTo(map);
         // Add Name of crop and its description
-        mark.bindPopup(`<b>${marker.name}</b><br>${marker.description}`).openPopup();
+        mark.bindPopup(`<b>${marker.name}</b>
+        <br>${marker.description}
+        <br><p id="crop-${marker.id}" class="cursor-pointer""><b>Voir le crop</b></p>`);
+
+
+        mark.on('popupopen', () => {
+            let cropElement = document.getElementById(`crop-${marker.id}`);
+            cropElement.addEventListener('click', () => goToCrop(marker.id));
+        });
     });
 
 

@@ -6,14 +6,14 @@
         </Link>
         <div class="space-x-4">
         <span class="text-xl hover:text-white cursor-pointer">
-            Admin
+            ADMIN
         </span>
             <Link :href="route('blog')" class="text-xl hover:text-white cursor-pointer">
                 LE BLOG
             </Link>
 
             <span class="text-xl hover:text-white cursor-pointer">
-            Trouver un crop
+            TROUVER UN CROP
         </span>
         </div>
         <button class="text-xl bg-black text-white p-3 rounded-xl hover:bg-white hover:text-black">

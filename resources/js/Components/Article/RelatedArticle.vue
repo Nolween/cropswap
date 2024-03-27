@@ -41,4 +41,6 @@ const goToArticle = (id) => {
 
 </script>
 
-<style scoped></style>
+<style scoped>
+
+</style>

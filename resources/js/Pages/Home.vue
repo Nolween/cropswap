@@ -102,18 +102,21 @@ const articles = [
 
 const markers = ref([
     {
+        id:1,
         icon: 'leaf-green',
         position: [47.2184, -1.5536],
         name: "User 1",
         description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed blandit libero volutpat sed cras ornare arcu.",
     },
     {
+        id:2,
         icon: 'leaf-green',
         position: [48.8566, 2.3522],
         name: "User 2",
         description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     },
     {
+        id:3,
         icon: 'leaf-orange',
         position: [43.7102, 7.2620],
         name: "User 3",
