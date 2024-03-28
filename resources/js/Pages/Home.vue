@@ -3,16 +3,23 @@
         <navigation-menu/>
         <!-- TITLE -->
         <div class="flex flex-wrap bg-lime-500 p-5 justify-around items-center">
-            <div class="sm:w-full md:w-1/2">
+            <div class="sm:w-full md:w-1/2 space-y-6">
                 <p class="text-6xl lg:text-8xl font-extrabold text-black text-center p-3">
                     Des choses à partager?
                 </p>
+                <div class="text-center">
+                    <Link :href="route('register')"
+                          class="text-xl bg-black text-white p-3 rounded-xl hover:bg-white hover:text-black font-bold">
+                        INSCRIPTION
+                    </Link>
+                </div>
             </div>
             <div class="py-8 sm:w-full md:w-1/2">
                 <img
                     src="https://images.unsplash.com/photo-1647275621308-f715bee42fe7?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                     alt="image" class="rounded-lg "/>
             </div>
+
         </div>
         <!-- 4 CARDS AT CENTER EXPLAINING PROS OF USING THE APP -->
         <div>
@@ -75,6 +82,7 @@ import BlogArticle from "@/Components/Carousel/BlogArticle.vue";
 import NavigationMenu from '@/Layouts/NavigationMenu.vue';
 import SimpleCard from "@/Components/Cards/SimpleCard.vue";
 import LeafletMap from "@/Components/Maps/LeafletMap.vue";
+import {Link} from "@inertiajs/vue3";
 
 
 const articles = [
@@ -102,21 +110,21 @@ const articles = [
 
 const markers = ref([
     {
-        id:1,
+        id: 1,
         icon: 'leaf-green',
         position: [47.2184, -1.5536],
         name: "User 1",
         description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed blandit libero volutpat sed cras ornare arcu.",
     },
     {
-        id:2,
+        id: 2,
         icon: 'leaf-green',
         position: [48.8566, 2.3522],
         name: "User 2",
         description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     },
     {
-        id:3,
+        id: 3,
         icon: 'leaf-orange',
         position: [43.7102, 7.2620],
         name: "User 3",

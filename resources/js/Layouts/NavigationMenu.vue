@@ -13,12 +13,12 @@
             </Link>
 
             <Link :href="route('crop.index')" class="text-xl hover:text-white cursor-pointer">
-            TROUVER UN CROP
-        </Link>
+                TROUVER UN CROP
+            </Link>
         </div>
-        <button class="text-xl bg-black text-white p-3 rounded-xl hover:bg-white hover:text-black">
-            INSCRIPTION
-        </button>
+        <Link :href="route('login')" class="text-xl bg-black text-white p-3 rounded-xl hover:bg-white hover:text-black">
+            CONNEXION
+        </Link>
     </div>
 </template>
 <script setup>
