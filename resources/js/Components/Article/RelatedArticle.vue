@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-wrap justify-between items-center w-1/2 xl:w-full cursor-pointer"
+    <div class="flex flex-wrap justify-between items-center w-1/2 lg:w-1/3 xl:w-full cursor-pointer text-white"
     @click="goToArticle(props.id)">
         <div class="w-1/2">
             <img class="w-full h-32 object-cover rounded-md"

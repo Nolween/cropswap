@@ -37,7 +37,7 @@
 
         <!-- ARTICLE RESUME -->
         <div class="flex flex-wrap">
-            <div class="p-6 w-full xl:w-3/4 space-y-4">
+            <div class="p-6 w-full xl:w-3/4 space-y-4 text-justify">
                 <p class="text-lg font-medium text-gray-700">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                     Sed
                     non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras
@@ -112,7 +112,7 @@
 
             </div>
             <!--RELATED POST COLUMN -->
-            <div class="w-full xl:w-1/4 bg-gray-100 p-5 ">
+            <div class="w-full xl:w-1/4 p-5 bg-orange-500">
                 <div class="font-bold text-2xl mb-3">Related Posts</div>
                 <!--  RELATED POST  -->
                 <div class="space-y-4 flex flex-wrap">

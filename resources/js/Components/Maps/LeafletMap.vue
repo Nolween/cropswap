@@ -1,5 +1,5 @@
 <template>
-    <div id="mapid" class=" mt-4 w-full h-full"></div>
+    <div id="mapid" class="w-full h-full"></div>
 </template>
 
 <script setup>

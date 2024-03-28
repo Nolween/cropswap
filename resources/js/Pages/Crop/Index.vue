@@ -5,9 +5,8 @@
         <div class="flex flex-wrap h-full">
 
             <!-- FILTER PART -->
-            <div class="w-full flex flex-wrap lg:w-1/3 h-screen overflow-auto">
-                <div class="w-full lg:border-r-2 py-8 px-4">
-                    <div class="text-5xl font-title font-extrabold text-center mb-8">FILTRES</div>
+            <div class="w-full flex flex-wrap lg:w-1/3 overflow-auto items-center bg-orange-500">
+                <div class="w-full py-8 px-4">
                     <div class="w-full p-3">
                         <button @click="filterCrops()"
                                 class="w-full mx-auto bg-lime-500 p-3 rounded-xl cursor-pointer text-white text-2xl font-bold">
@@ -30,7 +29,7 @@
                     </div>
 
                     <!-- SELECTED SWPAS -->
-                    <div class="w-full p-5">
+                    <div class="w-full p-5" v-if="selectedSwaps.length > 0">
                         <div class="text-2xl font-bold mb-3">SWAPS SELECTIONNES</div>
                         <div class="flex flex-wrap gap-2">
                             <div v-for="(swap, swapIndex) in selectedSwaps" :key="swapIndex"
@@ -44,10 +43,8 @@
                 </div>
             </div>
             <!-- MAPS PART-->
-            <div class="w-full lg:w-2/3 text-5xl font-title font-extrabold text-center py-8">
-                <div>RECHERCHE DE CROPS</div>
-
-                <div class="w-full h-full">
+            <div class="w-full lg:w-2/3 text-5xl font-title font-extrabold text-center">
+                <div class="w-full h-screen lg:h-full">
                     <leaflet-map :markers="filteredMarkers"></leaflet-map>
                 </div>
             </div>

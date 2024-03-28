@@ -98,7 +98,7 @@
             </div>
         </div>
         <!--  MAP WITH NEAR CROPS -->
-        <div class="w-full flex justify-center">
+        <div class="w-full flex justify-center h-[600px]">
             <leaflet-map :zoom-level="15" :center="cropPosition" height="400" :markers="markers"></leaflet-map>
         </div>
     </div>
@@ -192,6 +192,7 @@ const markers = ref([
         description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Fusce id velit ut tortor.",
     }
 ]);
+
 </script>
 
 <style scoped>
