@@ -52,5 +52,12 @@ Route::get('/crop/{id}', function ($id) {
     ]);
 })->name('crop.show');
 
+Route::get('/crop', function () {
+    return Inertia::render('Crop/Index',
+    [
+        'title' => 'Crops Search Page',
+    ]);
+})->name('crop.index');
+
 
 require __DIR__.'/auth.php';

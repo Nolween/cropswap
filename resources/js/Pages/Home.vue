@@ -37,8 +37,8 @@
         </div>
 
         <!-- MAP OF FRANCE SHOWING DIFFERENT LOCATIONS -->
-        <div class="flex justify-center">
-            <leaflet-map height="600" :markers="markers"></leaflet-map>
+        <div class="flex justify-center h-[600px]">
+            <leaflet-map :markers="markers"></leaflet-map>
         </div>
         <!-- HISTORIC DESCRIPTION -->
         <div class="bg-orange-500 p-5">

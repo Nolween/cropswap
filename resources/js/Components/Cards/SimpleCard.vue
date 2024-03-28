@@ -8,9 +8,9 @@
                            :size="60"
                 />
             </div>
-            <div class="text-center p-5">
-                <h2 class="text-2xl font-bold">{{ props.title }}</h2>
-                <p class="text-lg">{{ props.description }}</p>
+            <div class="text-center p-1 lg:p-5">
+                <h2 class="text-lg lg:text-2xl font-bold">{{ props.title }}</h2>
+                <p class="text-sm lg:text-lg">{{ props.description }}</p>
             </div>
         </div>
     </div>

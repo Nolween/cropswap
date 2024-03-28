@@ -12,9 +12,9 @@
                 LE BLOG
             </Link>
 
-            <span class="text-xl hover:text-white cursor-pointer">
+            <Link :href="route('crop.index')" class="text-xl hover:text-white cursor-pointer">
             TROUVER UN CROP
-        </span>
+        </Link>
         </div>
         <button class="text-xl bg-black text-white p-3 rounded-xl hover:bg-white hover:text-black">
             INSCRIPTION

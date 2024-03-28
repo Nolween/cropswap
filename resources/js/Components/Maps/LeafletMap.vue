@@ -1,19 +1,15 @@
 <template>
-    <div id="mapid" :style="'height:' + props.height +'px;'" class=" mt-4 w-full lg:w-2/3"></div>
+    <div id="mapid" class=" mt-4 w-full h-full"></div>
 </template>
 
 <script setup>
 
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import {onMounted} from "vue";
+import {onMounted, watch} from "vue";
 import {router} from "@inertiajs/vue3"
 
 const props = defineProps({
-    height: {
-        type: Number,
-        default: 550
-    },
     zoomLevel: {
         type: Number,
         default: 6
@@ -23,35 +19,47 @@ const props = defineProps({
         default: () => [46.605, 1.09]
     },
     markers: {
-    //     Array with position as array, icon, name and description properties
+        //     Array with position as array, icon, name and description properties
         type: Array,
         default: () => []
     }
 });
 
+// Map Declaratin
+let map;
+
+// Functions
 const goToCrop = (id) => {
     router.visit(`/crop/${id}`);
-}
+};
 
+const renderMap = () => {
 
-onMounted(() => {
-    const map = L.map('mapid').setView(props.center, props.zoomLevel);
+    if (!document.getElementById('mapid')) {
+        // If the element does not exist, return early to avoid creating the map.
+        return;
+    }
+    // Destroy map container
+    if (map) {
+        map.remove();
+    }
+    map = L.map('mapid', {scrollWheelZoom: false}).setView(props.center, props.zoomLevel);
 
     let LeafIcon = L.Icon.extend({
         options: {
             // shadowUrl: 'leaf-shadow.png',
-            iconSize:     [38, 95],
-            shadowSize:   [50, 64],
-            iconAnchor:   [22, 94],
+            iconSize: [38, 95],
+            shadowSize: [50, 64],
+            iconAnchor: [22, 94],
             shadowAnchor: [4, 62],
-            popupAnchor:  [-3, -76]
+            popupAnchor: [-3, -76]
         }
     });
 
     // Foreach markers to add them to the map
     props.markers.forEach(marker => {
         let oneIcon
-        switch(marker.icon) {
+        switch (marker.icon) {
             case 'leaf-green':
                 oneIcon = new LeafIcon({iconUrl: '/images/icons/leaf-green.png'});
                 break;
@@ -81,7 +89,38 @@ onMounted(() => {
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
     }).addTo(map);
+
+
+    // Listen for 'keyup' event on the document.
+    document.addEventListener('keydown', function (event) {
+        if (event.key === "Control") {
+            // If the 'Control' key is released, disable scroll wheel zoom.
+            map.scrollWheelZoom.enable();
+        }
+    });
+    // Listen for 'keyup' event on the document.
+    document.addEventListener('keyup', function (event) {
+        if (event.key === "Control") {
+            // If the 'Control' key is released, disable scroll wheel zoom.
+            map.scrollWheelZoom.disable();
+        }
+    });
+};
+
+
+
+onMounted(() => {
+    renderMap();
 });
+
+watch(
+    () => props.markers,
+    () => {
+        renderMap();
+    },
+    { deep: true }
+);
+
 </script>
 
 <style scoped>
