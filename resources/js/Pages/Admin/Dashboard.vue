@@ -2,13 +2,13 @@
     <div class="md:h-screen md:overflow-hidden">
         <navigation-menu/>
         <div class="h-full flex flex-wrap">
-            <div class="w-full text-xl md:text-5xl font-mono text-orange-500 border-b-2 p-3">
-                DASHBOARD
-            </div>
             <!-- ADMIN NAVIGATION -->
             <admin-side-bar></admin-side-bar>
             <!-- CONTENT PART -->
             <div class="w-full md:w-2/3 bg-gray-50">
+                <div class="w-full text-xl md:text-5xl font-mono text-orange-500 border-b-2 p-3">
+                    DASHBOARD
+                </div>
                 <div class="pt-4 text-2xl md:text-5xl font-bold text-center text-orange-500">
                     STATISTIQUES
                 </div>
