@@ -1,0 +1,36 @@
+<template>
+    <div class="w-full h-full md:w-1/3 border-r-2 border-gray-100 space-y-4 pt-8">
+        <div class="p-3 flex flex-nowrap w-full hover:bg-blue-100 cursor-pointer">
+            <Link :href="route('admin.crop.index')" class="flex flex-nowrap items-center text-xl space-x-2">
+                <!-- CROP ICON -->
+                <land-plots-icon size="40" class="text-orange-500"/>
+                <span class="font-bold text-2xl text-gray-600">CROPS</span>
+            </Link>
+        </div>
+        <div class="p-3 flex flex-nowrap w-full hover:bg-blue-100 cursor-pointer">
+            <Link :href="route('admin.swap.index')" class="flex flex-nowrap items-center text-xl space-x-2">
+                <!-- SWAPS ICON -->
+                <barley-icon size="40" class="text-orange-500"/>
+                <span class="font-bold text-2xl text-gray-600">SWAPS</span>
+            </Link>
+        </div>
+        <div class="p-3 flex flex-nowrap w-full hover:bg-blue-100 cursor-pointer">
+            <Link :href="route('admin.user.index')" class="flex flex-nowrap items-center text-xl space-x-2">
+                <!-- USERS ICON -->
+                <account-icon size="40" class="text-orange-500"/>
+                <span class="font-bold text-2xl text-gray-600">UTILISATEURS</span>
+            </Link>
+        </div>
+    </div>
+</template>
+
+<script setup>
+import LandPlotsIcon from "vue-material-design-icons/LandPlots.vue";
+import {Link} from "@inertiajs/vue3";
+import BarleyIcon from "vue-material-design-icons/Barley.vue";
+import AccountIcon from "vue-material-design-icons/Account.vue";
+</script>
+
+<style scoped>
+
+</style>
