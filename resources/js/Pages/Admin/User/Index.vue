@@ -12,14 +12,28 @@
                 <!-- ACTION PART -->
                 <div class="w-full flex justify-center items-center p-2 space-x-2">
                     <div class="">
-                        <button
-                            class="p-2 rounded-lg text-blue-500 text-md font-medium border-2 border-blue-500 hover:text-white hover:bg-blue-500 hover:border-transparent">
-                            <filter-outline-icon size="24"/>
-                        </button>
+                        <context-menu-button>
+                            <template v-slot:content>
+                                <div class="w-60 space-y-2">
+                                    <!--  An select input with 3 options -->
+                                    <select @change="updateFilters($event, 'role')" class="w-full p-2 border-2 border-gray-200 rounded-md">
+                                        <option value="null">Tous les utilisateurs</option>
+                                        <option value="User">Utilisateurs</option>
+                                        <option value="Admin">Administrateurs</option>
+                                    </select>
+                                    <!-- A number input option with label indicating minimum report wanted -->
+                                    <div class="flex flex-wrap justify-between items-center">
+                                        <input v-model="filters.minReport" type="number" id="min-report" placeholder="Singnalements minimum"
+                                               class="w-full border-2 border-gray-200 rounded-md"/>
+                                    </div>
+                                </div>
+                            </template>
+                        </context-menu-button>
                     </div>
                     <div class="w-1/2">
                         <input type="text" placeholder="Rechercher un utilisateur"
-                               class="w-full p-2 border-2 border-gray-200 rounded-md"/>
+                               class="w-full p-2 border-2 border-gray-200 rounded-md"
+                               v-model="filters.userSearch"/>
                     </div>
                     <div class="">
                         <button
@@ -30,7 +44,7 @@
                 </div>
                 <!-- TABLE -->
                 <div class="w-full p-2">
-                    <back-office-table @action="activate" :headers="headers" :rows="rows" :actions="actions"/>
+                    <back-office-table @action="activate" :headers="headers" :rows="filteredRows" :actions="actions"/>
                 </div>
 
             </div>
@@ -39,14 +53,21 @@
 </template>
 
 <script setup>
-import {ref} from 'vue';
+import {ref, computed, reactive} from 'vue';
 import NavigationMenu from "@/Layouts/NavigationMenu.vue";
 import AdminSideBar from "@/Layouts/AdminSideBar.vue";
-import FilterOutlineIcon from "vue-material-design-icons/FilterOutline.vue";
 import PlusIcon from "vue-material-design-icons/Plus.vue";
 import BackOfficeTable from "@/Components/Table/BackOfficeTable.vue";
+import ContextMenuButton from "@/Components/Buttons/ContextMenuButton.vue";
 //  Verify if the user is authenticated from session
 const authenticated = ref(false);
+const userSearch = ref('');
+
+const filters = reactive({
+    userSearch: '',
+    role: null,
+    minReport: 0
+});
 
 const headers = [
     {name: 'ID', type: 'string'},
@@ -77,6 +98,33 @@ const actions = [
     }
 ];
 
+const filteredRows = computed(() => {
+    return rows.filter(row => {
+        let returnRow = true;
+        if (filters.userSearch.trim().length > 0) {
+
+            returnRow = row[1].toLowerCase().includes(filters.userSearch.toLowerCase()) ||
+                row[2].toLowerCase().includes(filters.userSearch.toLowerCase());
+            if (!returnRow) {
+                return false;
+            }
+        }
+        if (filters.role) {
+            returnRow = row[3] === filters.role;
+            if (!returnRow) {
+                return false;
+            }
+        }
+        if (filters.minReport > 0) {
+            returnRow = row[4] >= filters.minReport;
+            if (!returnRow) {
+                return false;
+            }
+        }
+        return returnRow;
+    });
+});
+
 const activate = (action) => {
     if (action?.method === 'editUser') {
         editUser(action.rowIndex);
@@ -91,6 +139,10 @@ const editUser = (rowIndex) => {
 
 const banUser = (rowIndex) => {
     console.log('Ban user', rowIndex);
+};
+
+const updateFilters = (event, filter) => {
+    filters[filter] = filter !== 'minReport' ? event.target.value : event.target.value.parseInt;
 };
 
 </script>
