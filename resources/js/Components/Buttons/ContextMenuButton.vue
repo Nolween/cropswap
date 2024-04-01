@@ -3,7 +3,7 @@
         <button
             @click="isOpenedMenu = !isOpenedMenu"
             class="p-2 rounded-lg text-blue-500 text-md font-medium border-2 border-blue-500 hover:text-white hover:bg-blue-500 hover:border-transparent">
-            <filter-outline-icon size="24"/>
+            <filter-outline-icon :size="24"/>
         </button>
 
         <!-- Slot -->

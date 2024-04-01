@@ -16,14 +16,16 @@
                             <template v-slot:content>
                                 <div class="w-60 space-y-2">
                                     <!--  An select input with 3 options -->
-                                    <select @change="updateFilters($event, 'role')" class="w-full p-2 border-2 border-gray-200 rounded-md">
+                                    <select @change="updateFilters($event, 'role')"
+                                            class="w-full p-2 border-2 border-gray-200 rounded-md">
                                         <option value="null">Tous les utilisateurs</option>
                                         <option value="User">Utilisateurs</option>
                                         <option value="Admin">Administrateurs</option>
                                     </select>
                                     <!-- A number input option with label indicating minimum report wanted -->
                                     <div class="flex flex-wrap justify-between items-center">
-                                        <input v-model="filters.minReport" type="number" id="min-report" placeholder="Singnalements minimum"
+                                        <input v-model="filters.minReport" type="number" id="min-report"
+                                               placeholder="Singnalements minimum"
                                                class="w-full border-2 border-gray-200 rounded-md"/>
                                     </div>
                                 </div>
@@ -35,12 +37,10 @@
                                class="w-full p-2 border-2 border-gray-200 rounded-md"
                                v-model="filters.userSearch"/>
                     </div>
-                    <div class="">
-                        <button
-                            class="p-2 rounded-lg text-lime-500 text-md font-medium border-2 border-lime-500 hover:text-white hover:bg-lime-500 hover:border-transparent">
-                            <plus-icon size="24"/>
-                        </button>
-                    </div>
+                    <Link :href="route('admin.user.create')" type="button" title="Ajouter un utilisateur"
+                          class="p-2 rounded-lg text-lime-500 text-md font-medium border-2 border-lime-500 hover:text-white hover:bg-lime-500 hover:border-transparent">
+                        <plus-icon :size="24"/>
+                    </Link>
                 </div>
                 <!-- TABLE -->
                 <div class="w-full p-2">
@@ -54,6 +54,7 @@
 
 <script setup>
 import {ref, computed, reactive} from 'vue';
+import {Link} from "@inertiajs/vue3";
 import NavigationMenu from "@/Layouts/NavigationMenu.vue";
 import AdminSideBar from "@/Layouts/AdminSideBar.vue";
 import PlusIcon from "vue-material-design-icons/Plus.vue";

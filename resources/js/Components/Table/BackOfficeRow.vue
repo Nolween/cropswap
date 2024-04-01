@@ -7,7 +7,7 @@
                     :class="`border-${action.color}-500 hover:bg-${action.color}-500 text-${action.color}-500`"
                     @click="emitAction(action.method)">
                 <component :is="action.icon"
-                           :title="action.icon"
+                           :title="action.title"
                            :size="24"
                 />
             </button>
@@ -16,7 +16,7 @@
 </template>
 <script setup>
 
-import {defineAsyncComponent, onMounted, ref, defineEmits} from "vue";
+import {defineAsyncComponent, onMounted, defineEmits, shallowRef} from "vue";
 
 const props = defineProps({
     values: Array,
@@ -35,12 +35,13 @@ const loadIcon = async (action) => {
     return {
         icon: await defineAsyncComponent(() => import(`../../../../node_modules/vue-material-design-icons/${action.icon}.vue`)),
         color: action.color,
-        method: action.method
+        method: action.method,
+        title: action.icon
     };
 };
 
 // Icons components
-const iconComponents = ref([]);
+const iconComponents = shallowRef([]);
 
 // Load icons
 onMounted(async () => {

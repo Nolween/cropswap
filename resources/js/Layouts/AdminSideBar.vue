@@ -4,21 +4,21 @@
         <div class="p-3 flex flex-nowrap md:w-full hover:bg-blue-100 cursor-pointer">
             <Link :href="route('admin.crop.index')" class="flex flex-nowrap items-center text-xl space-x-2">
                 <!-- CROP ICON -->
-                <land-plots-icon size="40" class="text-orange-500"/>
+                <land-plots-icon :size="40" class="text-orange-500"/>
                 <span class="font-bold text-sm md:text-2xl text-gray-600">CROPS</span>
             </Link>
         </div>
         <div class="p-3 flex flex-nowrap md:w-full hover:bg-blue-100 cursor-pointer">
             <Link :href="route('admin.swap.index')" class="flex flex-nowrap items-center text-xl space-x-2">
                 <!-- SWAPS ICON -->
-                <barley-icon size="40" class="text-orange-500"/>
+                <barley-icon :size="40" class="text-orange-500"/>
                 <span class="font-bold text-sm md:text-2xl text-gray-600">SWAPS</span>
             </Link>
         </div>
         <div class="p-3 flex flex-nowrap md:w-full hover:bg-blue-100 cursor-pointer">
             <Link :href="route('admin.user.index')" class="flex flex-nowrap items-center text-xl space-x-2">
                 <!-- USERS ICON -->
-                <account-icon size="40" class="text-orange-500"/>
+                <account-icon :size="40" class="text-orange-500"/>
                 <span class="font-bold text-sm md:text-2xl text-gray-600">UTILISATEURS</span>
             </Link>
         </div>
