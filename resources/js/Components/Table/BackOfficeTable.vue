@@ -11,7 +11,8 @@
         <tbody>
         <back-office-row v-for="(row, rowIndex) in props.rows" :key="rowIndex"
                          :values="row" :actions="props.actions"
-                         @action="activate($event, rowIndex)"/>
+                         @action="activate($event, rowIndex)"
+                         @show="showLine(rowIndex)"/>
         </tbody>
     </table>
 </template>
@@ -26,7 +27,11 @@ const props = defineProps({
     actions: Array
 });
 
-const emit = defineEmits(['action']);
+const emit = defineEmits(['action', 'show']);
+
+const showLine = (rowIndex) => {
+    emit('show', rowIndex);
+};
 
 const activate = (method, rowIndex) => {
     emit('action', {method, rowIndex});

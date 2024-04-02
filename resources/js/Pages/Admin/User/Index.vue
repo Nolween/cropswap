@@ -44,7 +44,11 @@
                 </div>
                 <!-- TABLE -->
                 <div class="w-full p-2">
-                    <back-office-table @action="activate" :headers="headers" :rows="filteredRows" :actions="actions"/>
+                    <back-office-table @action="activate"
+                                       :headers="headers"
+                                       :rows="filteredRows"
+                                       :actions="actions"
+                                       @show="showUser($event)"/>
                 </div>
 
             </div>
@@ -54,7 +58,7 @@
 
 <script setup>
 import {ref, computed, reactive} from 'vue';
-import {Link} from "@inertiajs/vue3";
+import {Link, router} from "@inertiajs/vue3";
 import NavigationMenu from "@/Layouts/NavigationMenu.vue";
 import AdminSideBar from "@/Layouts/AdminSideBar.vue";
 import PlusIcon from "vue-material-design-icons/Plus.vue";
@@ -145,6 +149,11 @@ const banUser = (rowIndex) => {
 const updateFilters = (event, filter) => {
     filters[filter] = filter !== 'minReport' ? event.target.value : event.target.value.parseInt;
 };
+
+const showUser = (rowIndex) => {
+    router.visit(`/admin/users/${rowIndex}`);
+};
+
 
 </script>
 

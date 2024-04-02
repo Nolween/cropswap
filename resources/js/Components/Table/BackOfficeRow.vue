@@ -1,5 +1,5 @@
 <template>
-    <tr class="border-b-2 border-gray-200 cursor-pointer hover:bg-lime-50">
+    <tr @click="showLine" class="border-b-2 border-gray-200 cursor-pointer hover:bg-lime-50">
         <td class="p-2" v-for="(value, valueIndex) in values" :key="valueIndex">{{ value }}</td>
         <td class="p-2 space-x-2">
             <button v-for="(action, actionIndex) in iconComponents" :key="actionIndex"
@@ -23,7 +23,7 @@ const props = defineProps({
     actions: Array
 });
 
-const emit = defineEmits(['action']);
+const emit = defineEmits(['action', 'show']);
 
 const emitAction = (method) => {
     emit('action', method);
@@ -38,6 +38,10 @@ const loadIcon = async (action) => {
         method: action.method,
         title: action.icon
     };
+};
+
+const showLine = () => {
+    emit('show');
 };
 
 // Icons components

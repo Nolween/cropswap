@@ -44,6 +44,12 @@ Route::middleware(IsAdminAuthenticated::class)->group(function () {
             'Admin/User/Create'
         );
     })->name('admin.user.create');
+
+    Route::get('/admin/users/{id}', function ($id) {
+        return Inertia::render(
+            'Admin/User/Show'
+        );
+    })->name('admin.user.show');
 });
 
 
