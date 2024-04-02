@@ -10,6 +10,7 @@
         </thead>
         <tbody>
         <back-office-row v-for="(row, rowIndex) in props.rows" :key="rowIndex"
+                         :columns="props.headers"
                          :values="row" :actions="props.actions"
                          @action="activate($event, rowIndex)"
                          @show="showLine(rowIndex)"/>

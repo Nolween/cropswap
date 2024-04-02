@@ -19,8 +19,8 @@
                                     <select @change="updateFilters($event, 'role')"
                                             class="w-full p-2 border-2 border-gray-200 rounded-md">
                                         <option value="null">Tous les utilisateurs</option>
-                                        <option value="User">Utilisateurs</option>
-                                        <option value="Admin">Administrateurs</option>
+                                        <option value="user">Utilisateurs</option>
+                                        <option value="admin">Administrateurs</option>
                                     </select>
                                     <!-- A number input option with label indicating minimum report wanted -->
                                     <div class="flex flex-wrap justify-between items-center">
@@ -75,115 +75,114 @@ const filters = reactive({
 });
 
 const headers = [
-    {name: 'ID', type: 'string'},
-    {name: 'Name', type: 'string'},
-    {name: 'Email', type: 'string'},
-    {name: 'Role', type: 'string'},
-    {name: 'Sign.', type: 'number'},
+    {column: 'id', name: 'ID', type: 'string'},
+    {column: 'name', name: 'Name', type: 'string'},
+    {column: 'email', name: 'Email', type: 'string'},
+    {column: 'role', name: 'Role', type: 'string'},
+    {column: 'report', name: 'Sign.', type: 'number'},
 ];
 
 const rows = [
-    [1,"Aggy Baylis","abaylis0@adobe.com","user",7],
-    [2,"Smitty Banasevich","sbanasevich1@java.com","user",51],
-    [3,"Cindy Gasker","cgasker2@columbia.edu","admin",84],
-    [4,"Reeba Eatock","reatock3@mlb.com","admin",90],
-    [5,"Adelbert Banbrick","abanbrick4@huffingtonpost.com","admin",92],
-    [6,"Dewie Hugenin","dhugenin5@shutterfly.com","admin",48],
-    [7,"Eimile Emmet","eemmet6@virginia.edu","admin",68],
-    [8,"Patton Bensusan","pbensusan7@cdc.gov","admin",61],
-    [9,"Alanna Swatridge","aswatridge8@xinhuanet.com","user",98],
-    [10,"Morse Eymer","meymer9@earthlink.net","user",21],
-    [11,"Gaspard Barten","gbartena@howstuffworks.com","user",33],
-    [12,"Collie Jirus","cjirusb@elegantthemes.com","user",81],
-    [13,"Aubree Domelow","adomelowc@g.co","user",31],
-    [14,"Gabi Netti","gnettid@wp.com","user",4],
-    [15,"Ham Happs","hhappse@google.fr","admin",23],
-    [16,"Kacie Poundford","kpoundfordf@icq.com","admin",32],
-    [17,"Maryjane Tunno","mtunnog@chronoengine.com","admin",55],
-    [18,"Filip Hungerford","fhungerfordh@linkedin.com","admin",31],
-    [19,"Clayborne Stubbeley","cstubbeleyi@wikispaces.com","admin",93],
-    [20,"Gilli Kurtis","gkurtisj@imgur.com","user",60],
-    [21,"Maxim Monteaux","mmonteauxk@chron.com","user",38],
-    [22,"Sargent Gaylor","sgaylorl@uol.com.br","admin",98],
-    [23,"Sheela Drover","sdroverm@i2i.jp","user",40],
-    [24,"Elwin Jaime","ejaimen@paypal.com","admin",97],
-    [25,"Cathrin Gokes","cgokeso@ifeng.com","admin",2],
-    [26,"Thomasin Bountiff","tbountiffp@utexas.edu","user",85],
-    [27,"Darwin Graundisson","dgraundissonq@free.fr","admin",16],
-    [28,"Randal Glaisner","rglaisnerr@hc360.com","user",13],
-    [29,"Edna Dragon","edragons@ameblo.jp","user",40],
-    [30,"Nicko Reinhard","nreinhardt@weather.com","user",29],
-    [31,"Mariam Huccaby","mhuccabyu@cornell.edu","admin",33],
-    [32,"Tracee Atte-Stone","tattestonev@mashable.com","user",56],
-    [33,"Marjy Garrood","mgarroodw@va.gov","admin",3],
-    [34,"Johnny Custance","jcustancex@jugem.jp","user",13],
-    [35,"Lauree Challace","lchallacey@behance.net","admin",43],
-    [36,"Sharon Aves","savesz@exblog.jp","admin",29],
-    [37,"Redford Merigeau","rmerigeau10@fda.gov","admin",55],
-    [38,"Tamara Jeacock","tjeacock11@sohu.com","user",12],
-    [39,"Weber Swindells","wswindells12@rambler.ru","admin",41],
-    [40,"Izabel Netley","inetley13@amazon.co.jp","user",45],
-    [41,"Craig Grzeszczak","cgrzeszczak14@twitter.com","admin",78],
-    [42,"Kirby Stout","kstout15@hao123.com","admin",41],
-    [43,"Mariann Arkcoll","markcoll16@abc.net.au","user",29],
-    [44,"Odie Foyster","ofoyster17@stumbleupon.com","admin",20],
-    [45,"Sutton Penhalurick","spenhalurick18@linkedin.com","admin",83],
-    [46,"Arlie Waugh","awaugh19@bigcartel.com","user",98],
-    [47,"Xever Strooband","xstrooband1a@friendfeed.com","user",25],
-    [48,"Phaedra Jelf","pjelf1b@amazonaws.com","admin",10],
-    [49,"Filmore Handscomb","fhandscomb1c@merriam-webster.com","user",9],
-    [50,"Merill Simakov","msimakov1d@un.org","user",11],
-    [51,"Wolfie Fatkin","wfatkin1e@dedecms.com","admin",46],
-    [52,"Gilligan Jansens","gjansens1f@tumblr.com","admin",85],
-    [53,"Stephine Allgood","sallgood1g@cyberchimps.com","admin",88],
-    [54,"Rafaela Neillans","rneillans1h@netvibes.com","admin",19],
-    [55,"Eamon Shields","eshields1i@census.gov","user",90],
-    [56,"Howie Rankcom","hrankcom1j@blogs.com","user",42],
-    [57,"Herbert Fearick","hfearick1k@cocolog-nifty.com","user",85],
-    [58,"Elspeth Berns","eberns1l@pcworld.com","user",76],
-    [59,"Ari Loughrey","aloughrey1m@goo.ne.jp","admin",76],
-    [60,"Finn Francesconi","ffrancesconi1n@elpais.com","admin",41],
-    [61,"Arlen Switland","aswitland1o@privacy.gov.au","admin,72"],
-    [62,"Sherill Berford","sberford1p@tripadvisor.com","admin",2],
-    [63,"Jarid Treadgold","jtreadgold1q@ca.gov","user",80],
-    [64,"Cristabel Cluff","ccluff1r@squidoo.com","user",18],
-    [65,"Mirilla Skipp","mskipp1s@nasa.gov","user",47],
-    [66,"Jammal Finding","jfinding1t@fc2.com","admin",63],
-    [67,"Trula Onslow","tonslow1u@wordpress.com","user",61],
-    [68,"Nani Golde","ngolde1v@reddit.com","admin",7],
-    [69,"Henrietta Kurtis","hkurtis1w@deviantart.com","admin",23],
-    [70,"Ahmed Sollis","asollis1x@lycos.com","admin",90],
-    [71,"Heinrik Reyner","hreyner1y@over-blog.com","admin",29],
-    [72,"Tad Gettins","tgettins1z@devhub.com","admin",17],
-    [73,"Nealy Beardon","nbeardon20@woothemes.com","user",68],
-    [74,"Baxy Moors","bmoors21@techcrunch.com","user",38],
-    [75,"Bail Dawber","bdawber22@xrea.com","admin",30],
-    [76,"Annis Osipenko","aosipenko23@springer.com","admin",49],
-    [77,"Lynda Bedder","lbedder24@hc360.com","admin",4],
-    [78,"Alla Backsal","abacksal25@mtv.com","admin",9],
-    [79,"Corinna De Vaar","cde26@cyberchimps.com","user",3],
-    [80,"Miran Trayford","mtrayford27@bloglines.com","admin",62],
-    [81,"Marielle Dumphrey","mdumphrey28@google.nl","user",88],
-    [82,"Rebekkah Server","rserver29@seattletimes.com","admin",41],
-    [83,"Carlota Winkell","cwinkell2a@odnoklassniki.ru","admin",40],
-    [84,"Henrieta Mounfield","hmounfield2b@walmart.com","admin",74],
-    [85,"Alice Corkill","acorkill2c@cornell.edu","user",54],
-    [86,"Flory Letchmore","fletchmore2d@msn.com","admin",46],
-    [87,"Lazarus Mc Trusty","lmc2e@delicious.com","user",6],
-    [88,"Evaleen Boyles","eboyles2f@paypal.com","admin",64],
-    [89,"Alwin Sammons","asammons2g@technorati.com","admin",53],
-    [90,"Winnifred Haresnaip","wharesnaip2h@hubpages.com","admin",48],
-    [91,"Annnora Abrahamovitz","aabrahamovitz2i@blogger.com","admin",74],
-    [92,"Gracia Underwood","gunderwood2j@t.co","admin",33],
-    [93,"Woodrow Dellow","wdellow2k@jalbum.net","user",27],
-    [94,"Mae Ginman","mginman2l@plala.or.jp","admin",15],
-    [95,"Lindsy Akitt","lakitt2m@umn.edu","admin",70],
-    [96,"Marybeth Justham","mjustham2n@studiopress.com","user",16],
-    [97,"Alfy Gorler","agorler2o@4shared.com","user",18],
-    [98,"Jayson Blucher","jblucher2p@ocn.ne.jp","admin",23],
-    [99,"Nils Lugton","nlugton2q@fc2.com","user",38],
-    [100,"Janifer Gibbons","jgibbons2r@cnbc.com","admin",80],
-];
+    {id: 1, name: "Clay Castellucci", email: "ccastellucci0@adobe.com", role: "user", report: 5},
+    {id: 2, name: "Allistir Gaspar", email: "agaspar1@naver.com", role: "user", report: 57},
+    {id: 3, name: "Tammie Smalecombe", email: "tsmalecombe2@theatlantic.com", role: "admin", report: 52},
+    {id: 4, name: "Augustina Gethyn", email: "agethyn3@bloglines.com", role: "user", report: 63},
+    {id: 5, name: "Daffy Ogbourne", email: "dogbourne4@acquirethisname.com", role: "admin", report: 38},
+    {id: 6, name: "Grenville Boeck", email: "gboeck5@addtoany.com", role: "user", report: 37},
+    {id: 7, name: "Rufe Spick", email: "rspick6@fema.gov", role: "user", report: 67},
+    {id: 8, name: "Jaine Worvill", email: "jworvill7@indiatimes.com", role: "admin", report: 83},
+    {id: 9, name: "Amalee Bryce", email: "abryce8@sakura.ne.jp", role: "user", report: 95},
+    {id: 10, name: "Jemimah Pentelow", email: "jpentelow9@abc.net.au", role: "admin", report: 28},
+    {id: 11, name: "Koressa Frend", email: "kfrenda@creativecommons.org", role: "admin", report: 5},
+    {id: 12, name: "Dickie Beyne", email: "dbeyneb@sciencedaily.com", role: "user", report: 20},
+    {id: 13, name: "Serge MacSharry", email: "smacsharryc@jimdo.com", role: "admin", report: 96},
+    {id: 14, name: "Delmer Drewson", email: "ddrewsond@homestead.com", role: "admin", report: 10},
+    {id: 15, name: "Trumann Vlach", email: "tvlache@tinyurl.com", role: "user", report: 24},
+    {id: 16, name: "Celine Metterick", email: "cmetterickf@nps.gov", role: "admin", report: 59},
+    {id: 17, name: "Issi Chipping", email: "ichippingg@printfriendly.com", role: "admin", report: 7},
+    {id: 18, name: "Egan Wordsworth", email: "ewordsworthh@booking.com", role: "user", report: 91},
+    {id: 19, name: "Marya Pinckstone", email: "mpinckstonei@netlog.com", role: "user", report: 6},
+    {id: 20, name: "Tanner McMonies", email: "tmcmoniesj@purevolume.com", role: "admin", report: 58},
+    {id: 21, name: "Alyosha Aysh", email: "aayshk@rakuten.co.jp", role: "admin", report: 28},
+    {id: 22, name: "Hughie Brightie", email: "hbrightiel@dyndns.org", role: "user", report: 24},
+    {id: 23, name: "Morie Fellowes", email: "mfellowesm@washington.edu", role: "user", report: 34},
+    {id: 24, name: "Janene Worthington", email: "jworthingtonn@abc.net.au", role: "user", report: 96},
+    {id: 25, name: "Carmelia Smallpeace", email: "csmallpeaceo@mapy.cz", role: "admin", report: 7},
+    {id: 26, name: "Sharyl Goulbourn", email: "sgoulbournp@ed.gov", role: "admin", report: 95},
+    {id: 27, name: "Coraline Lob", email: "clobq@fotki.com", role: "admin", report: 64},
+    {id: 28, name: "Kat Chelam", email: "kchelamr@xrea.com", role: "admin", report: 98},
+    {id: 29, name: "Georas Overnell", email: "governells@hostgator.com", role: "admin", report: 56},
+    {id: 30, name: "Vernor Joss", email: "vjosst@nationalgeographic.com", role: "admin", report: 29},
+    {id: 31, name: "Walker Cattel", email: "wcattelu@storify.com", role: "user", report: 24},
+    {id: 32, name: "Yvon Ivatts", email: "yivattsv@bluehost.com", role: "user", report: 98},
+    {id: 33, name: "Hubie Jerzycowski", email: "hjerzycowskiw@squidoo.com", role: "user", report: 74},
+    {id: 34, name: "Bentley Witsey", email: "bwitseyx@weebly.com", role: "user", report: 3},
+    {id: 35, name: "Matilda Lowdiane", email: "mlowdianey@pbs.org", role: "user", report: 11},
+    {id: 36, name: "Florinda Solloway", email: "fsollowayz@slashdot.org", role: "user", report: 1},
+    {id: 37, name: "Kathleen Puckrin", email: "kpuckrin10@mayoclinic.com", role: "admin", report: 28},
+    {id: 38, name: "Gregor Brik", email: "gbrik11@unesco.org", role: "admin", report: 60},
+    {id: 39, name: "Josefa Slogrove", email: "jslogrove12@baidu.com", role: "admin", report: 45},
+    {id: 40, name: "Jobey Casellas", email: "jcasellas13@wp.com", role: "admin", report: 42},
+    {id: 41, name: "Ottilie Oslar", email: "ooslar14@nba.com", role: "admin", report: 12},
+    {id: 42, name: "Jacqui Luipold", email: "jluipold15@pbs.org", role: "admin", report: 46},
+    {id: 43, name: "Buddy Jerosch", email: "bjerosch16@whitehouse.gov", role: "admin", report: 73},
+    {id: 44, name: "Dominique Drogan", email: "ddrogan17@symantec.com", role: "admin", report: 12},
+    {id: 45, name: "Louis Sylvaine", email: "lsylvaine18@vistaprint.com", role: "user", report: 66},
+    {id: 46, name: "Christophe Danielski", email: "cdanielski19@wordpress.org", role: "admin", report: 6},
+    {id: 47, name: "Levon Robben", email: "lrobben1a@ibm.com", role: "admin", report: 78},
+    {id: 48, name: "Kearney Totaro", email: "ktotaro1b@imdb.com", role: "user", report: 10},
+    {id: 49, name: "Sena Meriton", email: "smeriton1c@hc360.com", role: "user", report: 2},
+    {id: 50, name: "Dixie Eirwin", email: "deirwin1d@eepurl.com", role: "admin", report: 25},
+    {id: 51, name: "Odessa Laborda", email: "olaborda1e@vistaprint.com", role: "user", report: 10},
+    {id: 52, name: "Allis Cranston", email: "acranston1f@odnoklassniki.ru", role: "user", report: 74},
+    {id: 53, name: "Travers Ivens", email: "tivens1g@privacy.gov.au", role: "user", report: 47},
+    {id: 54, name: "Winni Splain", email: "wsplain1h@amazon.de", role: "admin", report: 31},
+    {id: 55, name: "Morie Jevon", email: "mjevon1i@businessinsider.com", role: "admin", report: 43},
+    {id: 56, name: "Yoshiko Garrood", email: "ygarrood1j@guardian.co.uk", role: "user", report: 2},
+    {id: 57, name: "Heriberto Cordon", email: "hcordon1k@phpbb.com", role: "user", report: 49},
+    {id: 58, name: "Rock Cheine", email: "rcheine1l@gnu.org", role: "user", report: 35},
+    {id: 59, name: "Geoffry Dhennin", email: "gdhennin1m@cornell.edu", role: "user", report: 53},
+    {id: 60, name: "Devy Inkster", email: "dinkster1n@tinyurl.com", role: "user", report: 84},
+    {id: 61, name: "Alene Bartram", email: "abartram1o@xrea.com", role: "admin", report: 66},
+    {id: 62, name: "Skyler Bolsover", email: "sbolsover1p@craigslist.org", role: "user", report: 90},
+    {id: 63, name: "Gael Detloff", email: "gdetloff1q@fc2.com", role: "admin", report: 83},
+    {id: 64, name: "Bernette Gledhill", email: "bgledhill1r@cafepress.com", role: "admin", report: 59},
+    {id: 65, name: "Demeter Durek", email: "ddurek1s@intel.com", role: "user", report: 63},
+    {id: 66, name: "Deloria Cartner", email: "dcartner1t@wp.com", role: "user", report: 15},
+    {id: 67, name: "Jena Lung", email: "jlung1u@istockphoto.com", role: "user", report: 83},
+    {id: 68, name: "Sumner Daugherty", email: "sdaugherty1v@twitpic.com", role: "admin", report: 100},
+    {id: 69, name: "Valida Posen", email: "vposen1w@is.gd", role: "user", report: 65},
+    {id: 70, name: "Daveen Maplestone", email: "dmaplestone1x@biblegateway.com", role: "user", report: 42},
+    {id: 71, name: "Estele Douch", email: "edouch1y@nyu.edu", role: "user", report: 59},
+    {id: 72, name: "Isidore Foord", email: "ifoord1z@redcross.org", role: "admin", report: 23},
+    {id: 73, name: "Arabella Hassey", email: "ahassey20@phpbb.com", role: "user", report: 26},
+    {id: 74, name: "Filbert Edworthie", email: "fedworthie21@facebook.com", role: "user", report: 69},
+    {id: 75, name: "Carma Stegell", email: "cstegell22@telegraph.co.uk", role: "user", report: 10},
+    {id: 76, name: "Buffy Buddell", email: "bbuddell23@ucla.edu", role: "admin", report: 33},
+    {id: 77, name: "Dunc Stiff", email: "dstiff24@taobao.com", role: "admin", report: 74},
+    {id: 78, name: "Ainslee Huett", email: "ahuett25@ezinearticles.com", role: "admin", report: 97},
+    {id: 79, name: "Anastasie Gerald", email: "agerald26@umn.edu", role: "user", report: 78},
+    {id: 80, name: "Merle Gavriel", email: "mgavriel27@printfriendly.com", role: "admin", report: 81},
+    {id: 81, name: "Fee Gumn", email: "fgumn28@scientificamerican.com", role: "admin", report: 90},
+    {id: 82, name: "Menard Greschke", email: "mgreschke29@blinklist.com", role: "admin", report: 90},
+    {id: 83, name: "Stacy Josskoviz", email: "sjosskoviz2a@istockphoto.com", role: "admin", report: 85},
+    {id: 84, name: "Kristoforo Kern", email: "kkern2b@seattletimes.com", role: "user", report: 32},
+    {id: 85, name: "Marget Poor", email: "mpoor2c@netscape.com", role: "user", report: 43},
+    {id: 86, name: "Radcliffe Bensley", email: "rbensley2d@mayoclinic.com", role: "admin", report: 19},
+    {id: 87, name: "Ignacius Weatherhead", email: "iweatherhead2e@un.org", role: "admin", report: 88},
+    {id: 88, name: "Ursula Rawll", email: "urawll2f@is.gd", role: "admin", report: 82},
+    {id: 89, name: "Selena Yurlov", email: "syurlov2g@apache.org", role: "user", report: 61},
+    {id: 90, name: "Rosemary Hartly", email: "rhartly2h@columbia.edu", role: "admin", report: 20},
+    {id: 91, name: "Belicia Dupre", email: "bdupre2i@umich.edu", role: "user", report: 39},
+    {id: 92, name: "Sid Oxtarby", email: "soxtarby2j@samsung.com", role: "admin", report: 34},
+    {id: 93, name: "Taylor Gerbl", email: "tgerbl2k@friendfeed.com", role: "user", report: 38},
+    {id: 94, name: "Basil Nurden", email: "bnurden2l@chronoengine.com", role: "admin", report: 72},
+    {id: 95, name: "Paulie Lenox", email: "plenox2m@infoseek.co.jp", role: "admin", report: 68},
+    {id: 96, name: "Donella Leverett", email: "dleverett2n@ning.com", role: "user", report: 41},
+    {id: 97, name: "Alexander Boyde", email: "aboyde2o@nationalgeographic.com", role: "admin", report: 1},
+    {id: 98, name: "Clo Pettigree", email: "cpettigree2p@etsy.com", role: "admin", report: 36},
+    {id: 99, name: "Judi Flatt", email: "jflatt2q@blogger.com", role: "admin", report: 52},
+    {id: 100, name: "Ben Wallenger", email: "bwallenger2r@indiatimes.com", role: "admin", report: 21}];
 
 const actions = [
     {
@@ -203,20 +202,20 @@ const filteredRows = computed(() => {
         let returnRow = true;
         if (filters.userSearch.trim().length > 0) {
 
-            returnRow = row[1].toLowerCase().includes(filters.userSearch.toLowerCase()) ||
-                row[2].toLowerCase().includes(filters.userSearch.toLowerCase());
+            returnRow = row.name.toLowerCase().includes(filters.userSearch.toLowerCase()) ||
+                row.email.toLowerCase().includes(filters.userSearch.toLowerCase());
             if (!returnRow) {
                 return false;
             }
         }
         if (filters.role) {
-            returnRow = row[3] === filters.role;
+            returnRow = row.role === filters.role;
             if (!returnRow) {
                 return false;
             }
         }
         if (filters.minReport > 0) {
-            returnRow = row[4] >= filters.minReport;
+            returnRow = row.report >= filters.minReport;
             if (!returnRow) {
                 return false;
             }
@@ -242,6 +241,10 @@ const banUser = (rowIndex) => {
 };
 
 const updateFilters = (event, filter) => {
+    if (event.target.value === 'null') {
+        filters[filter] = null;
+        return;
+    }
     filters[filter] = filter !== 'minReport' ? event.target.value : event.target.value.parseInt;
 };
 

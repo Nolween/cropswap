@@ -1,6 +1,11 @@
 <template>
     <tr @click="showLine" class="border-b-2 border-gray-200 cursor-pointer hover:bg-lime-50">
-        <td class="p-2" v-for="(value, valueIndex) in values" :key="valueIndex">{{ value }}</td>
+        <template v-for="(value, valueIndex) in values" :key="valueIndex">
+            <td v-if="columnType(valueIndex) === 'image'" class="p-2 flex justify-center items-center">
+                <img alt="" :src="value" class="object-cover h-11 w-11"/>
+            </td>
+            <td v-else class="p-2 text-center">{{ value }}</td>
+        </template>
         <td class="p-2 space-x-2">
             <button v-for="(action, actionIndex) in iconComponents" :key="actionIndex"
                     class="cursor-pointer p-2 bg-white rounded-lg text-md font-medium border-2 hover:text-white hover:border-transparent"
@@ -19,14 +24,21 @@
 import {defineAsyncComponent, onMounted, defineEmits, shallowRef} from "vue";
 
 const props = defineProps({
-    values: Array,
-    actions: Array
+    values: Object,
+    actions: Array,
+    columns: Array
 });
 
 const emit = defineEmits(['action', 'show']);
 
 const emitAction = (method) => {
     emit('action', method);
+};
+
+// Function to find the value type according to props columns
+const columnType = (index) => {
+    // Find in props columns the type of the value
+    return props.columns.find((column) => column.column === index).type;
 };
 
 // Dynamic import according to the icon props

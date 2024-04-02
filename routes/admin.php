@@ -29,6 +29,12 @@ Route::middleware(IsAdminAuthenticated::class)->group(function () {
             ]
         );
     })->name('admin.swap.index');
+    Route::get('/admin/swap/create', function () {
+        return Inertia::render(
+            'Admin/Swap/Create'
+        );
+    })->name('admin.swap.create');
+
     // USERS PART
     Route::get('/admin/users/index', function () {
         return Inertia::render(
