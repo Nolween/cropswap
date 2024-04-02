@@ -1,12 +1,12 @@
 <template>
-    <div class="md:h-screen relative" :class="{'overflow-hidden' : isOpenedModal}">
+    <div class="md:h-screen relative overflow-hidden">
         <navigation-menu/>
 
         <div class="h-full flex flex-wrap">
             <!-- ADMIN NAVIGATION -->
             <admin-side-bar></admin-side-bar>
             <!-- CONTENT PART -->
-            <div class="w-full md:w-2/3 bg-gray-50">
+            <div class="w-full md:w-2/3 bg-gray-50 overflow-auto h-screen md:pb-40">
                 <div class="w-full text-xl md:text-5xl font-mono text-orange-500 border-b-2 p-3">
                     UTILISATEUR
                 </div>
@@ -46,7 +46,7 @@
                 </div>
                 <!-- REPORTED MESSAGES -->
                 <div class="p-3 w-full mb-3 gap-4 items-center">
-                    <div v-for="(message, messageIndex) in informations.reportedMessages"
+                    <div v-for="(message) in informations.reportedMessages"
                          class="w-full rounded-md bg-white p-2 mb-3">
                         <div class="text-start text-xl text-red-500 font-mono">{{ message.message }}</div>
                         <div class="text-end">{{ message.date }}</div>
