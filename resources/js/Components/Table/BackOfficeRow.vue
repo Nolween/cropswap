@@ -1,10 +1,10 @@
 <template>
     <tr @click="showLine" class="border-b-2 border-gray-200 cursor-pointer hover:bg-lime-50">
         <template v-for="(value, valueIndex) in values" :key="valueIndex">
-            <td v-if="columnType(valueIndex) === 'image'" class="p-2 flex justify-center items-center">
+            <td v-if="column(valueIndex).type === 'image' && !column(valueIndex).hidden" class="p-2 flex justify-center items-center">
                 <img alt="" :src="value" class="object-cover h-11 w-11"/>
             </td>
-            <td v-else class="p-2 text-center">{{ value }}</td>
+            <td v-else-if="!column(valueIndex).hidden" class="p-2 text-center">{{ value }}</td>
         </template>
         <td class="p-2 space-x-2">
             <button v-for="(action, actionIndex) in iconComponents" :key="actionIndex"
@@ -36,9 +36,9 @@ const emitAction = (method) => {
 };
 
 // Function to find the value type according to props columns
-const columnType = (index) => {
+const column = (index) => {
     // Find in props columns the type of the value
-    return props.columns.find((column) => column.column === index).type;
+    return props.columns.find((column) => column.column === index);
 };
 
 // Dynamic import according to the icon props

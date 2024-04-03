@@ -14,6 +14,7 @@
                     <div class="">
                         <context-menu-button>
                             <template v-slot:content>
+                                <div class="text-gray-500">FILTRES</div>
                                 <div class="w-60 space-y-2">
                                     <!--  An select input with 3 options -->
                                     <select @change="updateFilters($event, 'role')"

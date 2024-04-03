@@ -14,6 +14,7 @@
                     <div class="">
                         <context-menu-button>
                             <template v-slot:content>
+                                <div class="text-gray-500">FILTRES</div>
                                 <div class="w-60 space-y-2">
                                     <!--  An select input with options -->
                                     <select @change="updateFilters($event, 'category')"
@@ -96,12 +97,12 @@ const actions = [
     {
         icon: 'PencilOutline',
         color: 'blue',
-        method: 'editUser'
+        method: 'editSwap'
     },
     {
-        icon: 'Cancel',
+        icon: 'TrashCanOutline',
         color: 'red',
-        method: 'banUser'
+        method: 'deleteSwap'
     }
 ];
 
@@ -126,18 +127,18 @@ const filteredRows = computed(() => {
 });
 
 const activate = (action) => {
-    if (action?.method === 'editUser') {
-        editUser(action.rowIndex);
-    } else if (action?.method === 'banUser') {
-        banUser(action.rowIndex);
+    if (action?.method === 'editSwap') {
+        editSwap(action.rowIndex);
+    } else if (action?.method === 'deleteSwap') {
+        deleteSwap(action.rowIndex);
     }
 };
 
-const editUser = (rowIndex) => {
+const editSwap = (rowIndex) => {
     console.log('Edit user', rowIndex);
 };
 
-const banUser = (rowIndex) => {
+const deleteSwap = (rowIndex) => {
     console.log('Ban user', rowIndex);
 };
 
