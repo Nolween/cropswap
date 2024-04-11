@@ -120,7 +120,7 @@
                                      :key="relatedArticleIndex"
                                      :title="relatedArticle.title"
                                      :author="relatedArticle.author"
-                                     :datte="relatedArticle.date"
+                                     :date="relatedArticle.date"
                                      :image="relatedArticle.image"
                                      :id="relatedArticle.id"
                                      @goToArticle="goToArticle(relatedArticle.id)"

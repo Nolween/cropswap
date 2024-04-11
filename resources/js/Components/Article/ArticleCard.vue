@@ -6,7 +6,7 @@
         <div class="text-black">
             <h2 class="text-3xl font-bold">{{ props.title }}</h2>
             <p class="text-xl">{{
-                    props.description
+                    props.content
                 }}</p>
         </div>
     </div>
@@ -16,7 +16,7 @@ import { defineProps } from 'vue';
 
 const props = defineProps({
     title: String,
-    description: String,
+    content: String,
     image: String,
     id: Number,
 });
