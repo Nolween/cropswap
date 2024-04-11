@@ -14,51 +14,72 @@ use Inertia\Inertia;
 //     ]);
 // });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
 
 Route::get('/', function () {
-    return Inertia::render('Home',
-    [
-        'title' => 'Home Page',
-    ]);
+    return Inertia::render(
+        'Home',
+        [
+            'title' => 'Home Page',
+        ]
+    );
 })->name('home');
-Route::get('/blog', function () {
-    return Inertia::render('Blog/Index',
-    [
-        'title' => 'Blog Page',
-    ]);
-})->name('blog');
-Route::get('/blog/{id}', function ($id) {
-    return Inertia::render('Blog/Show',
-    [
-        'title' => 'Blog Page',
-        'id' => $id,
-    ]);
-})->name('blog.show');
-
-Route::get('/crop/{id}', function ($id) {
-    return Inertia::render('Crop/Show',
-    [
-        'title' => 'Crop Page',
-        'id' => $id,
-    ]);
-})->name('crop.show');
-
-Route::get('/crop', function () {
-    return Inertia::render('Crop/Index',
-    [
-        'title' => 'Crops Search Page',
-    ]);
-})->name('crop.index');
 
 
-require __DIR__.'/auth.php';
-require __DIR__.'/admin.php';
+// Connected Account
+Route::prefix('account')->middleware(['auth', 'verified'])->group(function () {
+    // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/informations', function () {
+        return Inertia::render('Account/Informations');
+    })->name('account.informations');
+    Route::get('/crop', function () {
+        return Inertia::render('Account/Crop');
+    })->name('account.crop.show');
+});
+
+// BLOG ROUTES
+Route::group(['prefix' => 'blog'], function () {
+    Route::get('/', function () {
+        return Inertia::render(
+            'Blog/Index',
+            [
+                'title' => 'Blog Page',
+            ]
+        );
+    })->name('blog');
+    Route::get('/{id}', function ($id) {
+        return Inertia::render(
+            'Blog/Show',
+            [
+                'title' => 'Blog Page',
+                'id'    => $id,
+            ]
+        );
+    })->name('blog.show');
+});
+
+// CROP ROUTES
+Route::group(['prefix' => 'crop'], function () {
+    Route::get('/{id}', function ($id) {
+        return Inertia::render(
+            'Crop/Show',
+            [
+                'title' => 'Crop Page',
+                'id'    => $id,
+            ]
+        );
+    })->name('crop.show');
+
+    Route::get('/', function () {
+        return Inertia::render(
+            'Crop/Index',
+            [
+                'title' => 'Crops Search Page',
+            ]
+        );
+    })->name('crop.index');
+});
+
+require __DIR__ . '/auth.php';
+require __DIR__ . '/admin.php';

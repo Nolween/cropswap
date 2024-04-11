@@ -7,9 +7,9 @@
                 <p class="text-6xl lg:text-8xl font-extrabold text-black text-center p-3">
                     Des choses à partager?
                 </p>
-                <div class="text-center">
+                <div class="text-center" v-if="!isAuthenticated">
                     <Link :href="route('register')"
-                          class="text-xl bg-black text-white p-3 rounded-xl hover:bg-white hover:text-black font-bold">
+                          class="text-xl bg-orange-500 text-white p-3 rounded-xl hover:bg-white hover:text-orange-500 font-bold">
                         INSCRIPTION
                     </Link>
                 </div>
@@ -83,6 +83,9 @@ import NavigationMenu from '@/Layouts/NavigationMenu.vue';
 import SimpleCard from "@/Components/Cards/SimpleCard.vue";
 import LeafletMap from "@/Components/Maps/LeafletMap.vue";
 import {Link} from "@inertiajs/vue3";
+import {useSessionInformations} from "@/Composables/session.js";
+
+const {isAuthenticated, isAdmin} = useSessionInformations();
 
 
 const articles = [

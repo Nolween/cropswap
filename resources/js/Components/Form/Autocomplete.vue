@@ -7,7 +7,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
         </div>
-        <div v-if="isOpenedList" class="absolute t-6 w-full bg-white border-2 border-gray-200 rounded-lg">
+        <div v-if="isOpenedList" class="h-40 overflow-auto z-40 absolute t-6 w-full bg-white border-2 border-gray-200 rounded-lg">
             <div v-for="value in filteredValues" :key="value.id" class="p-2 cursor-pointer hover:bg-gray-100"
                  :class="{ 'bg-blue-100': selectedValues.includes(value) }"
                  @click="selectValue(value)">

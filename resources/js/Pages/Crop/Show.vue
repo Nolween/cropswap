@@ -61,13 +61,13 @@
         <!-- DISPONIBLE FOOD -->
         <div class="bg-lime-500 w-full p-8">
             <div class="w-full text-2xl lg:text-5xl font-title text-center text-white font-bold">
-                MES SWAPS DISPONIBLES
+                MES SWAPS A PROFUSIO
             </div>
             <div class="flex flex-wrap justify-center items-center gap-4 p-5">
                 <!-- SWAP MINI CARD -->
-                <simple-swap v-for="(availableSwap, availableSwapIndex) in swaps.available"
-                             :key="availableSwapIndex"
-                             :swap="availableSwap">
+                <simple-swap v-for="(lotSwap, lotSwapIndex) in swaps.lot"
+                             :key="lotSwapIndex"
+                             :swap="lotSwap">
                 </simple-swap>
             </div>
         </div>
@@ -78,9 +78,9 @@
             </div>
             <div class="flex flex-wrap justify-center items-center gap-4 p-5">
                 <!-- SWAP MINI CARD -->
-                <simple-swap v-for="(inProgressSwap, inProgressSwapIndex) in swaps.inProgress"
-                             :key="inProgressSwapIndex"
-                             :swap="inProgressSwap">
+                <simple-swap v-for="(fewSwap, fewSwapIndex) in swaps.few"
+                             :key="fewSwapIndex"
+                             :swap="fewSwap">
                 </simple-swap>
             </div>
         </div>
@@ -111,7 +111,7 @@ import {reactive, ref} from 'vue';
 import LeafletMap from "@/Components/Maps/LeafletMap.vue";
 
 const swaps = reactive({
-    available: [
+    lot: [
         {
             name: "Poires",
             image: "poire.svg"
@@ -129,7 +129,7 @@ const swaps = reactive({
             image: "carotte.svg"
         },
     ],
-    inProgress: [
+    few: [
         {
             name: "Radis Long",
             image: "radis_long.svg"

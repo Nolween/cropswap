@@ -20,29 +20,64 @@
               class="text-xl bg-black text-white p-3 rounded-xl hover:bg-white hover:text-black">
             CONNEXION
         </Link>
-        <form v-else @submit.prevent="logout"
-              class="cursor-pointer text-xl bg-black text-white p-3 rounded-xl hover:bg-white hover:text-black">
-            <button type="submit">DECONNEXION</button>
-        </form>
+        <div v-else class="relative">
+            <button
+                class=" text-xl bg-white text-orange-500 p-3 rounded-lg hover:bg-orange-500 hover:text-white border-2"
+                ref="accountButton"
+                @click="displayAccountActions">
+                MON COMPTE
+
+            </button>
+            <div v-if="openedAccountActions"
+                 class="z-40 bg-orange-500 text-white text-xl font-bold absolute top-16 right-0 rounded-lg p-3 space-y-2 border-2">
+                <div><Link :href="route('account.informations')" class="hover:text-lime-500">MES INFOS</Link></div>
+                <div><Link :href="route('account.crop.show')" class="hover:text-lime-500">MON CROP</Link></div>
+                <div @click="logout" class="hover:text-lime-500">DECONNECTER</div>
+            </div>
+        </div>
 
     </div>
 </template>
 <script setup>
+import {onMounted, onUnmounted, ref} from 'vue';
 import {Link} from '@inertiajs/vue3';
 import {useSessionInformations} from "@/Composables/session.js";
 
 const {isAuthenticated, isAdmin} = useSessionInformations();
+
+const openedAccountActions = ref(false);
+
+const displayAccountActions = () => {
+    openedAccountActions.value = !openedAccountActions.value;
+};
 
 
 const logout = async () => {
     try {
         await axios.post('/logout');
         // After logout, redirect to the login page or home page
-        window.location.href = '/login';
+        window.location.href = '/';
     } catch (error) {
         console.error(error);
     }
 };
+
+const accountButton = ref(null);
+
+const outsideClickListener = (event) => {
+    if (accountButton.value && !accountButton.value.contains(event.target)) {
+        openedAccountActions.value = false;
+    }
+};
+
+onMounted(() => {
+//     If openedAccountActions is true, close it when clicking outside the button
+    document.addEventListener('click', outsideClickListener);
+});
+
+onUnmounted(() => {
+    document.removeEventListener('click', outsideClickListener);
+});
 
 
 </script>
