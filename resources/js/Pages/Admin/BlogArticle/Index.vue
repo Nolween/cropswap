@@ -41,7 +41,7 @@
                                class="w-full p-2 border-2 border-gray-200 rounded-md"
                                v-model="filters.ArticleSearch"/>
                     </div>
-                    <Link :href="route('admin.swap.create')" type="button" title="Créer un article"
+                    <Link :href="route('admin.blog-article.create')" type="button" title="Créer un article"
                           class="p-2 rounded-lg text-lime-500 text-md font-medium border-2 border-lime-500 hover:text-white hover:bg-lime-500 hover:border-transparent">
                         <plus-icon :size="24"/>
                     </Link>
