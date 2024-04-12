@@ -22,6 +22,13 @@
                 <span class="font-bold text-sm md:text-2xl text-gray-600">UTILISATEURS</span>
             </Link>
         </div>
+        <div class="p-3 flex flex-nowrap md:w-full hover:bg-blue-100 cursor-pointer">
+            <Link :href="route('admin.blog-article.index')" class="flex flex-nowrap items-center text-xl space-x-2">
+                <!-- USERS ICON -->
+                <newspaper-icon :size="40" class="text-orange-500"/>
+                <span class="font-bold text-sm md:text-2xl text-gray-600">ARTICLES BLOG</span>
+            </Link>
+        </div>
     </div>
 </template>
 
@@ -30,6 +37,7 @@ import LandPlotsIcon from "vue-material-design-icons/LandPlots.vue";
 import {Link} from "@inertiajs/vue3";
 import BarleyIcon from "vue-material-design-icons/Barley.vue";
 import AccountIcon from "vue-material-design-icons/Account.vue";
+import NewspaperIcon from "vue-material-design-icons/Newspaper.vue";
 </script>
 
 <style scoped>

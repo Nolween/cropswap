@@ -56,6 +56,23 @@ Route::middleware(IsAdminAuthenticated::class)->group(function () {
             'Admin/User/Show'
         );
     })->name('admin.user.show');
+//    BLOG ARTICLES PART
+    Route::get('/admin/blog-articles/index', function () {
+        return Inertia::render(
+            'Admin/BlogArticle/Index',
+            [
+                'title' => 'Admin Blog Article Index',
+            ]
+        );
+    })->name('admin.blog-article.index');
+    Route::get('/admin/blog-articles/create', function () {
+        return Inertia::render(
+            'Admin/BlogArticle/Create',
+            [
+                'title' => 'Admin Blog Article Create',
+            ]
+        );
+    })->name('admin.blog-article.create');
 });
 
 
