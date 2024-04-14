@@ -31,6 +31,16 @@
                     <div>
                         <complete-editor v-model="content"/>
                     </div>
+
+                    <!-- SUBMIT BUTTON -->
+                    <div class="w-full p-2">
+                        <button type="submit"
+                                class="w-full p-2 rounded-lg  text-md font-medium border-2  cursor-pointer"
+                                :disabled="!validForm"
+                                :class="validForm ? 'text-lime-500 border-lime-500 hover:text-white hover:bg-lime-500 hover:border-transparent' : 'bg-white text-gray-500 hover:bg-gray-500 hover:text-white'">
+                            Créer
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -45,7 +55,6 @@ import {ref} from "vue";
 
 const title = ref('');
 const image = ref('/images/crop/empty.svg');
-
 const content = ref('BLA BLA BLA');
 
 const updateImage = (event) => {
@@ -54,6 +63,11 @@ const updateImage = (event) => {
     }
 };
 
+const validForm = title.value.length > 0 && content.value.length > 0;
+
+const submitForm = () => {
+    console.log('submit');
+};
 
 </script>
 <style scoped>
