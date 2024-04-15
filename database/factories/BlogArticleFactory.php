@@ -19,7 +19,7 @@ class BlogArticleFactory extends Factory
     {
         return [
             'title'      => $this->faker->sentence,
-            'content'    => $this->faker->paragraphs(10),
+            'content'    => $this->faker->paragraphs(10, true),
             'image'      => $this->faker->imageUrl(),
             'user_id'    => User::inRandomOrder()->first()->id,
             'created_at' => $this->faker->dateTimeThisYear,

@@ -20,7 +20,7 @@ class BlogArticleCommentFactory extends Factory
     {
         return [
             'blog_article_id' => BlogArticle::inRandomOrder()->first()->id,
-            'content'         => $this->faker->sentences(),
+            'content'         => $this->faker->sentences(3, true),
             'user_id'         => User::inRandomOrder()->first()->id,
             'created_at'      => $this->faker->dateTimeThisYear,
             'updated_at'      => $this->faker->dateTimeThisMonth,

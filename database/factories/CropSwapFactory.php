@@ -19,8 +19,14 @@ class CropSwapFactory extends Factory
      */
     public function definition(): array
     {
+
         $cropId = Crop::inRandomOrder()->first()->id;
         $swapId = Swap::inRandomOrder()->first()->id;
+
+        // If there is already a crop swap with the same crop and swap, return an empty array
+        if (CropSwap::where('crop_id', $cropId)->where('swap_id', $swapId)->exists()) {
+            return [];
+        }
 
         return [
             'crop_id'  => $cropId,

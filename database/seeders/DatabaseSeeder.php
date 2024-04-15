@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Crop;
 use App\Models\Swap;
 use App\Models\User;
 
@@ -17,11 +18,15 @@ class DatabaseSeeder extends Seeder
     {
         //    Launch the UserSeeder
         $this->call(UserSeeder::class);
-        //   Launch the CropSwapSeeder
-        $this->call(CropSwapSeeder::class);
+        //    Launch the SwapSeeder
+        $this->call(SwapSeeder::class);
+        //    Launch the CropSeeder
+        $this->call(CropSeeder::class);
         //    Launch the BlogArticleSeeder
         $this->call(BlogArticleSeeder::class);
-    //    Launch the BlogCommentSeeder
+        //    Launch the BlogCommentSeeder
         $this->call(BlogArticleCommentSeeder::class);
+        //   Launch the CropSwapSeeder
+        $this->call(CropSwapSeeder::class);
     }
 }

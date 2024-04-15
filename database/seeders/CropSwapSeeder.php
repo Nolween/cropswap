@@ -14,10 +14,6 @@ class CropSwapSeeder extends Seeder
      */
     public function run(): void
     {
-        // Run the CropSeeder and SwapSeeder before creating CropSwap instances
-        $this->call(CropSeeder::class);
-        $this->call(SwapSeeder::class);
-
         CropSwap::factory()->count(100)->create();
     }
 }

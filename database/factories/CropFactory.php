@@ -24,7 +24,7 @@ class CropFactory extends Factory
             'user_id'           => User::inRandomOrder()->first()->id,
             'created_at'        => $this->faker->dateTimeThisYear,
             'updated_at'        => $this->faker->dateTimeThisMonth,
-            'deleted_at'        => $this->faker->dateTimeThisMonth,
+            'deleted_at'        => null,
             'latitude'          => $this->faker->latitude,
             'longitude'         => $this->faker->longitude,
             'is_active'         => $this->faker->boolean,
