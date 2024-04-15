@@ -1,5 +1,5 @@
 <template>
-    <div class="h-52 space-x-2 flex cursor-pointer"
+    <div class="min-h-52 space-x-2 flex cursor-pointer items-center"
     @click="goToArticle(props.id)">
         <img
             :src="props.image"

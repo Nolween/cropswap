@@ -14,7 +14,7 @@
                 <div class="text-white">
                     <h2 class="text-3xl font-bold">{{ articles[0].title }}</h2>
                     <p class="text-xl">{{
-                            articles[0].content
+                            truncateText(articles[0].content, 400)
                         }}</p>
                 </div>
             </div>
@@ -23,7 +23,7 @@
                 <template v-for="(secondaryArticle, secondaryArticleIndex) in computedSecondaryArticles"
                           :key="secondaryArticleIndex">
                     <secondary-article :title="secondaryArticle.title"
-                                       :content="secondaryArticle.content"
+                                       :content="truncateText(secondaryArticle.content, 200)"
                                        :image="secondaryArticle.image"
                                        :id="secondaryArticle.id"
                                        @go-to-article="goToArticle(secondaryArticle.id)"
@@ -33,8 +33,7 @@
         </div>
 
         <!-- OTHER ARTICLES AND SEARCH -->
-        <div class=" w-full flex flex-wrap p-6
-                    ">
+        <div class=" w-full flex flex-wrap p-6">
             <div class="w-1/2 text-2xl pl-2">Autres Articles</div>
             <div class="w-1/2">
                 <input type="text"
@@ -49,7 +48,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <template v-for="(article, articleIndex) in computedArticles" :key="articleIndex">
                     <article-card :title="article.title"
-                                  :content="article.content"
+                                  :content="truncateText(article.content, 300)"
                                   :image="article.image"
                                   :id="article.id"
                                   @go-to-article="goToArticle"
@@ -61,11 +60,14 @@
     </div>
 </template>
 <script setup>
-import {computed, ref} from 'vue';
+import {computed, onBeforeMount, ref} from 'vue';
 import {router} from '@inertiajs/vue3';
 import NavigationMenu from '@/Layouts/NavigationMenu.vue';
 import ArticleCard from "@/Components/Article/ArticleCard.vue";
 import SecondaryArticle from "@/Components/Article/SecondaryArticle.vue";
+import {useTextTools} from "@/Composables/textTools";
+
+const {truncateText} = useTextTools();
 
 const articles = ref([
     {
@@ -149,6 +151,24 @@ const computedArticles = computed(() => {
 const goToArticle = (id) => {
     router.visit(`/blog/${id}`);
 };
+
+
+
+// Fetch blog article data to /blog route
+const fetchBlogArticles = async () => {
+    try {
+        const response = await fetch('/blog/index');
+
+        const data = await response.json();
+        articles.value = data;
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+onBeforeMount(() => {
+    fetchBlogArticles();
+});
 
 </script>
 <style scoped>

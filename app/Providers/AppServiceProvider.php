@@ -11,7 +11,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        	// Register the BlogArticleRepositoryInterface with the BlogArticleRepositoryEloquent
+        $this->app->bind(
+            'App\Repositories\Interfaces\BlogArticleRepositoryInterface',
+            'App\Repositories\Eloquent\BlogArticleRepositoryEloquent'
+        );
     }
 
     /**

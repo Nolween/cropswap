@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BlogArticleController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -40,14 +41,9 @@ Route::prefix('account')->middleware(['auth', 'verified'])->group(function () {
 
 // BLOG ROUTES
 Route::group(['prefix' => 'blog'], function () {
-    Route::get('/', function () {
-        return Inertia::render(
-            'Blog/Index',
-            [
-                'title' => 'Blog Page',
-            ]
-        );
-    })->name('blog');
+    // List of articles
+    Route::get('/', fn() =>  Inertia::render('Blog/Index'))->name('blog');
+    Route::get('/index', [BlogArticleController::class, 'index'])->name('blog.index');
     Route::get('/{id}', function ($id) {
         return Inertia::render(
             'Blog/Show',

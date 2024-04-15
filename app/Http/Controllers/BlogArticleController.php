@@ -5,14 +5,27 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreBlogArticleRequest;
 use App\Http\Requests\UpdateBlogArticleRequest;
 use App\Models\BlogArticle;
+use App\Repositories\Interfaces\BlogArticleRepositoryInterface;
+use Inertia\Inertia;
 
 class BlogArticleController extends Controller
 {
+
+    protected $blogArticleRepository;
+
+    public function __construct(BlogArticleRepositoryInterface $blogArticleRepository)
+    {
+        $this->blogArticleRepository = $blogArticleRepository;
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        $articles = $this->blogArticleRepository->index();
+
+        return response()->json($articles);
     }
 
     /**
