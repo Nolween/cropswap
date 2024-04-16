@@ -42,8 +42,9 @@ Route::prefix('account')->middleware(['auth', 'verified'])->group(function () {
 // BLOG ROUTES
 Route::group(['prefix' => 'blog'], function () {
     // List of articles
-    Route::get('/', fn() =>  Inertia::render('Blog/Index'))->name('blog');
+    Route::get('/', [BlogArticleController::class, 'homeBlog'])->name('blog');
     Route::get('/index', [BlogArticleController::class, 'index'])->name('blog.index');
+    // Show article
     Route::get('/{id}', function ($id) {
         return Inertia::render(
             'Blog/Show',

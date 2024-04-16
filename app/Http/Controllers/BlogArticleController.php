@@ -18,6 +18,13 @@ class BlogArticleController extends Controller
         $this->blogArticleRepository = $blogArticleRepository;
     }
 
+    public function homeBlog()
+    {
+        return Inertia::render('Blog/Index', [
+            'articlesCount' => BlogArticle::count(),
+        ]);
+    }
+
     /**
      * Display a listing of the resource.
      */
