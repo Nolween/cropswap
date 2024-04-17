@@ -22,6 +22,8 @@ class BlogArticleFactory extends Factory
             'content'    => $this->faker->paragraphs(10, true),
             'image'      => $this->faker->imageUrl(),
             'user_id'    => User::inRandomOrder()->first()->id,
+            // A JSON array of tags
+            'tags'       => json_encode($this->faker->words(5)),
             'created_at' => $this->faker->dateTimeThisYear,
             'updated_at' => $this->faker->dateTimeThisMonth,
         ];

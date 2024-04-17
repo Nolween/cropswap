@@ -16,8 +16,8 @@
                         :src="articles[0].image"
                         alt="image" class="w-full"/>
                     <div class="text-white">
-                        <h2 class="text-3xl font-bold">{{ articles[0].title }}</h2>
-                        <p class="text-xl">{{
+                        <h2 class="text-3xl font-bold text-justify">{{ articles[0].title }}</h2>
+                        <p class="text-xl text-justify">{{
                                 truncateText(articles[0].content, 500)
                             }}</p>
                     </div>

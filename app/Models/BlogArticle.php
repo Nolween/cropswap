@@ -17,6 +17,7 @@ class BlogArticle extends Model
         'title',
         'content',
         'image',
+        'tags',
         'user_id',
         'created_at',
         'updated_at',

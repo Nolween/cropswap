@@ -5,8 +5,8 @@
             <img :src="props.image"
                  alt="image" class="w-1/2 object-cover"/>
             <div class="text-white w-1/2 p-2">
-                <h2 class="text-3xl font-bold">{{ props.title }}</h2>
-                <p class="text-md">{{
+                <h2 class="text-3xl font-bold text-justify">{{ props.title }}</h2>
+                <p class="text-md text-justify">{{
                         props.content
                     }}</p>
             </div>

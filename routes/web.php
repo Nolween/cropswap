@@ -45,15 +45,7 @@ Route::group(['prefix' => 'blog'], function () {
     Route::get('/', [BlogArticleController::class, 'homeBlog'])->name('blog');
     Route::get('/index', [BlogArticleController::class, 'index'])->name('blog.index');
     // Show article
-    Route::get('/{id}', function ($id) {
-        return Inertia::render(
-            'Blog/Show',
-            [
-                'title' => 'Blog Page',
-                'id'    => $id,
-            ]
-        );
-    })->name('blog.show');
+    Route::get('/{blogArticle}', [BlogArticleController::class, 'show'])->name('blog.show');
 });
 
 // CROP ROUTES

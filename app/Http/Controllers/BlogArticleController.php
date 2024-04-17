@@ -56,7 +56,40 @@ class BlogArticleController extends Controller
      */
     public function show(BlogArticle $blogArticle)
     {
-        //
+        $query = BlogArticle::query();
+
+        // Find 3 articles with at least one tag in common
+        foreach (json_decode($blogArticle->tags) as $tag) {
+            $query->orWhereJsonContains('tags', $tag);
+        }
+
+        $relatedArticles = BlogArticle::where('id', '!=', $blogArticle->id)
+                                      ->limit(3)
+                                      ->inRandomOrder()
+                                      ->get();
+
+        // Format $relatedArticles
+        $relatedArticles = $relatedArticles->map(function ($article) {
+            return [
+                'id'     => $article->id,
+                'title'  => $article->title,
+                'image'  => $article->image,
+                'author' => $article->user->name ?? 'Unknown author',
+                'date'   => $article->created_at->format('d/m/Y'),
+            ];
+        });
+
+        return Inertia::render('Blog/Show', [
+            'id'              => $blogArticle->id,
+            'title'           => $blogArticle->title,
+            'content'         => $blogArticle->content,
+            'image'           => $blogArticle->image,
+            'author'         => $blogArticle->user->name ?? 'Unknown author',
+            'created_at'      => $blogArticle->created_at,
+            'updated_at'      => $blogArticle->updated_at,
+            'tags'            => $blogArticle->tags,
+            'related_articles' => $relatedArticles
+        ]);
     }
 
     /**
