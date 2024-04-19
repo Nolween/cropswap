@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class UpdateBlogArticleRequest extends FormRequest
 {
@@ -11,7 +13,7 @@ class UpdateBlogArticleRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return Auth::user()->isAdmin();
     }
 
     /**
@@ -21,8 +23,15 @@ class UpdateBlogArticleRequest extends FormRequest
      */
     public function rules(): array
     {
+
         return [
-            //
+            'title'     => 'required|string|max:255',
+            'content'   => 'required|string',
+            'image'     => 'required|string',
+            'imageFile' => 'image',
+            'tags'      => 'required|array',
+            'id'        => 'required|exists:blog_articles,id',
+            'user_id'   => 'required|exists:users,id'
         ];
     }
 }

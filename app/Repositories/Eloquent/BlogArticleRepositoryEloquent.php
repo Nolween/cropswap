@@ -14,7 +14,10 @@ class BlogArticleRepositoryEloquent implements BlogArticleRepositoryInterface
 
     public function adminIndex()
     {
-        return BlogArticle::all();
+        return BlogArticle::select(['id', 'user_id', 'created_at as date', 'tags', 'title', 'image'])
+                          ->with('user')
+                          ->withCount('comments as comments')
+                          ->get();
     }
 
     public function create()
@@ -32,9 +35,9 @@ class BlogArticleRepositoryEloquent implements BlogArticleRepositoryInterface
         return BlogArticle::all();
     }
 
-    public function edit()
+    public function edit(BlogArticle $blogArticle)
     {
-        return BlogArticle::all();
+        return BlogArticle::find($blogArticle->id);
     }
 
     public function update()

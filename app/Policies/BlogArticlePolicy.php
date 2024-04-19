@@ -24,6 +24,11 @@ class BlogArticlePolicy
         return true;
     }
 
+    public function adminIndex(User $user): bool
+    {
+        return $user->isAdmin();
+    }
+
     /**
      * Determine whether the user can create models.
      */

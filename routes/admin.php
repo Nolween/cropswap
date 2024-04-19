@@ -1,18 +1,18 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use Illuminate\Foundation\Application;
+use App\Http\Controllers\BlogArticleCommentController;
+use App\Http\Controllers\BlogArticleController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Middleware\IsAdminAuthenticated;
 
-Route::middleware(IsAdminAuthenticated::class)->group(function () {
+Route::prefix('admin')->middleware(IsAdminAuthenticated::class)->group(function () {
     // ADMIN DASHBOARD
-    Route::get('admin/dashboard', function () {
+    Route::get('dashboard', function () {
         return Inertia::render('Admin/Dashboard');
     })->name('admin.dashboard');
     // CROP PART
-    Route::get('/admin/crop/index', function () {
+    Route::get('/crop/index', function () {
         return Inertia::render(
             'Admin/Crop/Index',
             [
@@ -21,7 +21,7 @@ Route::middleware(IsAdminAuthenticated::class)->group(function () {
         );
     })->name('admin.crop.index');
     // SWAP PART
-    Route::get('/admin/swap/index', function () {
+    Route::get('/swap/index', function () {
         return Inertia::render(
             'Admin/Swap/Index',
             [
@@ -29,14 +29,14 @@ Route::middleware(IsAdminAuthenticated::class)->group(function () {
             ]
         );
     })->name('admin.swap.index');
-    Route::get('/admin/swap/create', function () {
+    Route::get('/swap/create', function () {
         return Inertia::render(
             'Admin/Swap/Create'
         );
     })->name('admin.swap.create');
 
     // USERS PART
-    Route::get('/admin/users/index', function () {
+    Route::get('/users/index', function () {
         return Inertia::render(
             'Admin/User/Index',
             [
@@ -45,34 +45,31 @@ Route::middleware(IsAdminAuthenticated::class)->group(function () {
         );
     })->name('admin.user.index');
 
-    Route::get('/admin/users/create', function () {
+    Route::get('/users/create', function () {
         return Inertia::render(
             'Admin/User/Create'
         );
     })->name('admin.user.create');
 
-    Route::get('/admin/users/{id}', function ($id) {
+    Route::get('/users/{id}', function ($id) {
         return Inertia::render(
             'Admin/User/Show'
         );
     })->name('admin.user.show');
-//    BLOG ARTICLES PART
-    Route::get('/admin/blog-articles/index', function () {
-        return Inertia::render(
-            'Admin/BlogArticle/Index',
-            [
-                'title' => 'Admin Blog Article Index',
-            ]
+    //    BLOG ARTICLES PART
+    Route::prefix('blog-articles')->group(function () {
+        Route::get('/index', [BlogArticleController::class, 'adminIndex'])->name('admin.blog-article.index');
+        Route::get('/create', [BlogArticleController::class, 'create'])->name('admin.blog-article.create');
+        Route::get('/{blogArticle}', [BlogArticleController::class, 'edit'])->name('admin.blog-article.edit');
+        Route::put('/{blogArticle}', [BlogArticleController::class, 'update'])->name('admin.blog-article.update');
+        Route::post('/', [BlogArticleController::class, 'store'])->name('admin.blog-article.store');
+    });
+// BLOG COMMENT ROUTES
+    Route::prefix('comment')->group(function () {
+        Route::delete('/{blogArticleComment}', [BlogArticleCommentController::class, 'destroy'])->name(
+            'comment.destroy'
         );
-    })->name('admin.blog-article.index');
-    Route::get('/admin/blog-articles/create', function () {
-        return Inertia::render(
-            'Admin/BlogArticle/Create',
-            [
-                'title' => 'Admin Blog Article Create',
-            ]
-        );
-    })->name('admin.blog-article.create');
+    });
 });
 
 

@@ -27,7 +27,7 @@
             <div class="w-full md:w-1/2 relative">
                 <div class="absolute inset-0 bg-gradient-to-r from-white to-transparent"></div>
                 <img class="w-full h-full object-cover"
-                     :src="props.image"
+                     :src="computedImage"
                      alt="image">
             </div>
         </div>
@@ -64,7 +64,7 @@
 import NavigationMenu from "@/Layouts/NavigationMenu.vue";
 import RelatedArticle from "@/Components/Article/RelatedArticle.vue";
 import {router} from '@inertiajs/vue3';
-import {defineProps} from 'vue';
+import {computed, defineProps, onMounted} from 'vue';
 import dayjs from "dayjs";
 
 const props = defineProps({
@@ -82,6 +82,25 @@ const props = defineProps({
 const goToArticle = (id) => {
     router.visit(`/blog/${id}`);
 };
+
+
+const computedImage = computed(() => {
+    // If image begins with http, it's an url
+    if (props.image.startsWith('http')) {
+        return props.image;
+    } else if (props.image) {
+        // If image is a file, add the public image blog path
+        return `/images/blog/${props.image}`;
+    }
+    return '/images/blog/default.jpg';
+});
+
+onMounted(() => {
+    // If article is not null, set the image to the computed image
+    if (props?.image) {
+        props.image = computedImage.value;
+    }
+});
 
 </script>
 

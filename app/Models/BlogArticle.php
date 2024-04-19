@@ -5,6 +5,8 @@ namespace App\Models;
 use Carbon\Traits\Timestamp;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class BlogArticle extends Model
@@ -23,12 +25,17 @@ class BlogArticle extends Model
         'updated_at',
     ];
 
-    public function user()
+    // cast the tags to an array
+    protected $casts = [
+        'tags' => 'array',
+    ];
+
+    public function user() :BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function comments()
+    public function comments() :HasMany
     {
         return $this->hasMany(BlogArticleComment::class);
     }

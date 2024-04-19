@@ -61,6 +61,7 @@ class BlogArticleCommentController extends Controller
      */
     public function destroy(BlogArticleComment $blogArticleComment)
     {
-        //
+        $blogArticleComment->delete();
+        return response()->json(['success' => true, 'message' => 'Commentaire supprimé']);
     }
 }

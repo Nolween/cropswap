@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BlogArticleCommentController;
 use App\Http\Controllers\BlogArticleController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;

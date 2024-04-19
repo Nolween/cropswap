@@ -17,12 +17,12 @@
                                 <div class="text-gray-500">FILTRES</div>
                                 <div class="w-60 space-y-2">
                                     <!--  An select input with options -->
-                                    <select @change="updateFilters($event, 'userId')"
+                                    <select @change="updateFilters($event, 'user_id')"
                                             class="w-full p-2 border-2 border-gray-200 rounded-md">
                                         <option value="null">Tous les articles</option>
                                         <option v-for="(user, userIndex) in computedArticlesList"
                                                 :key="userIndex"
-                                                :value="user.userId" :selected="user.userId === parseInt(filters.userId)">
+                                                :value="user.user_id" :selected="user.user_id === parseInt(filters.user_id)">
                                             {{ user.name }}
                                         </option>
                                     </select>
@@ -41,7 +41,7 @@
                                class="w-full p-2 border-2 border-gray-200 rounded-md"
                                v-model="filters.ArticleSearch"/>
                     </div>
-                    <Link :href="route('admin.blog-article.create')" type="button" title="Créer un article"
+                    <Link :href="route('admin.blog-article.create', 0)" type="button" title="Créer un article"
                           class="p-2 rounded-lg text-lime-500 text-md font-medium border-2 border-lime-500 hover:text-white hover:bg-lime-500 hover:border-transparent">
                         <plus-icon :size="24"/>
                     </Link>
@@ -61,7 +61,7 @@
 </template>
 
 <script setup>
-import {ref, computed, reactive} from 'vue';
+import {defineProps,ref, computed, reactive} from 'vue';
 import {Link, router} from "@inertiajs/vue3";
 import NavigationMenu from "@/Layouts/NavigationMenu.vue";
 import AdminSideBar from "@/Layouts/AdminSideBar.vue";
@@ -72,9 +72,13 @@ import PlusIcon from "vue-material-design-icons/Plus.vue";
 const authenticated = ref(false);
 const ArticleSearch = ref('');
 
+const props = defineProps({
+    articles: Array,
+});
+
 const filters = reactive({
     ArticleSearch: '',
-    userId: null,
+    user_id: null,
     minComments: null,
 });
 
@@ -83,34 +87,26 @@ const headers = [
     {column: 'id', name: 'ID', type: 'string', minWidth: 20},
     {column: 'title', name: 'Titre', type: 'string', minWidth: 120},
     {column: 'image', name: 'Image', type: 'image', minWidth: 20},
-    {column: 'user', name: 'Auteur', type: 'string', minWidth: 20},
-    {column: 'comments', name: 'Commentaires', type: 'number', minWidth: 20},
+    {column: 'author', name: 'Auteur', type: 'string', minWidth: 20},
     {column: 'date', name: 'Date', type: 'date', minWidth: 20},
-    {column: 'userId', name: 'Utilisateur', type: 'string', hidden: true, minWidth: 20},
+    {column: 'tags', name: 'Tags', type: 'string', minWidth: 20},
+    {column: 'comments', name: 'Commentaires', type: 'number', minWidth: 20},
+    {column: 'user_id', name: 'Utilisateur', type: 'string', hidden: true, minWidth: 20},
 ];
 
-const rows = [
-    {id: 1, title: 'Pourquoi les haricots blancs sont blancs et pourquoi les haricots rouges sont rouge?', image: 'https://via.placeholder.com/150', user: 'Cashandrick', comments: 7, date: '2024-03-17 20:09:43' ,userId: 10},
-    {id: 2, title: 'Article 2', image: 'https://via.placeholder.com/150', user: 'Cashandrick', comments: 23, date: '2021-02-17 14:39:21' ,userId: 10},
-    {id: 2, title: 'Article 3', image: 'https://via.placeholder.com/150', user: 'Cashandrick', comments: 41, date: '2020-06-01 08:12:54' ,userId: 10},
-];
+const rows = ref(props.articles);
 
 const computedArticlesList = computed(() => {
 //     Get the list of users from the rows and do not duplicate if the user is already in the list
-    return rows.reduce((acc, row) => {
-        if (!acc.find(user => user.userId === row.userId)) {
-            acc.push({userId: row.userId, name: row.user});
+    return rows.value.reduce((acc, row) => {
+        if (!acc.find(user => user.user_id === row.user_id)) {
+            acc.push({user_id: row.user_id, name: row.author});
         }
         return acc;
     }, []);
 });
 
 const actions = [
-    {
-        icon: 'PencilOutline',
-        color: 'blue',
-        method: 'editArticle'
-    },
     {
         icon: 'Cancel',
         color: 'red',
@@ -119,7 +115,7 @@ const actions = [
 ];
 
 const filteredRows = computed(() => {
-    return rows.filter(row => {
+    return rows.value.filter(row => {
         let returnRow = true;
         if (filters.ArticleSearch.trim().length > 0) {
 
@@ -128,8 +124,8 @@ const filteredRows = computed(() => {
                 return false;
             }
         }
-        if (filters.userId) {
-            returnRow = row.userId === parseInt(filters.userId);
+        if (filters.user_id) {
+            returnRow = row.user_id === parseInt(filters.user_id);
             if (!returnRow) {
                 return false;
             }
@@ -169,7 +165,8 @@ const updateFilters = (event, filter) => {
 };
 
 const showArticle = (rowIndex) => {
-    router.visit(`/admin/blog-article/${rowIndex}`);
+    const rowId = rows.value[rowIndex].id;
+    router.visit(`/admin/blog-articles/${rowId}`);
 };
 
 

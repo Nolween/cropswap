@@ -6,6 +6,7 @@ use App\Http\Requests\StoreBlogArticleRequest;
 use App\Http\Requests\UpdateBlogArticleRequest;
 use App\Models\BlogArticle;
 use App\Repositories\Interfaces\BlogArticleRepositoryInterface;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
 class BlogArticleController extends Controller
@@ -35,12 +36,40 @@ class BlogArticleController extends Controller
         return response()->json($articles);
     }
 
+    public function adminIndex()
+    {
+        Gate::authorize('adminIndex', BlogArticle::class);
+
+        $articles = $this->blogArticleRepository->adminIndex();
+
+        // Format $articles
+        $articles = $articles->map(function ($article) {
+            return [
+                'id'       => $article->id,
+                'user_id'  => $article->user_id,
+                'title'    => $article->title,
+                'image'    => $article->image,
+                'author'   => $article->user->name ?? 'Auteur inconnu',
+                'date'     => $article->date,
+                'tags'     => implode(' ', $article->tags),
+                'comments' => $article->comments,
+            ];
+        });
+
+
+        return Inertia::render('Admin/BlogArticle/Index', [
+            'articles' => $articles,
+        ]);
+    }
+
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        //
+        return Inertia::render('Admin/BlogArticle/Create', [
+            'title' => 'Admin Blog Article Create',
+        ]);
     }
 
     /**
@@ -59,7 +88,7 @@ class BlogArticleController extends Controller
         $query = BlogArticle::query();
 
         // Find 3 articles with at least one tag in common
-        foreach (json_decode($blogArticle->tags) as $tag) {
+        foreach ($blogArticle->tags as $tag) {
             $query->orWhereJsonContains('tags', $tag);
         }
 
@@ -80,14 +109,14 @@ class BlogArticleController extends Controller
         });
 
         return Inertia::render('Blog/Show', [
-            'id'              => $blogArticle->id,
-            'title'           => $blogArticle->title,
-            'content'         => $blogArticle->content,
-            'image'           => $blogArticle->image,
-            'author'         => $blogArticle->user->name ?? 'Unknown author',
-            'created_at'      => $blogArticle->created_at,
-            'updated_at'      => $blogArticle->updated_at,
-            'tags'            => $blogArticle->tags,
+            'id'               => $blogArticle->id,
+            'title'            => $blogArticle->title,
+            'content'          => $blogArticle->content,
+            'image'            => $blogArticle->image,
+            'author'           => $blogArticle->user->name ?? 'Unknown author',
+            'created_at'       => $blogArticle->created_at,
+            'updated_at'       => $blogArticle->updated_at,
+            'tags'             => $blogArticle->tags,
             'related_articles' => $relatedArticles
         ]);
     }
@@ -97,7 +126,19 @@ class BlogArticleController extends Controller
      */
     public function edit(BlogArticle $blogArticle)
     {
-        //
+        return Inertia::render('Admin/BlogArticle/Create', [
+            'title'    => 'Admin Blog Article Edit',
+            'article'  => $blogArticle,
+            'comments' => $blogArticle->comments->map(function ($comment) {
+                return [
+                    'id'         => $comment->id,
+                    'content'    => $comment->content,
+                    'created_at' => $comment->created_at,
+                    'updated_at' => $comment->updated_at,
+                    'user'       => $comment->user->name ?? 'Auteur inconnu'
+                ];
+            })
+        ]);
     }
 
     /**
@@ -105,7 +146,23 @@ class BlogArticleController extends Controller
      */
     public function update(UpdateBlogArticleRequest $request, BlogArticle $blogArticle)
     {
-        //
+        // Moving the image to the right folder
+        if ($request->hasFile('imageFile')) {
+
+            $image = $request->file('imageFile');
+            $imageName = time() . '.' . $image->extension();
+            // Move the image to the right folder
+            $image->move(public_path('images/blog'), $imageName);
+
+            // Update the request with the new image name
+            $request->merge(['image' => $imageName]);
+
+        }
+
+        $blogArticle->update($request->all());
+
+
+        return response()->json(['success' => true, 'articleId' => $blogArticle->id]);
     }
 
     /**
