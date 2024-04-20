@@ -96,6 +96,12 @@ const headers = [
 
 const rows = ref(props.articles);
 
+rows.value.map(row => {
+    // If image begin with http, do not add the base url
+    row.image = row.image.startsWith('http') ? row.image : `/images/blog/${row.image}`;
+    return row;
+});
+
 const computedArticlesList = computed(() => {
 //     Get the list of users from the rows and do not duplicate if the user is already in the list
     return rows.value.reduce((acc, row) => {

@@ -9,7 +9,10 @@ class BlogArticleRepositoryEloquent implements BlogArticleRepositoryInterface
 {
     public function index()
     {
-        return BlogArticle::where('deleted_at', null)->with('comments')->get();
+        return BlogArticle::where('deleted_at', null)
+                          ->with('comments')
+                          ->orderBy('created_at', 'desc')
+                          ->get();
     }
 
     public function adminIndex()
@@ -17,6 +20,7 @@ class BlogArticleRepositoryEloquent implements BlogArticleRepositoryInterface
         return BlogArticle::select(['id', 'user_id', 'created_at as date', 'tags', 'title', 'image'])
                           ->with('user')
                           ->withCount('comments as comments')
+                          ->orderBy('created_at', 'desc')
                           ->get();
     }
 

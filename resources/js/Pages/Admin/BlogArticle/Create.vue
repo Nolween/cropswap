@@ -140,9 +140,14 @@ import AdminModal from "@/Components/Modal/AdminModal.vue";
 import ResponseToastr from "@/Components/Toastr/ResponseToastr.vue";
 
 const props = defineProps({
-    article: {type: Object, nullable: true, default: null},
+    article: {
+        type: Object,
+        nullable: true,
+        default: () => ({title: '', content: 'Votre contenu', image: '', tags: [], id: 0, comments: []})
+    },
     title: String,
 });
+
 
 const selectedTab = ref('general');
 
@@ -214,8 +219,10 @@ const submitForm = () => {
             }
         })
             .then(response => {
-                article.id = response.data.id;
+                article.id = response.data.articleId;
                 console.log(response.data);
+                // Launch toastr
+                updateResponse.value = true;
             })
             .catch(error => {
                 console.log(error);

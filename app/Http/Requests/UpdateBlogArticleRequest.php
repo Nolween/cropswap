@@ -26,12 +26,11 @@ class UpdateBlogArticleRequest extends FormRequest
 
         return [
             'title'     => 'required|string|max:255',
-            'content'   => 'required|string',
+            'content'   => 'required|string:min:100',
             'image'     => 'required|string',
             'imageFile' => 'image',
             'tags'      => 'required|array',
             'id'        => 'required|exists:blog_articles,id',
-            'user_id'   => 'required|exists:users,id'
         ];
     }
 }

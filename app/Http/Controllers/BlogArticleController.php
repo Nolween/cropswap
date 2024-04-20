@@ -6,6 +6,7 @@ use App\Http\Requests\StoreBlogArticleRequest;
 use App\Http\Requests\UpdateBlogArticleRequest;
 use App\Models\BlogArticle;
 use App\Repositories\Interfaces\BlogArticleRepositoryInterface;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
@@ -77,7 +78,24 @@ class BlogArticleController extends Controller
      */
     public function store(StoreBlogArticleRequest $request)
     {
-        //
+        // Moving the image to the right folder
+        if ($request->hasFile('imageFile')) {
+
+            $image = $request->file('imageFile');
+            $imageName = time() . '.' . $image->extension();
+            // Move the image to the right folder
+            $image->move(public_path('images/blog'), $imageName);
+
+            // Update the request with the new image name
+            $request->merge(['image' => $imageName]);
+
+        }
+
+        $request->merge(['user_id' => Auth::user()->id]);
+
+        $blogArticle = BlogArticle::create($request->all());
+
+        return response()->json(['success' => true, 'articleId' => $blogArticle->id]);
     }
 
     /**
@@ -158,6 +176,8 @@ class BlogArticleController extends Controller
             $request->merge(['image' => $imageName]);
 
         }
+
+        $request->merge(['user_id' => Auth::user()->id]);
 
         $blogArticle->update($request->all());
 

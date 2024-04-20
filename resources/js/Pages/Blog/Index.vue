@@ -123,6 +123,12 @@ const fetchBlogArticles = async () => {
     try {
         const response = await fetch('/blog/index');
         articles.value = await response.json();
+        articles.value.map(article => {
+            article.image = article.image.startsWith('http') ? article.image : `/images/blog/${article.image}`;
+            // Remove html tags from content
+            article.content = article.content.replace(/<[^>]*>?/gm, '');
+            return article;
+        });
         setLoading(false);
     } catch (error) {
         console.error(error);
