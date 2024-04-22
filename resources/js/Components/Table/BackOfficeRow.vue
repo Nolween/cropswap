@@ -11,7 +11,7 @@
             <button v-for="(action, actionIndex) in iconComponents" :key="actionIndex"
                     class="cursor-pointer p-2 bg-white rounded-lg text-md font-medium border-2 hover:text-white hover:border-transparent"
                     :class="`border-${action.color}-500 hover:bg-${action.color}-500 text-${action.color}-500`"
-                    @click="emitAction(action.method)">
+                    @click.stop="emitAction(action.method)">
                 <component :is="action.icon"
                            :title="action.title"
                            :size="24"

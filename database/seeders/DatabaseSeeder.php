@@ -28,5 +28,7 @@ class DatabaseSeeder extends Seeder
         $this->call(BlogArticleCommentSeeder::class);
         //   Launch the CropSwapSeeder
         $this->call(CropSwapSeeder::class);
+        //    Launch the UserMessageSeeder
+        $this->call(UserMessageSeeder::class);
     }
 }

@@ -40,7 +40,7 @@
                             class="w-1/3 bg-blue-500 text-white p-2 rounded-lg text-2xl font-bold">Contacter
                     </button>
                     <Link :href="route('crop.show', informations.id)"
-                          class="w-1/3 bg-lime-500 text-white p-2 rounded-lg text-2xl font-bold text-center">Fiche
+                          class="w-1/3 bg-lime-500 text-white p-2 rounded-lg text-2xl font-bold text-center">Crop
                     </Link>
                     <button @click="banModalOpened = true" class="w-1/3 bg-red-500 text-white p-2 rounded-lg text-2xl font-bold">Bannir</button>
                 </div>
@@ -48,8 +48,8 @@
                 <div class="p-3 w-full mb-3 gap-4 items-center">
                     <div v-for="(message) in informations.reportedMessages"
                          class="w-full rounded-md bg-white p-2 mb-3">
-                        <div class="text-start text-xl text-red-500 font-mono">{{ message.message }}</div>
-                        <div class="text-end">{{ message.date }}</div>
+                        <div class="text-start text-xl text-red-500 font-mono">{{ message.content }}</div>
+                        <div class="text-end">{{ dayjs(message.created_at).format('DD/MM/YYYY à HH:mm') }}</div>
                     </div>
                 </div>
                 <!-- CROP -->
@@ -97,22 +97,29 @@
                         Annuler
                     </button>
                     <button class="p-2 border-2 border-red-300 hover:border-transparent  bg-white hover:bg-red-500 text-red-500 hover:text-white rounded-lg text-xl font-bold"
-                            @click="banModalOpened = false">
+                            @click="banUser()">
                         Bannir
                     </button>
                 </div>
             </template>
         </admin-modal>
+
     </div>
 </template>
 
 <script setup>
-import {ref} from 'vue';
+import {defineProps, ref} from 'vue';
 import NavigationMenu from "@/Layouts/NavigationMenu.vue";
 import AdminSideBar from "@/Layouts/AdminSideBar.vue";
 import LeafletMap from "@/Components/Maps/LeafletMap.vue";
 import {Link} from "@inertiajs/vue3";
 import AdminModal from "@/Components/Modal/AdminModal.vue";
+import dayjs from "dayjs";
+
+const props = defineProps({
+    user: Object,
+});
+
 
 const isOpenedModal = ref(false);
 const banModalOpened = ref(false);
@@ -120,50 +127,40 @@ const banModalOpened = ref(false);
 const contactMessage = ref('');
 
 const informations = ref({
-    id: 1,
-    name: 'User 678',
-    email: 'bla@bla.com',
-    role: 'user',
-    inscriptionDate: new Date('2022-02-02'),
-    lastConnection: new Date('2023-02-02'),
-    cropName: 'Crop JKJKDFJK',
-    image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=700&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8cG9ydHJhaXR8ZW58MHx8MHx8fDA%3D',
-    cropPosition: [44, 4],
+    id: props.user.id,
+    name: props.user.name,
+    email: props.user.email,
+    role: props.user.role,
+    inscriptionDate: new Date(props.user.created_at),
+    lastConnection: new Date(props.user.updated_at),
+    cropName: props.user?.crop[0]?.name,
+    image: props.user.image.startsWith('http') ? props.user.image : '/images/user/' + props.user.image,
+    cropPosition: [parseFloat(props.user.crop[0]?.latitude), parseFloat(props.user.crop[0]?.longitude)],
     marker:
         [{
-            id: 1,
+            id: props.user.crop[0]?.id,
             icon: 'leaf-green',
-            position: [44, 4],
-            name: "User 1",
-            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed blandit libero volutpat sed cras ornare arcu.",
+            position: [parseFloat(props.user.crop[0]?.latitude), parseFloat(props.user.crop[0]?.longitude)],
+            name: props.user.crop[0]?.name,
+            description: props.user.crop[0]?.description,
         }],
-    reportedMessages: [
-        {
-            id: 1,
-            message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed blandit libero volutpat sed cras ornare arcu.',
-            reportedBy: 'User 1',
-            date: '2022-02-02 12:13:40'
-        },
-        {
-            id: 2,
-            message: 'Message 2',
-            reportedBy: 'User 2',
-            date: '2022-06-14 18:21:52'
-        },
-        {
-            id: 3,
-            message: 'Message 3',
-            reportedBy: 'User 3',
-            date: '2022-06-14 18:21:52'
-        },
-        {
-            id: 4,
-            message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed blandit libero volutpat sed cras ornare arcu.',
-            reportedBy: 'User 4',
-            date: '2022-02-02 12:13:40'
-        },
-    ]
+    reportedMessages: props.user.reported_messages,
 });
+
+const banUser = async () => {
+    banModalOpened.value = false;
+    // Send userId to the server to ban the user
+    axios.delete(`/admin/users/${props.user.id}`)
+        .then(response => {
+            if(response.data.success) {
+                // Redirect to the user index page
+                window.location.href = '/admin/users/index';
+            }
+        })
+        .catch(error => {
+            console.log(error);
+        });
+};
 
 </script>
 

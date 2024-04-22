@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BlogArticleCommentController;
 use App\Http\Controllers\BlogArticleController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Middleware\IsAdminAuthenticated;
@@ -36,26 +37,6 @@ Route::prefix('admin')->middleware(IsAdminAuthenticated::class)->group(function 
     })->name('admin.swap.create');
 
     // USERS PART
-    Route::get('/users/index', function () {
-        return Inertia::render(
-            'Admin/User/Index',
-            [
-                'title' => 'Admin User Index',
-            ]
-        );
-    })->name('admin.user.index');
-
-    Route::get('/users/create', function () {
-        return Inertia::render(
-            'Admin/User/Create'
-        );
-    })->name('admin.user.create');
-
-    Route::get('/users/{id}', function ($id) {
-        return Inertia::render(
-            'Admin/User/Show'
-        );
-    })->name('admin.user.show');
     //    BLOG ARTICLES PART
     Route::prefix('blog-articles')->group(function () {
         Route::get('/index', [BlogArticleController::class, 'adminIndex'])->name('admin.blog-article.index');
@@ -64,11 +45,25 @@ Route::prefix('admin')->middleware(IsAdminAuthenticated::class)->group(function 
         Route::put('/{blogArticle}', [BlogArticleController::class, 'update'])->name('admin.blog-article.update');
         Route::post('/', [BlogArticleController::class, 'store'])->name('admin.blog-article.store');
     });
-// BLOG COMMENT ROUTES
+    // BLOG COMMENT ROUTES
     Route::prefix('comment')->group(function () {
         Route::delete('/{blogArticleComment}', [BlogArticleCommentController::class, 'destroy'])->name(
             'comment.destroy'
         );
+    });
+
+    // USERS PART
+    Route::prefix('users')->group(function() {
+
+        Route::get('/index', [UserController::class, 'index'])->name('admin.user.index');
+        Route::get('/{user}', [UserController::class, 'show'])->name('admin.user.show');
+        Route::delete('/{user}', [UserController::class, 'destroy'])->name('admin.user.destroy');
+
+        Route::get('/create', function () {
+            return Inertia::render(
+                'Admin/User/Create'
+            );
+        })->name('admin.user.create');
     });
 });
 

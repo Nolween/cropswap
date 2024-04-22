@@ -5,12 +5,13 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -61,5 +62,26 @@ class User extends Authenticatable
     public function blogArticleComments(): HasMany
     {
         return $this->hasMany(BlogArticleComment::class);
+    }
+
+    public function sentMessages(): HasMany
+    {
+        return $this->hasMany(UserMessage::class, 'sender_id');
+    }
+
+    public function receivedMessages(): HasMany
+    {
+        return $this->hasMany(UserMessage::class, 'receiver_id');
+    }
+
+    public function reportedMessages(): HasMany
+    {
+        return $this->sentMessages()
+                    ->where('is_reported', true);
+    }
+
+    public function crop(): HasMany
+    {
+        return $this->hasMany(Crop::class);
     }
 }
