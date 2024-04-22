@@ -3,6 +3,7 @@
 use App\Http\Controllers\BlogArticleCommentController;
 use App\Http\Controllers\BlogArticleController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserMessageController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -69,6 +70,37 @@ Route::group(['prefix' => 'crop'], function () {
             ]
         );
     })->name('crop.index');
+});
+
+
+// MESSAGES PART
+Route::group(['prefix' => 'messages'], function () {
+    Route::post('/', [UserMessageController::class, 'store'])->name('message.store');
+    Route::get('/', function () {
+        return Inertia::render(
+            'Message/Index',
+            [
+                'title' => 'Messages Index',
+            ]
+        );
+    })->name('message.index');
+    Route::get('/create', function () {
+        return Inertia::render(
+            'Message/Create',
+            [
+                'title' => 'Messages Create',
+            ]
+        );
+    })->name('message.create');
+    Route::get('/{id}', function ($id) {
+        return Inertia::render(
+            'Message/Show',
+            [
+                'title' => 'Messages Show',
+                'id'    => $id,
+            ]
+        );
+    })->name('message.show');
 });
 
 require __DIR__ . '/auth.php';

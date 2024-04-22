@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class UserController extends Controller
@@ -54,6 +55,7 @@ class UserController extends Controller
                 'user' => $user,
                 'reportedMessages' => $user->reportedMessages,
                 'crop' => $user->crop,
+                'admin_id' => Auth::user()->id,
             ]
         );
     }

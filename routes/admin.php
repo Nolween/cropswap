@@ -3,6 +3,7 @@
 use App\Http\Controllers\BlogArticleCommentController;
 use App\Http\Controllers\BlogArticleController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserMessageController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Middleware\IsAdminAuthenticated;
@@ -53,8 +54,7 @@ Route::prefix('admin')->middleware(IsAdminAuthenticated::class)->group(function 
     });
 
     // USERS PART
-    Route::prefix('users')->group(function() {
-
+    Route::prefix('users')->group(function () {
         Route::get('/index', [UserController::class, 'index'])->name('admin.user.index');
         Route::get('/{user}', [UserController::class, 'show'])->name('admin.user.show');
         Route::delete('/{user}', [UserController::class, 'destroy'])->name('admin.user.destroy');

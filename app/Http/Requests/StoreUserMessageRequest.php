@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class StoreUserMessageRequest extends FormRequest
 {
@@ -11,7 +12,7 @@ class StoreUserMessageRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return Auth::check();
     }
 
     /**
@@ -22,7 +23,9 @@ class StoreUserMessageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'sender_id' => 'required|exists:users,id',
+            'receiver_id' => 'required|exists:users,id',
+            'content' => 'required|string',
         ];
     }
 }

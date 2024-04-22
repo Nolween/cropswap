@@ -29,7 +29,9 @@ class UserMessageController extends Controller
      */
     public function store(StoreUserMessageRequest $request)
     {
-        //
+        $message = UserMessage::create($request->validated());
+
+        return response()->json(['message' => 'Message envoyé', 'success' => true]);
     }
 
     /**

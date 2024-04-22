@@ -36,13 +36,15 @@
                 </div>
                 <!-- ACTIONS -->
                 <div class="w-full flex p-3 justify-center gap-2">
-                    <button @click="isOpenedModal = true"
+                    <button @click="isOpenedContactModal = true"
                             class="w-1/3 bg-blue-500 text-white p-2 rounded-lg text-2xl font-bold">Contacter
                     </button>
                     <Link :href="route('crop.show', informations.id)"
                           class="w-1/3 bg-lime-500 text-white p-2 rounded-lg text-2xl font-bold text-center">Crop
                     </Link>
-                    <button @click="banModalOpened = true" class="w-1/3 bg-red-500 text-white p-2 rounded-lg text-2xl font-bold">Bannir</button>
+                    <button @click="banModalOpened = true"
+                            class="w-1/3 bg-red-500 text-white p-2 rounded-lg text-2xl font-bold">Bannir
+                    </button>
                 </div>
                 <!-- REPORTED MESSAGES -->
                 <div class="p-3 w-full mb-3 gap-4 items-center">
@@ -53,7 +55,7 @@
                     </div>
                 </div>
                 <!-- CROP -->
-                <div class="p-3 w-full justify-center mb-3">
+                <div v-if="informations?.cropName" class="p-3 w-full justify-center mb-3">
                     <div class="text-center text-3xl text-lime-500 font-bold w-full mb-4">
                         {{ informations.cropName }}
                     </div>
@@ -63,11 +65,12 @@
                                      :markers="informations.marker"></leaflet-map>
                     </div>
                 </div>
+                <div v-else class="text-3xl text-center text-red-500">PAS DE CROP</div>
             </div>
         </div>
-        <admin-modal v-if="isOpenedModal"
+        <admin-modal v-if="isOpenedContactModal"
                      title="Contacter l'utilisateur"
-                     @close="isOpenedModal = false">
+                     @close="isOpenedContactModal = false">
             <template #body>
                 <div class="w-full">
                     <textarea class="w-full p-2 border-2 border-gray-200 rounded-md" rows="5"
@@ -79,7 +82,7 @@
             </template>
             <template #footer>
                 <div class="w-full flex justify-end">
-                    <button class="p-2 bg-blue-500 text-white rounded-lg text-xl font-bold" @click="isOpenedModal = false">Envoyer
+                    <button class="p-2 bg-blue-500 text-white rounded-lg text-xl font-bold" @click="sendMessage">Envoyer
                     </button>
                 </div>
             </template>
@@ -92,39 +95,51 @@
             </template>
             <template #footer>
                 <div class="w-full flex justify-end space-x-2">
-                    <button class="p-2 border-2 border-gray-300 hover:border-transparent text-gray-300 hover:bg-gray-300 hover:text-white bg-white rounded-lg text-xl font-bold"
-                            @click="banModalOpened = false">
+                    <button
+                        class="p-2 border-2 border-gray-300 hover:border-transparent text-gray-300 hover:bg-gray-300 hover:text-white bg-white rounded-lg text-xl font-bold"
+                        @click="banModalOpened = false">
                         Annuler
                     </button>
-                    <button class="p-2 border-2 border-red-300 hover:border-transparent  bg-white hover:bg-red-500 text-red-500 hover:text-white rounded-lg text-xl font-bold"
-                            @click="banUser()">
+                    <button
+                        class="p-2 border-2 border-red-300 hover:border-transparent  bg-white hover:bg-red-500 text-red-500 hover:text-white rounded-lg text-xl font-bold"
+                        @click="banUser()">
                         Bannir
                     </button>
                 </div>
             </template>
         </admin-modal>
 
+        <response-toastr v-if="toaster.delete" :message="toaster.message"/>
+
     </div>
 </template>
 
 <script setup>
-import {defineProps, ref} from 'vue';
+import {defineProps, ref, reactive} from 'vue';
 import NavigationMenu from "@/Layouts/NavigationMenu.vue";
 import AdminSideBar from "@/Layouts/AdminSideBar.vue";
 import LeafletMap from "@/Components/Maps/LeafletMap.vue";
 import {Link} from "@inertiajs/vue3";
 import AdminModal from "@/Components/Modal/AdminModal.vue";
 import dayjs from "dayjs";
+import ResponseToastr from "@/Components/Toastr/ResponseToastr.vue";
 
 const props = defineProps({
     user: Object,
+    admin_id: Number
 });
 
 
-const isOpenedModal = ref(false);
+const isOpenedContactModal = ref(false);
 const banModalOpened = ref(false);
 
 const contactMessage = ref('');
+
+const toaster = reactive({
+    delete: false,
+    message: null
+});
+
 
 const informations = ref({
     id: props.user.id,
@@ -152,9 +167,28 @@ const banUser = async () => {
     // Send userId to the server to ban the user
     axios.delete(`/admin/users/${props.user.id}`)
         .then(response => {
-            if(response.data.success) {
+            if (response.data.success) {
                 // Redirect to the user index page
                 window.location.href = '/admin/users/index';
+            }
+        })
+        .catch(error => {
+            console.log(error);
+        });
+};
+
+const sendMessage = async () => {
+    // Send the message to the server
+    axios.post(`/messages`, {
+        sender_id: props.admin_id,
+        receiver_id: props.user.id,
+        content: contactMessage.value
+    })
+        .then(response => {
+            if (response.data.success) {
+                toaster.message = response.data.message;
+                toaster.delete = true;
+                isOpenedContactModal.value = false;
             }
         })
         .catch(error => {
