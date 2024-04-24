@@ -52,7 +52,7 @@ class BlogArticleController extends Controller
                 'image'    => $article->image,
                 'author'   => $article->user->name ?? 'Auteur inconnu',
                 'date'     => $article->date,
-                'tags'     => implode(' ', $article->tags),
+                'tags'     => $article->tags,
                 'comments' => $article->comments,
             ];
         });

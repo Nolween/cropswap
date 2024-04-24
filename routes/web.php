@@ -75,32 +75,9 @@ Route::group(['prefix' => 'crop'], function () {
 
 // MESSAGES PART
 Route::group(['prefix' => 'messages'], function () {
-    Route::post('/', [UserMessageController::class, 'store'])->name('message.store');
-    Route::get('/', function () {
-        return Inertia::render(
-            'Message/Index',
-            [
-                'title' => 'Messages Index',
-            ]
-        );
-    })->name('message.index');
-    Route::get('/create', function () {
-        return Inertia::render(
-            'Message/Create',
-            [
-                'title' => 'Messages Create',
-            ]
-        );
-    })->name('message.create');
-    Route::get('/{id}', function ($id) {
-        return Inertia::render(
-            'Message/Show',
-            [
-                'title' => 'Messages Show',
-                'id'    => $id,
-            ]
-        );
-    })->name('message.show');
+    Route::post('/', [UserMessageController::class, 'store'])->name('messages.store');
+    Route::get('/', [UserMessageController::class, 'index'])->name('messages.index');
+
 });
 
 require __DIR__ . '/auth.php';

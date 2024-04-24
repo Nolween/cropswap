@@ -19,8 +19,8 @@ class UserMessageFactory extends Factory
     {
         // Random existing sender ID
         $sender = User::inRandomOrder()->first();
-        // Random existing receiver ID
-        $receiver = User::inRandomOrder()->first();
+        // Random existing receiver ID (not the same as sender)
+        $receiver = User::where('id', '!=', $sender->id)->inRandomOrder()->first();
 
         $created = $this->faker->dateTimeBetween('-1 year', 'now');
 

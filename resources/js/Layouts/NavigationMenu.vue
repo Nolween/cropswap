@@ -30,6 +30,7 @@
             </button>
             <div v-if="openedAccountActions"
                  class="z-40 bg-orange-500 text-white text-xl font-bold absolute top-16 right-0 rounded-lg p-3 space-y-2 border-2">
+                <div><Link :href="route('messages.index')" class="hover:text-lime-500">MESSAGERIE</Link></div>
                 <div><Link :href="route('account.informations')" class="hover:text-lime-500">MES INFOS</Link></div>
                 <div><Link :href="route('account.crop.show')" class="hover:text-lime-500">MON CROP</Link></div>
                 <div @click="logout" class="hover:text-lime-500">DECONNECTER</div>
