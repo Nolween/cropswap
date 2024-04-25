@@ -5,7 +5,7 @@
 
         <div class="flex flex-grow">
             <!-- Left Sidebar displaying all conversations -->
-            <div class="w-16 md:w-1/4 bg-orange-500 overflow-auto overflow-x-hidden">
+            <div class="w-16 md:w-1/4 bg-orange-500 overflow-auto overflow-x-hidden left-part">
                 <div class="text-white text-2xl p-2 hidden md:block text-center">CONVERSATIONS</div>
                 <div class="text-white text-2xl p-3 block md:hidden">
                     <ChatOutlineIcon class="text-white" :size="40"/>
@@ -64,7 +64,7 @@
 <script setup>
 
 import NavigationMenu from "@/Layouts/NavigationMenu.vue";
-import {defineProps, ref} from 'vue';
+import {defineProps, ref, onMounted} from 'vue';
 import ChatOutlineIcon from "vue-material-design-icons/ChatOutline.vue";
 import {useTextTools} from "@/Composables/textTools.js";
 import dayjs from "dayjs";
@@ -88,6 +88,21 @@ const collapse = () => {
 const selectConversation = (conversation) => {
     selectedConversation.value = conversation;
 };
+
+
+onMounted(() => {
+    const navigationMenu = document.querySelector('.navigation-menu');
+    const leftPart = document.querySelector('.left-part');
+
+    const resizeLeftPart = () => {
+        const navigationMenuHeight = navigationMenu.offsetHeight;
+        leftPart.style.height = `calc(100vh - ${navigationMenuHeight}px)`;
+    };
+
+    window.addEventListener('resize', resizeLeftPart);
+    resizeLeftPart();
+});
+
 
 </script>
 
