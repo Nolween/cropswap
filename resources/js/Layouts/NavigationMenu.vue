@@ -1,6 +1,6 @@
 <template>
     <div
-        class="bg-lime-500 min-h-16 text-black font-bold flex flex-wrap justify-around items-center gap-y-3 py-5 space-x-2 navigation-menu">
+        class="bg-lime-500 text-black font-bold flex flex-wrap justify-around items-center gap-y-3 py-5 space-x-2 navigation-menu">
         <Link class="text-4xl cursor-pointer" :href="route('home')">
             CROPSWAP
         </Link>
