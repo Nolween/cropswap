@@ -29,12 +29,12 @@
                 </div>
             </div>
             <!-- Right Part with messages in chat design of the selected conversation -->
-            <div class="relative w-full md:w-3/4 bg-gray-50 overflow-auto">
-                <div class="absolute top-O w-full text-xl md:text-5xl font-mono text-orange-500 border-b-2 p-3">
+            <div class="relative w-full md:w-3/4 bg-gray-50">
+                <div class="absolute top-O w-full text-xl md:text-5xl font-mono text-orange-500 border-b-2 p-3 user-part">
                     {{ selectedConversation.user }}
                 </div>
 
-                <div class="absolute top-20 p-4 gap-2 w-full">
+                <div class="absolute top-20 p-4 gap-2 w-full right-part overflow-auto">
                     <div v-for="(message, messageIndex) in selectedConversation.messages"
                          :key="messageIndex"
                          class="w-full flex"
@@ -48,10 +48,11 @@
                     </div>
                 </div>
                 <!-- WRITING PART AT BOTTOM -->
-                <div class="absolute bottom-0 w-full bg-orange-500 p-2 flex gap-2">
+                <div class="absolute bottom-0 w-full bg-orange-500 p-2 flex gap-2 message-part">
                     <input type="text" class="w-3/4 p-2 rounded-2xl border-transparent"
-                           placeholder="Votre message ici"/>
-                    <button class="w-1/4 bg-lime-500 text-white p-2 rounded-2xl">ENVOYER</button>
+                           v-model="message"
+                           placeholder="Votre message ici" @keydown.enter="sendMessage"/>
+                    <button class="w-1/4 bg-lime-500 text-white p-2 rounded-2xl" @click="sendMessage">ENVOYER</button>
                 </div>
 
             </div>
@@ -76,10 +77,13 @@ const props = defineProps({
     authId: Number
 });
 
+const conversations = ref(props.conversations);
+
 const isCollapsed = ref(false);
-const conversation = ref(props.conversations);
 // Select the first conversation by default
 const selectedConversation = ref(props.conversations[Object.keys(props.conversations)[0]]);
+
+const message = ref('');
 
 const collapse = () => {
     isCollapsed.value = !isCollapsed.value;
@@ -89,8 +93,23 @@ const selectConversation = (conversation) => {
     selectedConversation.value = conversation;
 };
 
+const sendMessage = async () => {
+    if (message.value === '') return;
+    // Send the message to the server
+    axios.post('/messages', {
+        content: message.value,
+        sender_id: props.authId,
+        receiver_id: selectedConversation.value.receiver_id
+    }).then(response => {
+        message.value = '';
+    }).catch(error => {
+        console.error(error);
+    });
+};
 
 onMounted(() => {
+
+    // CSS to resize the left part of the screen
     const navigationMenu = document.querySelector('.navigation-menu');
     const leftPart = document.querySelector('.left-part');
 
@@ -101,8 +120,42 @@ onMounted(() => {
 
     window.addEventListener('resize', resizeLeftPart);
     resizeLeftPart();
-});
 
+    //  CSS to resize the right part of the screen
+    const rightPart = document.querySelector('.right-part');
+    const messagePart = document.querySelector('.message-part');
+    const userPart = document.querySelector('.user-part');
+    const resizeRightPart = () => {
+        const navigationMenuHeight = navigationMenu.offsetHeight;
+        const messagePartHeight = messagePart.offsetHeight;
+        const userPartHeight = userPart.offsetHeight;
+        rightPart.style.height = `calc(100vh - ${navigationMenuHeight}px - ${messagePartHeight}px - ${userPartHeight}px)`;
+    };
+
+    window.addEventListener('resize', resizeRightPart);
+    resizeRightPart();
+
+    // Echo part, broadcasting events
+    Echo.private(`messages.${props.authId}`)
+        .listen('UserMessageCreatedEvent', (e) => {
+            // Find the conversation in the list of conversations thanks to the receiver_id and add the message to the messages array
+            const existingConversation = Object.values(conversations.value).find(conversation => conversation.receiver_id === e.user_message.receiver_id && props.authId === e.user_message.sender_id);
+
+            if (existingConversation) {
+                existingConversation.messages.unshift(e.user_message);
+            } else {
+                conversations.value.unshift({
+                    receiver_id: e.user_message.receiver_id,
+                    user: e.user_message.receiver,
+                    user_image: e.user_message.receiver_image,
+                    messages: [e.user_message],
+                    last_message: e.user_message.content,
+                    unread: 1,
+                });
+            }
+        });
+
+});
 
 </script>
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\TestEvent;
 use App\Http\Requests\StoreUserMessageRequest;
 use App\Http\Requests\UpdateUserMessageRequest;
 use App\Models\UserMessage;
@@ -40,6 +41,7 @@ class UserMessageController extends Controller
             //    return an object with name of the other user, the last message and the number of unread messages
             return (object)[
                 'user'            => $otherUser->name,
+                'receiver_id'     => $otherUser->id,
                 'last_message'    => $conversation->first()->content,
                 'messages'        => $conversation->all(),
                 'unread'          => $conversation->where('receiver_id', auth()->id())->where('read_at', null)->count(),
