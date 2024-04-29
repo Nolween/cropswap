@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BlogArticleCommentController;
 use App\Http\Controllers\BlogArticleController;
+use App\Http\Controllers\SwapController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserMessageController;
 use Illuminate\Support\Facades\Route;
@@ -23,19 +24,14 @@ Route::prefix('admin')->middleware(IsAdminAuthenticated::class)->group(function 
         );
     })->name('admin.crop.index');
     // SWAP PART
-    Route::get('/swap/index', function () {
-        return Inertia::render(
-            'Admin/Swap/Index',
-            [
-                'title' => 'Admin Swap Index',
-            ]
-        );
-    })->name('admin.swap.index');
-    Route::get('/swap/create', function () {
-        return Inertia::render(
-            'Admin/Swap/Create'
-        );
-    })->name('admin.swap.create');
+    Route::prefix('swap')->group(function () {
+        Route::get('/index', [SwapController::class, 'index'])->name('admin.swap.index');
+        Route::get('/create', function () {
+            return Inertia::render(
+                'Admin/Swap/Create'
+            );
+        })->name('admin.swap.create');
+    });
 
     // USERS PART
     //    BLOG ARTICLES PART

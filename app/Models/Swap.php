@@ -11,7 +11,8 @@ class Swap extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = ['name', 'image'];
+
+    protected $fillable = ['name', 'image', 'category'];
 
     public function crops()
     {

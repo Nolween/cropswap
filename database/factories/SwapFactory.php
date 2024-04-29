@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\SwapCategoryEnum;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,8 +18,9 @@ class SwapFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->name,
-            'image' => $this->faker->imageUrl(),
+            'name'     => $this->faker->name,
+            'image'    => $this->faker->imageUrl(),
+            'category' => $this->faker->randomElement(SwapCategoryEnum::all()),
         ];
     }
 }

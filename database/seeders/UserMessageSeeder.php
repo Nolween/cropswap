@@ -13,7 +13,9 @@ class UserMessageSeeder extends Seeder
      */
     public function run(): void
     {
-    //    Create 100 user messages
-        UserMessage::factory(100)->create();
+        // Create 100 user messages quietly, without firing model events
+        UserMessage::factory()->count(100)->make()->each(function ($userMessage) {
+            $userMessage->saveQuietly();
+        });
     }
 }

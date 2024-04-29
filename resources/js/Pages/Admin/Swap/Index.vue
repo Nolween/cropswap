@@ -46,6 +46,7 @@
                                        :headers="headers"
                                        :rows="filteredRows"
                                        :actions="actions"
+                                       :perPage="10"
                                        @show="showSwap($event)"/>
                 </div>
 
@@ -55,13 +56,19 @@
 </template>
 
 <script setup>
-import {ref, computed, reactive} from 'vue';
+import {defineProps,ref, computed, reactive} from 'vue';
 import {Link, router} from "@inertiajs/vue3";
 import NavigationMenu from "@/Layouts/NavigationMenu.vue";
 import AdminSideBar from "@/Layouts/AdminSideBar.vue";
 import PlusIcon from "vue-material-design-icons/Plus.vue";
 import BackOfficeTable from "@/Components/Table/BackOfficeTable.vue";
 import ContextMenuButton from "@/Components/Buttons/ContextMenuButton.vue";
+
+const props = defineProps({
+    swaps: Object,
+    categories: Object,
+});
+
 //  Verify if the user is authenticated from session
 const authenticated = ref(false);
 const swapSearch = ref('');
@@ -71,11 +78,7 @@ const filters = reactive({
     category: null,
 });
 
-const categories = [
-    {name: 'Céréales', value: 'cereal'},
-    {name: 'Fruits', value: 'fruits'},
-    {name: 'Légumes', value: 'vegetables'},
-];
+const categories = props.categories;
 
 const headers = [
     {column: 'id', name: 'ID', type: 'string'},
@@ -84,14 +87,7 @@ const headers = [
     {column: 'category', name: 'Catégorie', type: 'string'},
 ];
 
-const rows = [
-    {id: 1, name: 'Carotte', image: 'https://via.placeholder.com/150', category: 'vegetables'},
-    {id: 2, name: 'Pomme', image: 'https://via.placeholder.com/150', category: 'fruits'},
-    {id: 3, name: 'Blé', image: 'https://via.placeholder.com/150', category: 'cereal'},
-    {id: 4, name: 'Tomate', image: 'https://via.placeholder.com/150', category: 'vegetables'},
-    {id: 5, name: 'Banane', image: 'https://via.placeholder.com/150', category: 'fruits'},
-    {id: 6, name: 'Orge', image: 'https://via.placeholder.com/150', category: 'cereal'},
-];
+const rows = ref(props.swaps);
 
 const actions = [
     {
@@ -107,7 +103,7 @@ const actions = [
 ];
 
 const filteredRows = computed(() => {
-    return rows.filter(row => {
+    return rows.value.filter(row => {
         let returnRow = true;
         if (filters.swapSearch.trim().length > 0) {
 

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\SwapCategoryEnum;
 use App\Http\Requests\StoreSwapRequest;
 use App\Http\Requests\UpdateSwapRequest;
 use App\Models\Swap;
+use Inertia\Inertia;
 
 class SwapController extends Controller
 {
@@ -13,7 +15,24 @@ class SwapController extends Controller
      */
     public function index()
     {
-        //
+        $swaps = Swap::select('id', 'name', 'image', 'category')
+            ->orderBy('name')
+            ->get();
+
+        // Add an url prefix to the image
+        $swaps->map(function ($swap) {
+            $swap->image = asset('images/food/' . $swap->image);
+            return $swap;
+        });
+
+
+        return Inertia::render(
+            'Admin/Swap/Index',
+            [
+                'swaps' => $swaps,
+                'categories' => SwapCategoryEnum::allTranslated(),
+            ]
+        );
     }
 
     /**
