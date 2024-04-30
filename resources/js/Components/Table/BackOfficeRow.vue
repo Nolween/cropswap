@@ -10,7 +10,7 @@
             </td>
             <td v-else-if="column(valueIndex).type === 'stringArray'"
                 class="flex flex-wrap gap-2 justify-center items-center">
-                <template v-for="(arrayValue, arrayValueIndex) in JSON.parse(value)" :key="arrayValueIndex">
+                <template v-for="(arrayValue, arrayValueIndex) in value" :key="arrayValueIndex">
                     <span class="bg-blue-500 text-white p-2 rounded-md">{{ arrayValue }}</span>
                 </template>
             </td>
