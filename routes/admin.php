@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BlogArticleCommentController;
 use App\Http\Controllers\BlogArticleController;
+use App\Http\Controllers\CropController;
 use App\Http\Controllers\SwapController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserMessageController;
@@ -15,14 +16,10 @@ Route::prefix('admin')->middleware(IsAdminAuthenticated::class)->group(function 
         return Inertia::render('Admin/Dashboard');
     })->name('admin.dashboard');
     // CROP PART
-    Route::get('/crop/index', function () {
-        return Inertia::render(
-            'Admin/Crop/Index',
-            [
-                'title' => 'Admin Crop Index',
-            ]
-        );
-    })->name('admin.crop.index');
+    Route::prefix('crop')->group(function () {
+        Route::get('index', [CropController::class, 'index'])->name('admin.crop.index');
+    });
+
     // SWAP PART
     Route::prefix('swap')->group(function () {
         Route::get('/index', [SwapController::class, 'index'])->name('admin.swap.index');
@@ -33,7 +30,6 @@ Route::prefix('admin')->middleware(IsAdminAuthenticated::class)->group(function 
         Route::delete('/{swap}', [SwapController::class, 'destroy'])->name('admin.swap.destroy');
     });
 
-    // USERS PART
     //    BLOG ARTICLES PART
     Route::prefix('blog-articles')->group(function () {
         Route::get('/index', [BlogArticleController::class, 'adminIndex'])->name('admin.blog-article.index');

@@ -57,7 +57,6 @@ class BlogArticleController extends Controller
             ];
         });
 
-
         return Inertia::render('Admin/BlogArticle/Index', [
             'articles' => $articles,
         ]);

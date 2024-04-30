@@ -89,7 +89,7 @@ const headers = [
     {column: 'image', name: 'Image', type: 'image', minWidth: 20},
     {column: 'author', name: 'Auteur', type: 'string', minWidth: 20},
     {column: 'date', name: 'Date', type: 'date', minWidth: 20},
-    {column: 'tags', name: 'Tags', type: 'string', minWidth: 20},
+    {column: 'tags', name: 'Tags', type: 'stringArray', minWidth: 20},
     {column: 'comments', name: 'Commentaires', type: 'number', minWidth: 20},
     {column: 'user_id', name: 'Utilisateur', type: 'string', hidden: true, minWidth: 20},
 ];

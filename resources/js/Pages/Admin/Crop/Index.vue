@@ -22,7 +22,8 @@
                                         <option value="null">Tous les utilisateurs</option>
                                         <option v-for="(user, userIndex) in computedUsersList"
                                                 :key="userIndex"
-                                                :value="user.userId" :selected="user.userId === parseInt(filters.userId)">
+                                                :value="user.userId"
+                                                :selected="user.userId === parseInt(filters.userId)">
                                             {{ user.name }}
                                         </option>
                                     </select>
@@ -47,22 +48,46 @@
                     <back-office-table @action="activate"
                                        :headers="headers"
                                        :rows="filteredRows"
-                                       :actions="actions"
-                                       @show="showSwap($event)"/>
+                                       :per-page="10"
+                                       :actions="actions"/>
                 </div>
 
             </div>
         </div>
+        <admin-modal v-if="openBanUserModal && userToBan" title="Bannissement du l'utilisateur">
+            <template v-slot:body>
+                <div class="text-center">
+                    <p>Êtes-vous sûr de vouloir bannir {{ userToBan.user }} ?</p>
+                </div>
+            </template>
+            <template v-slot:footer>
+                <div class="flex justify-center space-x-2">
+                    <button @click="banUser" type="button"
+                            class="p-2 rounded-lg text-md font-medium border-2 border-red-500 text-red-500 hover:text-white hover:bg-red-500 hover:border-transparent">
+                        Oui
+                    </button>
+                    <button @click="[openBanUserModal = false, userToBan = null]" type="button"
+                            class="p-2 rounded-lg text-md font-medium border-2 border-lime-500 text-lime-500 hover:text-white hover:bg-lime-500 hover:border-transparent">
+                        Non
+                    </button>
+                </div>
+            </template>
+        </admin-modal>
     </div>
 </template>
 
 <script setup>
-import {ref, computed, reactive} from 'vue';
-import {router} from "@inertiajs/vue3";
+import {defineProps, ref, computed, reactive} from 'vue';
 import NavigationMenu from "@/Layouts/NavigationMenu.vue";
 import AdminSideBar from "@/Layouts/AdminSideBar.vue";
 import BackOfficeTable from "@/Components/Table/BackOfficeTable.vue";
 import ContextMenuButton from "@/Components/Buttons/ContextMenuButton.vue";
+import AdminModal from "@/Components/Modal/AdminModal.vue";
+
+const props = defineProps({
+    crops: Array,
+});
+
 //  Verify if the user is authenticated from session
 const authenticated = ref(false);
 const cropSearch = ref('');
@@ -83,18 +108,14 @@ const headers = [
     {column: 'userId', name: 'Utilisateur', type: 'string', hidden: true},
 ];
 
-const rows = [
-    {id: 1, name: 'Jardin 1 de User 10', image: 'https://via.placeholder.com/150', user: 'User 10', reports: 7, userId: 10},
-    {id: 2, name: 'Jardin 1 de User 11', image: 'https://via.placeholder.com/150', user: 'User 11', reports: 17, userId: 11},
-    {id: 3, name: 'Jardin 1 de User 12', image: 'https://via.placeholder.com/150', user: 'User 12', reports: 27, userId: 12},
-    {id: 4, name: 'Jardin 1 de User 13', image: 'https://via.placeholder.com/150', user: 'User 13', reports: 37, userId: 13},
-    {id: 5, name: 'Jardin 2 de User 13', image: 'https://via.placeholder.com/150', user: 'User 13', reports: 47, userId: 13},
-    {id: 6, name: 'Jardin 1 de User 15', image: 'https://via.placeholder.com/150', user: 'User 15', reports: 57, userId: 15},
-];
+const rows = ref(props.crops);
+
+const openBanUserModal = ref(false);
+const userToBan = ref(null);
 
 const computedUsersList = computed(() => {
 //     Get the list of users from the rows and do not duplicate if the user is already in the list
-    return rows.reduce((acc, row) => {
+    return rows.value.reduce((acc, row) => {
         if (!acc.find(user => user.userId === row.userId)) {
             acc.push({userId: row.userId, name: row.user});
         }
@@ -104,19 +125,19 @@ const computedUsersList = computed(() => {
 
 const actions = [
     {
-        icon: 'PencilOutline',
+        icon: 'Magnify',
         color: 'blue',
-        method: 'editUser'
+        method: 'seeCrop'
     },
     {
         icon: 'Cancel',
         color: 'red',
-        method: 'banUser'
+        method: 'openBanModal',
     }
 ];
 
 const filteredRows = computed(() => {
-    return rows.filter(row => {
+    return rows.value.filter(row => {
         let returnRow = true;
         if (filters.cropSearch.trim().length > 0) {
 
@@ -142,19 +163,36 @@ const filteredRows = computed(() => {
 });
 
 const activate = (action) => {
-    if (action?.method === 'editUser') {
-        editUser(action.rowIndex);
-    } else if (action?.method === 'banUser') {
-        banUser(action.rowIndex);
+    if (action?.method === 'seeCrop') {
+        seeCrop(action.rowIndex);
+    } else if (action?.method === 'openBanModal') {
+        openBanModal(action.rowIndex);
     }
 };
 
-const editUser = (rowIndex) => {
-    console.log('Edit user', rowIndex);
+const seeCrop = (rowIndex) => {
+    // Get the crop from the rows
+    const crop = filteredRows.value[rowIndex];
+    // Visit the crop page in a new tab
+    window.open(`/crop/${crop.id}`, '_blank');
 };
 
-const banUser = (rowIndex) => {
-    console.log('Ban user', rowIndex);
+const openBanModal = (rowIndex) => {
+    userToBan.value = filteredRows.value[rowIndex];
+    openBanUserModal.value = true;
+};
+
+const banUser = async () => {
+    if (userToBan.value) {
+        await axios.delete(`/admin/users/${userToBan.value.userId}`).then(response => {
+            if (response.data.success) {
+                rows.value = rows.value.filter(row => row.userId !== userToBan.value.userId);
+                openBanUserModal.value = false;
+            }
+        }).catch(error => {
+            console.log(error);
+        });
+    }
 };
 
 const updateFilters = (event, filter) => {
@@ -163,10 +201,6 @@ const updateFilters = (event, filter) => {
         return;
     }
     filters[filter] = event.target.value;
-};
-
-const showSwap = (rowIndex) => {
-    router.visit(`/admin/swaps/${rowIndex}`);
 };
 
 

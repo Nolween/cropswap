@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCropRequest;
 use App\Http\Requests\UpdateCropRequest;
 use App\Models\Crop;
+use Inertia\Inertia;
 
 class CropController extends Controller
 {
@@ -13,7 +14,28 @@ class CropController extends Controller
      */
     public function index()
     {
-        //
+        // Get Crops with only id, name, and user_id as userId and user name as user
+        $crops = Crop::select('id', 'name', 'user_id', 'image')
+                     ->orderBy('name')
+                     ->get();
+
+        $crops = $crops->map(function ($crop) {
+            return [
+                'id'      => $crop->id,
+                'name'    => $crop->name,
+                'image'   => $crop->image,
+                'user'    => $crop->user->name,
+                'reports' => 5, // Fake data
+                'userId'  => $crop->user_id,
+            ];
+        });
+
+        return Inertia::render(
+            'Admin/Crop/Index',
+            [
+                'crops' => $crops,
+            ]
+        );
     }
 
     /**

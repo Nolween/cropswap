@@ -155,6 +155,8 @@ const tagToAdd = ref('');
 
 const article = reactive(props.article);
 
+article.tags = JSON.parse(article.tags);
+
 const openedDeleteCommentModal = ref(false);
 const commentToDelete = ref(null);
 
