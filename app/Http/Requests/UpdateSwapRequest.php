@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class UpdateSwapRequest extends FormRequest
 {
@@ -11,7 +12,7 @@ class UpdateSwapRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return Auth::user()->isAdmin();
     }
 
     /**
@@ -22,7 +23,11 @@ class UpdateSwapRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name'      => 'required|string',
+            'category'  => 'required|string',
+            'image'     => 'required|string',
+            'imageFile' => 'image',
+            'id'        => 'required|exists:swaps,id',
         ];
     }
 }

@@ -25,7 +25,7 @@
                                 <label for="category" class="text-gray-600">Catégorie</label>
                                 <select v-model="form.category" id="category" name="category"
                                         class="w-full p-2 border-2 border-gray-200 rounded-md">
-                                    <option value="null">Toutes les catégories</option>
+                                    <option value="null">Pas de catégorie</option>
                                     <option v-for="(category, categoryIndex) in categories"
                                             :key="categoryIndex"
                                             :value="category.value" :selected="category.value === form.category">
@@ -36,10 +36,10 @@
                             <!-- INPUT LOAD IMAGE -->
                             <div class="w-full p-2">
                                 <span class="text-gray-600">Image du swap</span>
-                                <input type="file" id="image" name="image"
+                                <input type="file" id="image" name="image" @change="updateImage"
                                        class="w-full p-2 border-2 border-gray-200 rounded-md hidden"/>
                                 <label for="image" class="text-gray-600">
-                                    <img :src="form.image" alt="Image du swap"
+                                    <img :src="computedImage" alt="Image du swap"
                                          class="max-w-80 max-h-80 object-cover mx-auto mb-2 cursor-pointer">
                                 </label>
                             </div>
@@ -65,27 +65,79 @@
 <script setup>
 import NavigationMenu from "@/Layouts/NavigationMenu.vue";
 import AdminSideBar from "@/Layouts/AdminSideBar.vue";
-import {computed, ref} from "vue";
+import {defineProps, computed, ref} from "vue";
 
-const categories = [
-    {name: 'Céréale', value: 'cereal'},
-    {name: 'Légume', value: 'vegetable'},
-    {name: 'Fruit', value: 'fruit'},
-];
+const props = defineProps({
+    swap: {type: Object, nullable: true},
+    categories: Object,
+});
+
+const computedImage = computed(() => {
+    return form.value.image.startsWith('blob') ? form.value.image : `/images/food/${form.value.image}`;
+});
+
+const categories = props.categories;
 
 const form = ref({
-    name: '',
-    image: 'https://images.unsplash.com/photo-1711924847907-498771a92bde?q=80&w=473&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    category: 'fruit'
+    name: props.swap.name,
+    image: props.swap.image,
+    category: props.swap.category,
+    id: props.swap.id,
+
 });
 
 
 const validForm = computed(() => {
-    return form.value.name.length > 0 && form.value.category.length > 0 && form.value.image.length > 0;
+    return form.value.name.length > 0
+        && form.value.category && form.value.category.length > 0
+        && form.value.image.length > 0 && form.value.imageFile
+        && form.value.image !== 'empty.svg';
 });
 
-const submitForm = () => {
-    console.log(form.value);
+
+const updateImage = (event) => {
+    if (event.target.files && event.target.files[0]) {
+        form.value.image = URL.createObjectURL(event.target.files[0]);
+        form.value.imageFile = event.target.files[0];
+    }
+};
+
+const submitForm = async () => {
+    const formData = new FormData();
+    formData.append('name', form.value.name);
+    formData.append('category', form.value.category);
+    formData.append('image', form.value.image);
+    formData.append('imageFile', form.value.imageFile);
+
+    if (form.value.id) {
+        formData.append('id', form.value.id);
+        formData.append('_method', 'PUT');
+
+        await axios.post(`/admin/swap/${form.value.id}`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }).then(response => {
+            if (response.data.success) {
+                window.location.href = route('admin.swap.index');
+            }
+        }).catch(error => {
+            console.log(error.response.data);
+        });
+
+    } else {
+        await axios.post(`/admin/swap`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }).then(response => {
+            if (response.data.success) {
+                window.location.href = route('admin.swap.index');
+            }
+        }).catch(error => {
+            console.log(error.response.data);
+        });
+    }
 }
 </script>
 

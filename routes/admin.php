@@ -26,11 +26,11 @@ Route::prefix('admin')->middleware(IsAdminAuthenticated::class)->group(function 
     // SWAP PART
     Route::prefix('swap')->group(function () {
         Route::get('/index', [SwapController::class, 'index'])->name('admin.swap.index');
-        Route::get('/create', function () {
-            return Inertia::render(
-                'Admin/Swap/Create'
-            );
-        })->name('admin.swap.create');
+        Route::get('/create', [SwapController::class, 'create'])->name('admin.swap.create');
+        Route::get('/{swap}', [SwapController::class, 'show'])->name('admin.swap.show');
+        Route::post('/', [SwapController::class, 'store'])->name('admin.swap.store');
+        Route::put('/{swap}', [SwapController::class, 'update'])->name('admin.swap.update');
+        Route::delete('/{swap}', [SwapController::class, 'destroy'])->name('admin.swap.destroy');
     });
 
     // USERS PART

@@ -28,19 +28,22 @@
                              @show="showLine(rowIndex)"/>
             </tbody>
         </table>
-        <div v-if="props.perPage">
-            <div class="flex flex-wrap justify-center space-x-2 p-2">
+        <div v-if="props.perPage && props.rows.length > props.perPage">
+            <div class="flex flex-wrap justify-center space-x-2 p- ">
                 <!-- Previous -->
                 <div class="cursor-pointer text-blue-400 font-bold"
                      @click="currentPage > 1 ? currentPage = currentPage - 1 : ''">
                     Précédent
                 </div>
-                <div v-for="page in Math.ceil(props.rows.length / props.perPage)" :key="page"
-                     class="cursor-pointer"
-                     @click="currentPage = page"
-                     :class="currentPage === page ? 'text-blue-400 font-bold' : 'text-gray-500'">
-                    {{ page }}
-                </div>
+                <template v-for="page in Math.ceil(props.rows.length / props.perPage)" :key="page">
+                    <!-- Show only multiple pf ten and 3 around the current page -->
+                    <div v-if="page === 1 || page === currentPage || page < currentPage + 3 && page > currentPage - 3 || page === Math.ceil(props.rows.length / props.perPage) || page % 10 === 0"
+                        class="cursor-pointer"
+                        @click="currentPage = page"
+                        :class="currentPage === page ? 'text-blue-400 font-bold' : 'text-gray-500'">
+                        {{ page }}
+                    </div>
+                </template>
                 <!-- Next -->
                 <div class="cursor-pointer text-blue-400 font-bold"
                      @click="currentPage < Math.ceil(props.rows.length / props.perPage) ? currentPage = currentPage + 1 : ''">
@@ -77,7 +80,7 @@ const sorting = reactive({
 const emit = defineEmits(['action', 'show']);
 
 const showLine = (rowIndex) => {
-    emit('show', rowIndex);
+    emit('show', ((currentPage.value - 1) * props.perPage) + rowIndex);
 };
 
 const activate = (method, rowIndex) => {
@@ -110,7 +113,7 @@ const computedSortedRows = computed(() => {
                 }
             }
         });
-        //     Pages
+        // Pages
         if (props.perPage) {
             return sortedRows.slice((currentPage.value - 1) * props.perPage, currentPage.value * props.perPage);
         }

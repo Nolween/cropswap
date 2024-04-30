@@ -52,17 +52,37 @@
 
             </div>
         </div>
+        <admin-modal v-if="swapToDelete && openSwapModalDelete" title="Suppression de swap">
+            <template v-slot:body>
+                <div class="text-center">
+                    <p>Êtes-vous sûr de vouloir supprimer {{swapToDelete.name }} ?</p>
+                </div>
+            </template>
+            <template v-slot:footer>
+                <div class="flex justify-center space-x-2">
+                    <button @click="confirmSwapDelete"
+                            class="p-2 rounded-lg text-md font-medium border-2 border-red-500 text-red-500 hover:text-white hover:bg-red-500 hover:border-transparent">
+                        Oui
+                    </button>
+                    <button @click="openSwapModalDelete = false"
+                            class="p-2 rounded-lg text-md font-medium border-2 border-lime-500 text-lime-500 hover:text-white hover:bg-lime-500 hover:border-transparent">
+                        Non
+                    </button>
+                </div>
+            </template>
+        </admin-modal>
     </div>
 </template>
 
 <script setup>
-import {defineProps,ref, computed, reactive} from 'vue';
+import {defineProps, ref, computed, reactive} from 'vue';
 import {Link, router} from "@inertiajs/vue3";
 import NavigationMenu from "@/Layouts/NavigationMenu.vue";
 import AdminSideBar from "@/Layouts/AdminSideBar.vue";
 import PlusIcon from "vue-material-design-icons/Plus.vue";
 import BackOfficeTable from "@/Components/Table/BackOfficeTable.vue";
 import ContextMenuButton from "@/Components/Buttons/ContextMenuButton.vue";
+import AdminModal from "@/Components/Modal/AdminModal.vue";
 
 const props = defineProps({
     swaps: Object,
@@ -72,6 +92,8 @@ const props = defineProps({
 //  Verify if the user is authenticated from session
 const authenticated = ref(false);
 const swapSearch = ref('');
+const openSwapModalDelete = ref(false);
+const swapToDelete = ref(null);
 
 const filters = reactive({
     swapSearch: '',
@@ -90,11 +112,6 @@ const headers = [
 const rows = ref(props.swaps);
 
 const actions = [
-    {
-        icon: 'PencilOutline',
-        color: 'blue',
-        method: 'editSwap'
-    },
     {
         icon: 'TrashCanOutline',
         color: 'red',
@@ -122,21 +139,32 @@ const filteredRows = computed(() => {
     });
 });
 
+
 const activate = (action) => {
-    if (action?.method === 'editSwap') {
-        editSwap(action.rowIndex);
-    } else if (action?.method === 'deleteSwap') {
-        deleteSwap(action.rowIndex);
+    if (action?.method === 'deleteSwap') {
+        swapToDelete.value = filteredRows.value[action.rowIndex];
+        openSwapModalDelete.value = true;
     }
 };
+
+const confirmSwapDelete = async () => {
+    if (swapToDelete.value) {
+        await axios.delete(`/admin/swap/${swapToDelete.value.id}`).then(response => {
+            if(response.data.success) {
+                rows.value = rows.value.filter(row => row.id !== swapToDelete.value.id);
+                openSwapModalDelete.value = false;
+            }
+        }).catch(error => {
+            console.log(error);
+        });
+    }
+}
+
 
 const editSwap = (rowIndex) => {
     console.log('Edit user', rowIndex);
 };
 
-const deleteSwap = (rowIndex) => {
-    console.log('Ban user', rowIndex);
-};
 
 const updateFilters = (event, filter) => {
     if (event.target.value === 'null') {
@@ -147,7 +175,7 @@ const updateFilters = (event, filter) => {
 };
 
 const showSwap = (rowIndex) => {
-    router.visit(`/admin/swaps/${rowIndex}`);
+    router.visit(`/admin/swap/${filteredRows.value[rowIndex].id}`);
 };
 
 
