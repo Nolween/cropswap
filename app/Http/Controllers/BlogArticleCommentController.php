@@ -29,7 +29,24 @@ class BlogArticleCommentController extends Controller
      */
     public function store(StoreBlogArticleCommentRequest $request)
     {
-        //
+        //    Create a new comment for the blog article
+        $newComment = BlogArticleComment::create([
+            'content'         => $request->get('content'),
+            'user_id'         => auth()->id(),
+            'blog_article_id' => $request->get('blog_article_id'),
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'comment' => [
+                'avatar'     => $newComment->user->image ? filter_var($newComment->user->image, FILTER_VALIDATE_URL) !== false ? $newComment->user->image : '/images/user/' . $newComment->user->image : 'empty.svg',
+                'content'    => $newComment->content,
+                'created_at' => $newComment->created_at,
+                'id'         => $newComment->id,
+                'updated_at' => $newComment->updated_at,
+                'user'       => $newComment->user->name,
+            ]
+        ]);
     }
 
     /**

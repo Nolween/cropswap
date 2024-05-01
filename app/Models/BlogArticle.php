@@ -37,7 +37,7 @@ class BlogArticle extends Model
 
     public function comments() :HasMany
     {
-        return $this->hasMany(BlogArticleComment::class);
+        return $this->hasMany(BlogArticleComment::class)->orderBy('created_at', 'desc');
     }
 
 }

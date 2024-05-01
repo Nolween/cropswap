@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class StoreBlogArticleCommentRequest extends FormRequest
 {
@@ -11,7 +12,7 @@ class StoreBlogArticleCommentRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return Auth::check();
     }
 
     /**
@@ -22,7 +23,8 @@ class StoreBlogArticleCommentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'content' => ['required', 'string'],
+            'blog_article_id' => ['required', 'integer', 'exists:blog_articles,id'],
         ];
     }
 }

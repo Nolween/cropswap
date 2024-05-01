@@ -26,7 +26,6 @@ class BlogArticleController extends Controller
 
     public function homeBlog(?string $tag = null): InertiaResponse
     {
-
         return Inertia::render('Blog/Index', [
             'articlesCount' => BlogArticle::count(),
             'tag'           => $tag,
@@ -85,7 +84,6 @@ class BlogArticleController extends Controller
     {
         // Moving the image to the right folder
         if ($request->hasFile('imageFile')) {
-
             $image = $request->file('imageFile');
             $imageName = time() . '.' . $image->extension();
             // Move the image to the right folder
@@ -93,7 +91,6 @@ class BlogArticleController extends Controller
 
             // Update the request with the new image name
             $request->merge(['image' => $imageName]);
-
         }
 
         $request->merge(['user_id' => Auth::user()->id]);
@@ -108,14 +105,15 @@ class BlogArticleController extends Controller
      */
     public function show(BlogArticle $blogArticle): InertiaResponse
     {
-        $query = BlogArticle::query();
-
-        // Find 3 articles with at least one tag in common
-        foreach ($blogArticle->tags as $tag) {
-            $query->orWhereJsonContains('tags', $tag);
-        }
+        // Get tags of the article
+        $tags = $blogArticle->tags;
 
         $relatedArticles = BlogArticle::where('id', '!=', $blogArticle->id)
+                                      ->where(function ($query) use ($tags) {
+                                          foreach ($tags as $tag) {
+                                              $query->orWhereJsonContains('tags', $tag);
+                                          }
+                                      })
                                       ->limit(3)
                                       ->inRandomOrder()
                                       ->get();
@@ -140,6 +138,16 @@ class BlogArticleController extends Controller
             'created_at'       => $blogArticle->created_at,
             'updated_at'       => $blogArticle->updated_at,
             'tags'             => $blogArticle->tags,
+            'comments'         => $blogArticle->comments->map(function ($comment) {
+                return [
+                    'id'         => $comment->id,
+                    'content'    => $comment->content,
+                    'created_at' => $comment->created_at,
+                    'updated_at' => $comment->updated_at,
+                    'user'       => $comment->user->name ?? 'Unknown author',
+                    'avatar'     => $comment->user->image ? filter_var($comment->user->image, FILTER_VALIDATE_URL) !== false ? $comment->user->image : '/images/user/' . $comment->user->image : 'empty.svg'
+                ];
+            }),
             'related_articles' => $relatedArticles
         ]);
     }
@@ -171,7 +179,6 @@ class BlogArticleController extends Controller
     {
         // Moving the image to the right folder
         if ($request->hasFile('imageFile')) {
-
             $image = $request->file('imageFile');
             $imageName = time() . '.' . $image->extension();
             // Move the image to the right folder
@@ -179,7 +186,6 @@ class BlogArticleController extends Controller
 
             // Update the request with the new image name
             $request->merge(['image' => $imageName]);
-
         }
 
         $request->merge(['user_id' => Auth::user()->id]);

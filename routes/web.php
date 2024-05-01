@@ -50,6 +50,9 @@ Route::group(['prefix' => 'blog'], function () {
     Route::get('/{tag}', [BlogArticleController::class, 'homeBlog'])->name('blog.tag');
     // Show article
     Route::get('/article/{blogArticle}', [BlogArticleController::class, 'show'])->name('blog.show');
+//  Comments
+    Route::post('/article/comment', [BlogArticleCommentController::class, 'store'])->name('blog.comment.store');
+    Route::delete('/article/{blogArticle}/comment/{blogArticleComment}', [BlogArticleCommentController::class, 'destroy'])->name('blog.comment.destroy');
 });
 
 // CROP ROUTES
