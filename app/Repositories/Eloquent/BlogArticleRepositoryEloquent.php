@@ -7,12 +7,17 @@ use App\Repositories\Interfaces\BlogArticleRepositoryInterface;
 
 class BlogArticleRepositoryEloquent implements BlogArticleRepositoryInterface
 {
-    public function index()
+    public function index(?string $tag = null)
     {
-        return BlogArticle::where('deleted_at', null)
-                          ->with('comments')
-                          ->orderBy('created_at', 'desc')
-                          ->get();
+        $query = BlogArticle::where('deleted_at', null)
+                            ->with('comments')
+                            ->orderBy('created_at', 'desc');
+
+        if ($tag) {
+            $query->whereJsonContains('tags', $tag);
+        }
+
+        return $query->get();
     }
 
     public function adminIndex()

@@ -46,8 +46,10 @@ Route::group(['prefix' => 'blog'], function () {
     // List of articles
     Route::get('/', [BlogArticleController::class, 'homeBlog'])->name('blog');
     Route::get('/index', [BlogArticleController::class, 'index'])->name('blog.index');
+    Route::get('/index/{tag}', [BlogArticleController::class, 'index'])->name('blog.index.tag');
+    Route::get('/{tag}', [BlogArticleController::class, 'homeBlog'])->name('blog.tag');
     // Show article
-    Route::get('/{blogArticle}', [BlogArticleController::class, 'show'])->name('blog.show');
+    Route::get('/article/{blogArticle}', [BlogArticleController::class, 'show'])->name('blog.show');
 });
 
 // CROP ROUTES

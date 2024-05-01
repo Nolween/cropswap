@@ -1,11 +1,20 @@
 <template>
     <div>
         <navigation-menu></navigation-menu>
-        <div class="flex flex-nowrap justify-around items-center">
+        <div class="flex flex-wrap justify-around items-center">
             <div class="w-full md:w-1/2 p-6 font-title text-gray-700 space-y-4">
                 <h2 class="text-4xl font-extrabold ">{{ props.title }}</h2>
                 <!-- SEPARATOR -->
                 <div class="w-1/4 h-0.5 bg-gray-200"></div>
+
+                <div class="w-full flex flex-wrap gap-3">
+                    <div class="flex" v-for="(tag, tagIndex) in props.tags" :key="tagIndex">
+                    <span @click="goToArticlesTag(tag)"
+                        class="hover:text-blue-500 hover:bg-white hover:border-blue-500 border-2 border-transparent bg-blue-500 text-white font-medium p-2 rounded-md cursor-pointer">
+                        {{ tag }}
+                    </span>
+                    </div>
+                </div>
                 <div class="flex justify-between">
                     <div>
                         <div class="font-bold">{{ props.author }}</div>
@@ -94,6 +103,10 @@ const computedImage = computed(() => {
     }
     return '/images/blog/default.jpg';
 });
+
+const goToArticlesTag = (tag) => {
+    router.visit(`/blog/${tag}`);
+};
 
 onMounted(() => {
     // If article is not null, set the image to the computed image

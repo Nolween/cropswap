@@ -86,6 +86,7 @@ const {isLoading, setLoading} = useLoading();
 
 const props = defineProps({
     articlesCount: Number,
+    tag: {type: String, nullable: true},
 });
 
 
@@ -113,16 +114,17 @@ const computedArticles = computed(() => {
 });
 
 const goToArticle = (id) => {
-    router.visit(`/blog/${id}`);
+    router.visit(`/blog/article/${id}`);
 };
 
 
 // Fetch blog article data to /blog route
 const fetchBlogArticles = async () => {
+
+    const url = !props.tag ? '/blog/index' : `/blog/index/${props.tag}` ;
     setLoading(true);
-    try {
-        const response = await fetch('/blog/index');
-        articles.value = await response.json();
+    axios.get(url).then(response => {
+        articles.value = response.data;
         articles.value.map(article => {
             article.image = article.image.startsWith('http') ? article.image : `/images/blog/${article.image}`;
             // Remove html tags from content
@@ -130,9 +132,10 @@ const fetchBlogArticles = async () => {
             return article;
         });
         setLoading(false);
-    } catch (error) {
+    }).catch(error => {
         console.error(error);
-    }
+    });
+
 };
 
 onBeforeMount(() => {

@@ -6,7 +6,7 @@ use App\Models\BlogArticle;
 
 interface BlogArticleRepositoryInterface
 {
-    public function index();
+    public function index(?string $tag = null);
     public function adminIndex();
     public function create();
     public function store();

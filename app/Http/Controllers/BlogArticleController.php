@@ -6,9 +6,13 @@ use App\Http\Requests\StoreBlogArticleRequest;
 use App\Http\Requests\UpdateBlogArticleRequest;
 use App\Models\BlogArticle;
 use App\Repositories\Interfaces\BlogArticleRepositoryInterface;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Response;
 use Inertia\Inertia;
+use Inertia\Response as InertiaResponse;
+
 
 class BlogArticleController extends Controller
 {
@@ -20,24 +24,26 @@ class BlogArticleController extends Controller
         $this->blogArticleRepository = $blogArticleRepository;
     }
 
-    public function homeBlog()
+    public function homeBlog(?string $tag = null): InertiaResponse
     {
+
         return Inertia::render('Blog/Index', [
             'articlesCount' => BlogArticle::count(),
+            'tag'           => $tag,
         ]);
     }
 
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(?string $tag = null): JsonResponse
     {
-        $articles = $this->blogArticleRepository->index();
+        $articles = $this->blogArticleRepository->index($tag);
 
         return response()->json($articles);
     }
 
-    public function adminIndex()
+    public function adminIndex(): InertiaResponse
     {
         Gate::authorize('adminIndex', BlogArticle::class);
 
@@ -65,7 +71,7 @@ class BlogArticleController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): InertiaResponse
     {
         return Inertia::render('Admin/BlogArticle/Create', [
             'title' => 'Admin Blog Article Create',
@@ -75,7 +81,7 @@ class BlogArticleController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreBlogArticleRequest $request)
+    public function store(StoreBlogArticleRequest $request): JsonResponse
     {
         // Moving the image to the right folder
         if ($request->hasFile('imageFile')) {
@@ -100,7 +106,7 @@ class BlogArticleController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(BlogArticle $blogArticle)
+    public function show(BlogArticle $blogArticle): InertiaResponse
     {
         $query = BlogArticle::query();
 
@@ -141,7 +147,7 @@ class BlogArticleController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(BlogArticle $blogArticle)
+    public function edit(BlogArticle $blogArticle): InertiaResponse
     {
         return Inertia::render('Admin/BlogArticle/Create', [
             'title'    => 'Admin Blog Article Edit',
@@ -161,7 +167,7 @@ class BlogArticleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateBlogArticleRequest $request, BlogArticle $blogArticle)
+    public function update(UpdateBlogArticleRequest $request, BlogArticle $blogArticle): JsonResponse
     {
         // Moving the image to the right folder
         if ($request->hasFile('imageFile')) {
