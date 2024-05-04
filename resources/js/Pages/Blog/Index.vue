@@ -41,31 +41,33 @@
             </div>
         </div>
 
-        <!-- OTHER ARTICLES AND SEARCH -->
-        <div class=" w-full flex flex-wrap p-6">
-            <div class="w-1/2 text-2xl pl-2">Autres Articles</div>
-            <div class="w-1/2">
-                <input type="text"
-                       v-model="search"
-                       placeholder="Rechercher un article"
-                       class="w-full p-2"/>
+        <template v-if="computedArticles.length > 3">
+            <!-- OTHER ARTICLES AND SEARCH -->
+            <div class=" w-full flex flex-wrap p-6">
+                <div class="w-1/2 text-2xl pl-2">Autres Articles</div>
+                <div class="w-1/2">
+                    <input type="text"
+                           v-model="search"
+                           placeholder="Rechercher un article"
+                           class="w-full p-2"/>
+                </div>
             </div>
-        </div>
 
-        <!-- OTHER ARTICLES IN GRID -->
-        <div class="w-full p-3 lg:p-6 space-y-4 mb-40">
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <template v-for="(article, articleIndex) in computedArticles" :key="articleIndex">
-                    <article-card :title="article.title"
-                                  :content="truncateText(article.content, 300)"
-                                  :image="article.image"
-                                  :id="article.id"
-                                  @go-to-article="goToArticle"
-                                  :is-loading="isLoading"
-                    />
-                </template>
+            <!-- OTHER ARTICLES IN GRID -->
+            <div class="w-full p-3 lg:p-6 space-y-4 mb-40">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <template v-for="(article, articleIndex) in computedArticles" :key="articleIndex">
+                        <article-card :title="article.title"
+                                      :content="truncateText(article.content, 300)"
+                                      :image="article.image"
+                                      :id="article.id"
+                                      @go-to-article="goToArticle"
+                                      :is-loading="isLoading"
+                        />
+                    </template>
+                </div>
             </div>
-        </div>
+        </template>
 
     </div>
 </template>
@@ -121,7 +123,7 @@ const goToArticle = (id) => {
 // Fetch blog article data to /blog route
 const fetchBlogArticles = async () => {
 
-    const url = !props.tag ? '/blog/index' : `/blog/index/${props.tag}` ;
+    const url = !props.tag ? '/blog/index' : `/blog/index/${props.tag}`;
     setLoading(true);
     axios.get(url).then(response => {
         articles.value = response.data;

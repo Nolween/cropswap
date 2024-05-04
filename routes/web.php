@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BlogArticleCommentController;
 use App\Http\Controllers\BlogArticleController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserMessageController;
 use Illuminate\Foundation\Application;
@@ -18,14 +19,7 @@ use Inertia\Inertia;
 // });
 
 
-Route::get('/', function () {
-    return Inertia::render(
-        'Home',
-        [
-            'title' => 'Home Page',
-        ]
-    );
-})->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 
 // Connected Account

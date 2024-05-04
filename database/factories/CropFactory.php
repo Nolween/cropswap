@@ -17,6 +17,8 @@ class CropFactory extends Factory
      */
     public function definition(): array
     {
+        $frenchLatitude = $this->faker->latitude(42.603354, 49.124199);
+        $frenchLongitude = $this->faker->longitude(-1.317383, 7.560303);
         return [
             'name'              => $this->faker->sentence,
             'description'       => $this->faker->paragraph,
@@ -25,8 +27,8 @@ class CropFactory extends Factory
             'created_at'        => $this->faker->dateTimeThisYear,
             'updated_at'        => $this->faker->dateTimeThisMonth,
             'deleted_at'        => null,
-            'latitude'          => $this->faker->latitude,
-            'longitude'         => $this->faker->longitude,
+            'latitude'          => $frenchLatitude,
+            'longitude'         => $frenchLongitude,
             'is_active'         => $this->faker->boolean,
             'is_permaculture'   => $this->faker->boolean,
             'is_shared'         => $this->faker->boolean,

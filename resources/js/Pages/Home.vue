@@ -68,73 +68,59 @@
             </div>
         </div>
 
-        <!-- BLOG CAROUSEL ARTICLES  -->
-        <div class="flex w-full justify-center mx-auto mb-4">
-            <blog-article :articles="articles"/>
+
+        <!-- BLOG ARTICLES SAMPLES -->
+        <div>
+            <div class="text-6xl lg:text-8xl font-extrabold text-lime-500 text-center p-3">
+                Articles du Blog
+            </div>
+            <div class="bg-gray-200 p-3 flex flex-nowrap overflow-x-auto gap-3">
+                <article-card v-for="(article, articleIndex) in articles"
+                              :key="articleIndex" @click="goToArticle(article.id)"
+                              :content="article.content"
+                              :image="article.image"
+                              :title="article.title"
+                              :date="article.created_at"
+                              :tags="article.tags"
+                              :user="article.user"
+                              :id="article.id"
+                              @go-to-article="goToArticle"
+                              @go-to-tag="goToTag"
+                >
+                </article-card>
+            </div>
         </div>
-
-
     </div>
 </template>
 <script setup>
-import {ref} from 'vue';
-import BlogArticle from "@/Components/Carousel/BlogArticle.vue";
+import {defineProps, ref} from 'vue';
 import NavigationMenu from '@/Layouts/NavigationMenu.vue';
 import SimpleCard from "@/Components/Cards/SimpleCard.vue";
+import ArticleCard from "@/Components/Cards/ArticleCard.vue";
 import LeafletMap from "@/Components/Maps/LeafletMap.vue";
 import {Link} from "@inertiajs/vue3";
 import {useSessionInformations} from "@/Composables/session.js";
+import {router} from "@inertiajs/vue3";
 
 const {isAuthenticated, isAdmin} = useSessionInformations();
 
+const props = defineProps({
+    articles: Array,
+    crops: Array,
+});
 
-const articles = [
-    {
-        title: "Article 1",
-        content: "Content of article 1",
-        image: "https://images.unsplash.com/photo-1560493676-04071c5f467b?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8YWdyaWN1bHR1cmV8ZW58MHx8MHx8fDI%3D"
-    },
-    {
-        title: "Article 2",
-        content: "Content of article 2",
-        image: "https://images.unsplash.com/photo-1499529112087-3cb3b73cec95?q=80&w=3474&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-    },
-    {
-        title: "Article 3",
-        content: "Content of article 3",
-        image: "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-    },
-    {
-        title: "Article 4",
-        content: "Content of article 4",
-        image: "https://images.unsplash.com/photo-1559884743-74a57598c6c7?q=80&w=3552&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-    },
-];
+const articles = props.articles;
 
-const markers = ref([
-    {
-        id: 1,
-        icon: 'leaf-green',
-        position: [47.2184, -1.5536],
-        name: "User 1",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed blandit libero volutpat sed cras ornare arcu.",
-    },
-    {
-        id: 2,
-        icon: 'leaf-green',
-        position: [48.8566, 2.3522],
-        name: "User 2",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    },
-    {
-        id: 3,
-        icon: 'leaf-orange',
-        position: [43.7102, 7.2620],
-        name: "User 3",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Fusce id velit ut tortor.",
-    }
-]);
 
+const markers = ref(props.crops);
+
+const goToArticle = (id) => {
+    router.visit(route('blog.show', {blogArticle: id}));
+}
+
+const goToTag = (tag) => {
+    router.visit(route('blog.tag', {tag: tag}));
+}
 
 </script>
 <style scoped>

@@ -61,7 +61,7 @@
         <!-- DISPONIBLE FOOD -->
         <div class="bg-lime-500 w-full p-8">
             <div class="w-full text-2xl lg:text-5xl font-title text-center text-white font-bold">
-                MES SWAPS A PROFUSIO
+                MES SWAPS A PROFUSION
             </div>
             <div class="flex flex-wrap justify-center items-center gap-4 p-5">
                 <!-- SWAP MINI CARD -->
