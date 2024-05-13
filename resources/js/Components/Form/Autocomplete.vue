@@ -1,5 +1,5 @@
 <template>
-    <div class="relative" ref="autocomplete">
+    <div class="relative z-40" ref="autocomplete">
         <input type="text" class="w-full p-2 border-2 border-gray-200 rounded-lg" :placeholder="props.placeholder"
                v-model="search" @input="searchValues" @click="isOpenedList = true">
         <div class="absolute right-3 top-3 cursor-pointer" @click="clearSearch" v-if="search.length > 0">

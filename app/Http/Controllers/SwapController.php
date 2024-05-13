@@ -14,7 +14,7 @@ class SwapController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function adminIndex()
     {
         $swaps = Swap::select('id', 'name', 'image', 'category')
                      ->orderBy('name')

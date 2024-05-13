@@ -5,37 +5,26 @@
         <div class="flex flex-wrap h-full">
 
             <!-- FILTER PART -->
-            <div class="w-full flex flex-wrap lg:w-1/3 overflow-auto items-center bg-orange-500">
+            <div class="w-full flex flex-wrap lg:w-1/3 overflow-auto bg-orange-500">
                 <div class="w-full py-8 px-4">
-                    <div class="w-full p-3">
-                        <button @click="filterCrops()"
-                                class="w-full mx-auto bg-lime-500 p-3 rounded-xl cursor-pointer text-white text-2xl font-bold">
-                            FILTRER
-                        </button>
-                    </div>
-                    <div class="w-full p-4">
-                        <input v-model="userSearch" type="text"
-                               placeholder="Rechercher un utilisateur"
-                               class="w-full p-2 border-2 border-gray-200 rounded-md"/>
-                    </div>
-                    <div class="w-full p-4">
+                    <div class="w-full p-4" :class="{'min-h-52 lg:min-h-auto': selectedSwaps.length === 0}">
                         <!-- An autocomplete input with list of swaps -->
                         <autocomplete v-model="swapSearch" :values="swapList"
-                                      placeholder="Selectionner des swaps"
+                                      placeholder="Sélectionner des swaps"
                                       :selected-values="selectedSwaps"
                                       :is-multiple="true"
                                       @updateSelectedValues="updateSelectedSwaps"/>
-                        <!-- List of all swaps options -->
                     </div>
 
-                    <!-- SELECTED SWPAS -->
+                    <!-- SELECTED SWAPS -->
                     <div class="w-full p-5" v-if="selectedSwaps.length > 0">
                         <div class="text-2xl font-bold mb-3">SWAPS SELECTIONNES</div>
                         <div class="flex flex-wrap gap-2">
                             <div v-for="(swap, swapIndex) in selectedSwaps" :key="swapIndex"
                                  class="bg-blue-500 text-white p-2 rounded-md font-bold">
-                                {{ swap.name }} <span @click="updateSelectedSwaps(selectedSwaps.filter(selectedSwap => selectedSwap !== swap))"
-                                                      class="cursor-pointer">X</span>
+                                {{ swap.name }} <span
+                                @click="updateSelectedSwaps(selectedSwaps.filter(selectedSwap => selectedSwap !== swap))"
+                                class="cursor-pointer">X</span>
                             </div>
                         </div>
                     </div>
@@ -45,7 +34,7 @@
             <!-- MAPS PART-->
             <div class="w-full lg:w-2/3 text-5xl font-title font-extrabold text-center">
                 <div class="w-full h-screen lg:h-full">
-                    <leaflet-map :markers="filteredMarkers"></leaflet-map>
+                    <leaflet-map :center="center" :zoom-level="zoomLevel" :markers="filteredMarkers"></leaflet-map>
                 </div>
             </div>
         </div>
@@ -59,81 +48,43 @@
 import NavigationMenu from "@/Layouts/NavigationMenu.vue";
 import LeafletMap from "@/Components/Maps/LeafletMap.vue";
 import Autocomplete from "@/Components/Form/Autocomplete.vue";
-import {ref, computed} from "vue";
+import {ref, defineProps, computed, onBeforeMount} from "vue";
 
-const userSearch = ref('');
+const props = defineProps({
+    markers: {type: Array, default: () => []},
+    zoomLevel: {type: Number, default: 10},
+    swaps: {type: Array, default: () => []},
+});
+
+
+const center = ref([46.605, 1.09]);
+const zoomLevel = ref(props.zoomLevel);
+
+
 const swapSearch = ref('');
 const selectedSwaps = ref([]);
 
-const swapList = ref([
-    {
-        id: 1,
-        name: "Pommes",
-    },
-    {
-        id: 2,
-        name: "Poires",
-    },
-    {
-        id: 3,
-        name: "Carottes",
-    },
-    {
-        id: 4,
-        name: "Tomates",
-    },
-]);
+const swapList = ref(props.swaps);
 
-const markers = ref([
-    {
-        id: 1,
-        icon: 'leaf-green',
-        position: [47.2184, -1.5536],
-        swaps: [1],
-        name: "User 1",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed blandit libero volutpat sed cras ornare arcu.",
-    },
-    {
-        id: 2,
-        icon: 'leaf-green',
-        position: [48.8566, 2.3522],
-        swaps: [2, 3],
-        name: "User 2",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    },
-    {
-        id: 3,
-        icon: 'leaf-orange',
-        position: [43.7102, 7.2620],
-        swaps: [4],
-        name: "User 3",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Fusce id velit ut tortor.",
-    },
-    {
-        id: 4,
-        icon: 'leaf-orange',
-        position: [45.7102, 5.2620],
-        swaps: [1, 3],
-        name: "User 4",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Fusce id velit ut tortor.",
+const markers = ref(props.markers);
+
+const filteredMarkers = computed(() => {
+
+    if (selectedSwaps.value.length > 0) {
+        return markers.value.filter(marker => {
+            return marker.swaps.some(swap => selectedSwaps.value.map(selectedSwap => selectedSwap.id).includes(swap.id));
+        });
     }
-]);
-
-let filteredMarkers = ref(markers.value);
+    else {
+        return markers.value;
+    }
+});
 
 const computedSelectedSwapsIds = computed(() => {
     return selectedSwaps.value.map(swap => swap.id);
 });
 
 const filterCrops = () => {
-    // Filter by user search
-    if (userSearch.value.length > 0) {
-        filteredMarkers.value = markers.value.filter(marker => {
-            return marker.name.toLowerCase().includes(userSearch.value.toLowerCase());
-        });
-    } else {
-        filteredMarkers.value = markers.value;
-    }
     if (selectedSwaps.value.length > 0) {
         filteredMarkers.value = filteredMarkers.value.filter(marker => {
             return marker.swaps.some(swap => computedSelectedSwapsIds.value.includes(swap));
@@ -144,6 +95,32 @@ const filterCrops = () => {
 const updateSelectedSwaps = (swaps) => {
     selectedSwaps.value = swaps;
 };
+
+const getPosition = () => {
+    return new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject);
+    });
+};
+
+onBeforeMount(async () => {
+    if (!props.center && localStorage.getItem('userPosition')) {
+        center.value = JSON.parse(localStorage.getItem('userPosition'));
+    }
+    // Try to get geolocation of the user
+    else if (navigator.geolocation) {
+        try {
+            const position = await getPosition();
+            localStorage.setItem('userPosition', JSON.stringify([position.coords.latitude, position.coords.longitude]));
+            center.value = [position.coords.latitude, position.coords.longitude];
+        } catch (error) {
+            center.value = [46.605, 1.09];
+            zoomLevel.value = 6.4;
+        }
+    } else {
+        center.value = [46.605, 1.09];
+        zoomLevel.value = 6.4;
+    }
+});
 
 </script>
 

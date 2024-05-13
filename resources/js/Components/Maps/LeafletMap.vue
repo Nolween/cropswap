@@ -1,5 +1,5 @@
 <template>
-    <div id="mapid" class="w-full h-full z-40"></div>
+    <div id="mapid" class="w-full h-full z-30"></div>
 </template>
 
 <script setup>
@@ -39,11 +39,20 @@ const renderMap = () => {
         // If the element does not exist, return early to avoid creating the map.
         return;
     }
+
+    let zoomLevel = props.zoomLevel;
+    let center = props.center;
+
     // Destroy map container
     if (map) {
+        //  keep the zoom level and center
+        center = map.getCenter();
+        zoomLevel = map.getZoom();
         map.remove();
     }
-    map = L.map('mapid', {scrollWheelZoom: false}).setView(props.center, props.zoomLevel);
+
+
+    map = L.map('mapid', {scrollWheelZoom: false}).setView(center, zoomLevel);
 
     let LeafIcon = L.Icon.extend({
         options: {
@@ -118,7 +127,15 @@ watch(
     () => {
         renderMap();
     },
-    { deep: true }
+    { deep: true, immediate: true }
+);
+
+watch(
+    () => props.center,
+    () => {
+        renderMap();
+    },
+    { deep: true, immediate: true }
 );
 
 </script>

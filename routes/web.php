@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BlogArticleCommentController;
 use App\Http\Controllers\BlogArticleController;
+use App\Http\Controllers\CropController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserMessageController;
@@ -61,14 +62,7 @@ Route::group(['prefix' => 'crop'], function () {
         );
     })->name('crop.show');
 
-    Route::get('/', function () {
-        return Inertia::render(
-            'Crop/Index',
-            [
-                'title' => 'Crops Search Page',
-            ]
-        );
-    })->name('crop.index');
+    Route::get('/', [CropController::class, 'index'])->name('crop.index');
 });
 
 

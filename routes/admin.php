@@ -17,12 +17,12 @@ Route::prefix('admin')->middleware(IsAdminAuthenticated::class)->group(function 
     })->name('admin.dashboard');
     // CROP PART
     Route::prefix('crop')->group(function () {
-        Route::get('index', [CropController::class, 'index'])->name('admin.crop.index');
+        Route::get('index', [CropController::class, 'adminIndex'])->name('admin.crop.index');
     });
 
     // SWAP PART
     Route::prefix('swap')->group(function () {
-        Route::get('/index', [SwapController::class, 'index'])->name('admin.swap.index');
+        Route::get('/index', [SwapController::class, 'adminIndex'])->name('admin.swap.index');
         Route::get('/create', [SwapController::class, 'create'])->name('admin.swap.create');
         Route::get('/{swap}', [SwapController::class, 'show'])->name('admin.swap.show');
         Route::post('/', [SwapController::class, 'store'])->name('admin.swap.store');

@@ -9,6 +9,9 @@ class CropSwap extends Model
 {
     use HasFactory;
 
+    // Define the table name
+    protected $table = 'crop_swap';
+
     // Define const for quantity, 0, 1 and 2
     const NONE_QUANTITY = 0;
     const FEW_QUANTITY  = 1;
