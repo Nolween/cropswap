@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\BlogArticleCommentController;
 use App\Http\Controllers\BlogArticleController;
 use App\Http\Controllers\CropController;
@@ -12,9 +13,7 @@ use App\Http\Middleware\IsAdminAuthenticated;
 
 Route::prefix('admin')->middleware(IsAdminAuthenticated::class)->group(function () {
     // ADMIN DASHBOARD
-    Route::get('dashboard', function () {
-        return Inertia::render('Admin/Dashboard');
-    })->name('admin.dashboard');
+    Route::get('dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
     // CROP PART
     Route::prefix('crop')->group(function () {
         Route::get('index', [CropController::class, 'adminIndex'])->name('admin.crop.index');

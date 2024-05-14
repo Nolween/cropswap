@@ -12,10 +12,11 @@
                 <div class="pt-4 text-2xl md:text-5xl font-bold text-center text-orange-500">
                     STATISTIQUES
                 </div>
-                <div class="flex flex-wrap justify-center w-full">
-                    <simple-card title="64" description="Crops inscrits" icon="LandPlots"/>
-                    <simple-card title="128" description="Swap effectués" icon="Barley"/>
-                    <simple-card title="31" description="Crops inscrits" icon="Account"/>
+                <div class="flex flex-wrap justify-around w-full">
+                    <simple-card :title="props.cropsCount" description="Crops inscrits" icon="LandPlots"/>
+                    <simple-card :title="props.swapsCount" description="Swap référencés" icon="Barley"/>
+                    <simple-card :title="props.messagesCount" description="Messages envoyés" icon="MessageOutline"/>
+                    <simple-card :title="props.articlesCount" description="Articles publiés" icon="PostOutline"/>
                 </div>
             </div>
         </div>
@@ -23,12 +24,20 @@
 </template>
 
 <script setup>
-import {ref} from 'vue';
+import {ref, defineProps} from 'vue';
 import NavigationMenu from "@/Layouts/NavigationMenu.vue";
 import AdminSideBar from "@/Layouts/AdminSideBar.vue";
 import SimpleCard from "@/Components/Cards/SimpleCard.vue";
 //  Verify if the user is authenticated from session
 const authenticated = ref(false);
+
+const props = defineProps({
+    cropsCount: {type: Number, required: true},
+    swapsCount: {type: Number, required: true},
+    messagesCount: {type: Number, required: true},
+    articlesCount: {type: Number, required: true},
+});
+
 
 </script>
 
