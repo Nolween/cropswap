@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -41,21 +42,32 @@ class UserController extends Controller
         //
     }
 
+    public function show()
+    {
+        $user = Auth::user();
+
+        return Inertia::render(
+            'Account/Informations',
+            [
+                'user'  => $user,
+                'crops' => $user->crop,
+            ]
+        );
+    }
+
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
+    public function adminShow(User $user)
     {
-
-
         return Inertia::render(
             'Admin/User/Show',
             [
-                'title' => 'Admin User Show',
-                'user' => $user,
+                'title'            => 'Admin User Show',
+                'user'             => $user,
                 'reportedMessages' => $user->reportedMessages,
-                'crop' => $user->crop,
-                'admin_id' => Auth::user()->id,
+                'crop'             => $user->crop,
+                'admin_id'         => Auth::user()->id,
             ]
         );
     }
@@ -71,9 +83,23 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateUserRequest $request)
     {
-        //
+        $user = Auth::user();
+
+        $form = [];
+
+        if($request->has('newMail') && $request->newMail !== 'null' && $request->newMail !== $user->email){
+            $form['email'] = $request->newMail;
+        }
+        if ($request->has('newPassword') && $request->newPassword !== 'null') {
+            $form['password'] = bcrypt($request->newPassword);
+        }
+        if ($request->has('name') && $request->name !== $user->name) {
+            $form['name'] = $request->name;
+        }
+        $user->update($form);
+        return response()->json(['success' => true]);
     }
 
     /**
@@ -82,6 +108,12 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $user->delete();
+
+        // If User Auth is deleted, logout
+        if(Auth::user()->id === $user->id){
+            Auth::logout();
+        }
+
         return response()->json(['success' => true]);
     }
 }

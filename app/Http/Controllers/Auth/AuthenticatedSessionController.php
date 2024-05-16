@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Events\UserLoggedInEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
@@ -32,6 +33,10 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
+
+        // New user logged in event
+        UserLoggedInEvent::dispatch(Auth::user());
+
 
         if(auth()->user()->isAdmin()) {
             return redirect()->intended(route('admin.dashboard', absolute: false));

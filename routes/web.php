@@ -5,6 +5,7 @@ use App\Http\Controllers\BlogArticleController;
 use App\Http\Controllers\CropController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserMessageController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -28,9 +29,8 @@ Route::prefix('account')->middleware(['auth', 'verified'])->group(function () {
     // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::get('/informations', function () {
-        return Inertia::render('Account/Informations');
-    })->name('account.informations');
+    Route::get('/informations', [UserController::class, 'show'])->name('account.informations');
+    Route::put('/informations', [UserController::class, 'update'])->name('account.informations.update');
     Route::get('/crop', function () {
         return Inertia::render('Account/Crop');
     })->name('account.crop.show');
@@ -72,6 +72,7 @@ Route::group(['prefix' => 'messages'], function () {
     Route::get('/', [UserMessageController::class, 'index'])->name('messages.index');
 
 });
+
 
 require __DIR__ . '/auth.php';
 require __DIR__ . '/admin.php';

@@ -47,7 +47,7 @@ Route::prefix('admin')->middleware(IsAdminAuthenticated::class)->group(function 
     // USERS PART
     Route::prefix('users')->group(function () {
         Route::get('/index', [UserController::class, 'index'])->name('admin.user.index');
-        Route::get('/{user}', [UserController::class, 'show'])->name('admin.user.show');
+        Route::get('/{user}', [UserController::class, 'adminShow'])->name('admin.user.show');
         Route::delete('/{user}', [UserController::class, 'destroy'])->name('admin.user.destroy');
 
         Route::get('/create', function () {

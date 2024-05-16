@@ -37,7 +37,7 @@
                     <button @click="isOpenedEditionModal = true"
                             class="w-1/3 bg-blue-500 text-white p-2 rounded-lg text-2xl font-bold">Modifier
                     </button>
-                    <Link :href="route('crop.show', informations.id)"
+                    <Link :href="route('crop.show', informations.marker[0].id)"
                           class="w-1/3 bg-lime-500 text-white p-2 rounded-lg text-2xl font-bold text-center">Fiche
                     </Link>
                     <button @click="deleteModalOpened = true"
@@ -65,37 +65,37 @@
                     <!-- NAME INPUT -->
                     <div class="gap-2 flex flex-wrap mb-2">
                         <label for="informationName" class="w-full text-gray-500">Nom</label>
-                        <input name="informationName" type="text" :value="editInformations.name"
+                        <input name="informationName" type="text" v-model="editInformations.name"
                                class="w-full p-2 border-2 text-gray-500 rounded-md border-gray-200 "/>
                     </div>
                     <!-- OLD EMAIL INPUT -->
                     <div class="gap-2 flex flex-wrap">
                         <label for="informationEmail" class="text-gray-500">Ancien Email</label>
-                        <input name="informationEmail" type="text" :value="editInformations.oldMail"
-                               class="w-full p-2 border-2 text-gray-500 rounded-md border-gray-200 "/>
+                        <input disabled name="informationEmail" type="text" v-model="editInformations.oldMail"
+                               class="w-full p-2 border-2 text-gray-500 rounded-md border-gray-200 bg-gray-100"/>
                     </div>
                     <!-- NEW EMAIL INPUT -->
                     <div class="gap-2 flex flex-wrap">
                         <label for="informationEmail" class="text-gray-500">Nouvel Email</label>
-                        <input name="informationEmail" type="text" :value="editInformations.newMail"
+                        <input name="informationEmail" type="text" v-model="editInformations.newMail"
                                class="w-full p-2 border-2 text-gray-500 rounded-md border-gray-200 "/>
                     </div>
                     <!-- OLD PASSWORD INPUT -->
                     <div class="gap-2 flex flex-wrap">
                         <label for="informationEmail" class="text-gray-500">Ancien mot de passe</label>
-                        <input name="informationEmail" type="text" :value="editInformations.oldPassword"
+                        <input name="informationEmail" type="password" v-model="editInformations.oldPassword"
                                class="w-full p-2 border-2 text-gray-500 rounded-md border-gray-200 "/>
                     </div>
                     <!-- NEW PASSWORD INPUT -->
                     <div class="gap-2 flex flex-wrap">
                         <label for="informationEmail" class="text-gray-500">Nouveau mot de passe</label>
-                        <input name="informationEmail" type="text" :value="editInformations.newPassword"
+                        <input name="informationEmail" type="password" v-model="editInformations.newPassword"
                                class="w-full p-2 border-2 text-gray-500 rounded-md border-gray-200 "/>
                     </div>
                     <!-- NEW PASSWORD INPUT -->
                     <div class="gap-2 flex flex-wrap">
                         <label for="informationEmail" class="text-gray-500">Confirmation mot de passe</label>
-                        <input name="informationEmail" type="text" :value="editInformations.confirmPassword"
+                        <input name="informationEmail" type="password" v-model="editInformations.confirmPassword"
                                class="w-full p-2 border-2 text-gray-500 rounded-md border-gray-200 "/>
                     </div>
                 </div>
@@ -105,8 +105,10 @@
                     <button class="p-2 bg-gray-300 text-white rounded-lg text-xl font-bold"
                             @click="isOpenedEditionModal = false">Annuler
                     </button>
-                    <button class="p-2 bg-blue-500 text-white rounded-lg text-xl font-bold"
-                            @click="isOpenedEditionModal = false">Envoyer
+                    <button class="p-2 text-white rounded-lg text-xl font-bold"
+                            :disabled="unValidForm"
+                            :class="unValidForm ? 'bg-gray-300' : 'bg-blue-500 hover:bg-blue-700'"
+                            @click="updateInformations">Envoyer
                     </button>
                 </div>
             </template>
@@ -118,8 +120,10 @@
                 </div>
                 <!-- CHECKBOX TO CONFIRM DELETING OF ACCOUNT-->
                 <div class="w-full flex items-center space-x-2">
-                    <input v-model="confirmedDeletion" type="checkbox" class="w-6 h-6 border-2 border-gray-300 rounded-md cursor-pointer" id="confirmDelete"/>
-                    <label for="confirmDelete" class="text-gray-500 cursor-pointer">Je confirme la suppression de mon compte</label>
+                    <input v-model="confirmedDeletion" type="checkbox"
+                           class="w-6 h-6 border-2 border-gray-300 rounded-md cursor-pointer" id="confirmDelete"/>
+                    <label for="confirmDelete" class="text-gray-500 cursor-pointer">Je confirme la suppression de mon
+                        compte</label>
                 </div>
             </template>
             <template #footer>
@@ -133,7 +137,7 @@
                         :disabled="!confirmedDeletion"
                         :class="confirmedDeletion ? 'border-red-300 bg-red-500 text-white hover:bg-white hover:text-red-500' : 'bg-white text-gray-500 hover:bg-gray-500 hover:text-white border-gray-300'"
                         class="p-2 border-2 rounded-lg text-xl font-bold"
-                        @click="deleteModalOpened = false">
+                        @click="confirmUserDelete">
                         Supprimer
                     </button>
                 </div>
@@ -143,11 +147,22 @@
 </template>
 
 <script setup>
-import {ref, reactive} from 'vue';
+import {defineProps, ref, reactive, computed} from 'vue';
 import NavigationMenu from "@/Layouts/NavigationMenu.vue";
 import LeafletMap from "@/Components/Maps/LeafletMap.vue";
 import {Link} from "@inertiajs/vue3";
 import AdminModal from "@/Components/Modal/AdminModal.vue";
+
+const props = defineProps({
+    user: {
+        type: Object, default: () => {
+        }
+    },
+    crops: {
+        type: Object, default: () => {
+        }
+    },
+});
 
 const isOpenedEditionModal = ref(false);
 const deleteModalOpened = ref(false);
@@ -157,59 +172,83 @@ const contactMessage = ref('');
 const confirmedDeletion = ref(false);
 
 const informations = ref({
-    id: 1,
-    name: 'User 678',
-    email: 'bla@bla.com',
-    role: 'user',
-    inscriptionDate: new Date('2022-02-02'),
-    lastConnection: new Date('2023-02-02'),
-    cropName: 'Crop JKJKDFJK',
-    image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=700&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8cG9ydHJhaXR8ZW58MHx8MHx8fDA%3D',
-    cropPosition: [44, 4],
+    id: props.user.id,
+    name: props.user.name,
+    email: props.user.email,
+    role: props.user.role.charAt(0).toUpperCase() + props.user.role.slice(1),
+    inscriptionDate: new Date(props.user.created_at),
+    lastConnection: new Date(props.user.last_connection_date),
+    cropName: props.crops[0].name,
+    image: props.user.image,
+    cropPosition: [props.crops[0].latitude, props.crops[0].longitude],
     marker:
         [{
-            id: 1,
+            id: props.crops[0].id,
             icon: 'leaf-green',
-            position: [44, 4],
-            name: "User 1",
-            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed blandit libero volutpat sed cras ornare arcu.",
+            position: [props.crops[0].latitude, props.crops[0].longitude],
+            name: props.user.name,
+            description: props.crops[0].description,
         }],
-    reportedMessages: [
-        {
-            id: 1,
-            message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed blandit libero volutpat sed cras ornare arcu.',
-            reportedBy: 'User 1',
-            date: '2022-02-02 12:13:40'
-        },
-        {
-            id: 2,
-            message: 'Message 2',
-            reportedBy: 'User 2',
-            date: '2022-06-14 18:21:52'
-        },
-        {
-            id: 3,
-            message: 'Message 3',
-            reportedBy: 'User 3',
-            date: '2022-06-14 18:21:52'
-        },
-        {
-            id: 4,
-            message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed blandit libero volutpat sed cras ornare arcu.',
-            reportedBy: 'User 4',
-            date: '2022-02-02 12:13:40'
-        },
-    ]
 });
 
 const editInformations = reactive({
-    name: null,
-    oldMail: null,
+    name: props.user.name,
+    oldMail: props.user.email,
     newMail: null,
     oldPassword: null,
     newPassword: null,
     confirmPassword: null,
 })
+
+const unValidForm = computed(() => {
+    if (!editInformations.name || editInformations.name === props.user.name) {
+        console.log('name');
+        return true;
+    }
+    if (editInformations.newMail && editInformations.newMail !== editInformations.oldMail) {
+        console.log('mail');
+        return true;
+    }
+    if (editInformations.oldPassword && editInformations.newPassword && editInformations.newPassword !== editInformations.confirmPassword) {
+        console.log('confirm');
+        return true;
+    }
+    return false;
+})
+
+const updateInformations = async () => {
+
+    const formData = new FormData();
+    formData.append('name', editInformations.name);
+    formData.append('newMail', editInformations.newMail);
+    formData.append('oldPassword', editInformations.oldPassword);
+    formData.append('newPassword', editInformations.newPassword);
+    formData.append('confirmPassword', editInformations.confirmPassword);
+    formData.append('userId', informations.value.id);
+    formData.append('_method', 'PUT');
+
+    axios.post(`/account/informations`, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    }).then(response => {
+        if (response.data.success) {
+            window.location.href = route('account.informations');
+        }
+    }).catch(error => {
+        console.log(error.response.data);
+    });
+}
+
+const confirmUserDelete = async () => {
+    await axios.delete(`/admin/users/${informations.value.id}`).then(response => {
+        if (response.data.success) {
+            window.location.href = route('home');
+        }
+    }).catch(error => {
+        console.log(error.response.data);
+    });
+}
 
 </script>
 
