@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class UpdateCropRequest extends FormRequest
 {
@@ -11,18 +13,27 @@ class UpdateCropRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        $crop = $this->route('crop');
+        return Auth::check() && Auth::id() === $crop->user_id;
     }
 
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
-        return [
-            //
+        $rules = [
+            'name'        => ['required', 'string', 'max:255'],
+            'image'       => ['required', 'string'],
+            'description' => ['required', 'string'],
         ];
+
+        if ($this->hasFile('imageFile')) {
+            $rules['imageFile'] = 'image';
+        }
+
+        return $rules;
     }
 }

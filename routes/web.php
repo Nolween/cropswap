@@ -31,9 +31,8 @@ Route::prefix('account')->middleware(['auth', 'verified'])->group(function () {
     // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/informations', [UserController::class, 'show'])->name('account.informations');
     Route::put('/informations', [UserController::class, 'update'])->name('account.informations.update');
-    Route::get('/crop', function () {
-        return Inertia::render('Account/Crop');
-    })->name('account.crop.show');
+    Route::get('/crop', [CropController::class, 'show'])->name('account.crop.show');
+    Route::put('/crop/{crop}', [CropController::class, 'update'])->name('account.crop.update');
 });
 
 // BLOG ROUTES
@@ -47,7 +46,10 @@ Route::group(['prefix' => 'blog'], function () {
     Route::get('/article/{blogArticle}', [BlogArticleController::class, 'show'])->name('blog.show');
 //  Comments
     Route::post('/article/comment', [BlogArticleCommentController::class, 'store'])->name('blog.comment.store');
-    Route::delete('/article/{blogArticle}/comment/{blogArticleComment}', [BlogArticleCommentController::class, 'destroy'])->name('blog.comment.destroy');
+    Route::delete(
+        '/article/{blogArticle}/comment/{blogArticleComment}',
+        [BlogArticleCommentController::class, 'destroy']
+    )->name('blog.comment.destroy');
 });
 
 // CROP ROUTES
@@ -70,7 +72,6 @@ Route::group(['prefix' => 'crop'], function () {
 Route::group(['prefix' => 'messages'], function () {
     Route::post('/', [UserMessageController::class, 'store'])->name('messages.store');
     Route::get('/', [UserMessageController::class, 'index'])->name('messages.index');
-
 });
 
 

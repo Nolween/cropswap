@@ -129,31 +129,49 @@
                             </div>
                         </div>
                     </div>
-                    <div></div>
-
                 </div>
             </template>
         </admin-modal>
     </div>
 </template>
 <script setup>
-import {ref, reactive, computed} from 'vue';
+import {defineProps, ref, reactive, computed} from 'vue';
 import NavigationMenu from "@/Layouts/NavigationMenu.vue";
 import Autocomplete from "@/Components/Form/Autocomplete.vue";
 import AdminModal from "@/Components/Modal/AdminModal.vue";
 import SimpleSwap from "@/Components/Cards/SimpleSwap.vue";
 
+const props = defineProps({
+    crop: Object,
+    swaps: Object,
+    user: Object
+});
+
 const selectedTab = ref('informations');
 
 const form = reactive({
-    cropName: '',
-    description: '',
-    image: '/images/crop/empty.svg'
+    cropName: props.crop.name,
+    description: props.crop.description,
+    imageFile: null,
+    image: props.crop.image.startsWith('http') ? props.crop.image : `/images/crop/${props.crop.image}`,
 });
 
 
-const updateCrop = () => {
-    console.log(form);
+const updateCrop = async() => {
+    const formData = new FormData();
+    formData.append('name', form.cropName);
+    formData.append('description', form.description);
+    formData.append('image', form.image);
+    formData.append('imageFile', form.imageFile);
+    formData.append('_method', 'PUT');
+
+    await axios.post(`/account/crop/${props.crop.id}`, formData).then(response => {
+        if(response.data.success) {
+            console.log('Crop updated');
+        }
+    }).catch(error => {
+        console.log(error.response.data);
+    });
 };
 
 const validForm = computed(() => {
@@ -163,6 +181,7 @@ const validForm = computed(() => {
 const updateImage = (event) => {
     if (event.target.files && event.target.files[0]) {
         form.image = URL.createObjectURL(event.target.files[0]);
+        form.imageFile = event.target.files[0];
     }
 };
 

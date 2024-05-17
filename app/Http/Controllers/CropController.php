@@ -25,7 +25,8 @@ class CropController extends Controller
             return [
                 'id'      => $crop->id,
                 'name'    => $crop->name,
-                'image'   => $crop->image,
+                // If $crop->image starts whit http, we keep it as is, else we add the path to the image
+                'image'   => str_starts_with($crop->image, 'http') ? $crop->image : asset('images/crop/' . $crop->image),
                 'user'    => $crop->user->name,
                 'reports' => 5, // Fake data
                 'userId'  => $crop->user_id,
@@ -98,7 +99,17 @@ class CropController extends Controller
      */
     public function show(Crop $crop)
     {
-        //
+        // Get the crop with the swaps
+        $crop = Crop::with('swaps')->with('user')->where('user_id', Auth::user()->id)->first();
+
+        return Inertia::render(
+            'Account/Crop',
+            [
+                'crop'  => $crop,
+                'user'  => $crop->user,
+                'swaps' => $crop->swaps,
+            ]
+        );
     }
 
     /**
@@ -114,7 +125,23 @@ class CropController extends Controller
      */
     public function update(UpdateCropRequest $request, Crop $crop)
     {
-        //
+        // Moving the image to the right folder
+        if ($request->hasFile('imageFile')) {
+            $image = $request->file('imageFile');
+            $imageName = $crop->id . '.' . $image->extension();
+            // Move the image to the right folder
+            $image->move(public_path('images/crop'), $imageName);
+
+            // Update the request with the new image name
+            $request->merge(['image' => $imageName]);
+        }
+        else {
+            $request->merge(['image' => $crop->image]);
+        }
+
+        $crop->update($request->all());
+
+        return response()->json(['success' => true]);
     }
 
     /**
