@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCropRequest;
 use App\Http\Requests\UpdateCropRequest;
+use App\Http\Requests\UpdateCropSwapRequest;
 use App\Models\Crop;
 use App\Models\Swap;
 use Illuminate\Support\Facades\Auth;
@@ -26,7 +27,9 @@ class CropController extends Controller
                 'id'      => $crop->id,
                 'name'    => $crop->name,
                 // If $crop->image starts whit http, we keep it as is, else we add the path to the image
-                'image'   => str_starts_with($crop->image, 'http') ? $crop->image : asset('images/crop/' . $crop->image),
+                'image'   => str_starts_with($crop->image, 'http') ? $crop->image : asset(
+                    'images/crop/' . $crop->image
+                ),
                 'user'    => $crop->user->name,
                 'reports' => 5, // Fake data
                 'userId'  => $crop->user_id,
@@ -102,12 +105,15 @@ class CropController extends Controller
         // Get the crop with the swaps
         $crop = Crop::with('swaps')->with('user')->where('user_id', Auth::user()->id)->first();
 
+        $swapList = Swap::all();
+
         return Inertia::render(
             'Account/Crop',
             [
-                'crop'  => $crop,
-                'user'  => $crop->user,
-                'swaps' => $crop->swaps,
+                'crop'     => $crop,
+                'user'     => $crop->user,
+                'swaps'    => $crop->swaps,
+                'swapList' => $swapList,
             ]
         );
     }
@@ -134,8 +140,7 @@ class CropController extends Controller
 
             // Update the request with the new image name
             $request->merge(['image' => $imageName]);
-        }
-        else {
+        } else {
             $request->merge(['image' => $crop->image]);
         }
 
@@ -143,6 +148,28 @@ class CropController extends Controller
 
         return response()->json(['success' => true]);
     }
+
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function updateSwap(UpdateCropSwapRequest $request, Crop $crop)
+    {
+
+        if($request->quantity === null) {
+            $crop->swaps()->detach($request->swapId);
+            return response()->json(['success' => true]);
+        }
+
+        $pivot = $crop->swaps()->updateExistingPivot($request->swapId, ['quantity' => $request->quantity]);
+
+        if ($pivot === 0) {
+            $crop->swaps()->attach($request->swapId, ['quantity' => $request->quantity, 'created_at' => now(), 'updated_at' => now()]);
+        }
+
+        return response()->json(['success' => true]);
+    }
+
 
     /**
      * Remove the specified resource from storage.

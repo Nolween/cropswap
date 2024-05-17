@@ -33,6 +33,7 @@ Route::prefix('account')->middleware(['auth', 'verified'])->group(function () {
     Route::put('/informations', [UserController::class, 'update'])->name('account.informations.update');
     Route::get('/crop', [CropController::class, 'show'])->name('account.crop.show');
     Route::put('/crop/{crop}', [CropController::class, 'update'])->name('account.crop.update');
+    Route::post('/crop/{crop}/swap', [CropController::class, 'updateSwap'])->name('account.crop.swap');
 });
 
 // BLOG ROUTES

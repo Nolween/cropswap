@@ -143,8 +143,9 @@ import SimpleSwap from "@/Components/Cards/SimpleSwap.vue";
 
 const props = defineProps({
     crop: Object,
-    swaps: Object,
-    user: Object
+    swaps: Array,
+    user: Object,
+    swapList: Array,
 });
 
 const selectedTab = ref('informations');
@@ -157,7 +158,7 @@ const form = reactive({
 });
 
 
-const updateCrop = async() => {
+const updateCrop = async () => {
     const formData = new FormData();
     formData.append('name', form.cropName);
     formData.append('description', form.description);
@@ -166,7 +167,7 @@ const updateCrop = async() => {
     formData.append('_method', 'PUT');
 
     await axios.post(`/account/crop/${props.crop.id}`, formData).then(response => {
-        if(response.data.success) {
+        if (response.data.success) {
             console.log('Crop updated');
         }
     }).catch(error => {
@@ -192,59 +193,53 @@ const swapActions = {
     delete: 'Supprimer'
 };
 
-const swapList = ref([
-    {id: 1, name: 'Tomate', image: 'tomate.svg'},
-    {id: 2, name: 'Carotte', image: 'carotte.svg'},
-    {id: 3, name: 'Pomme', image: 'pomme.svg'},
-    {id: 4, name: 'Poire', image: 'poire.svg'},
-    {id: 5, name: 'Banane', image: 'banane.svg'},
-    {id: 6, name: 'Fraise', image: 'fraise.svg'},
-    {id: 7, name: 'Orange', image: 'orange.svg'},
-    {id: 8, name: 'Pomme de terre', image: 'pomme_de_terre.svg'},
-    {id: 9, name: 'Salade', image: 'salade.svg'},
-    {id: 10, name: 'Concombre', image: 'concombre.svg'},
-    {id: 11, name: 'Aubergine', image: 'aubergine.svg'},
-    {id: 12, name: 'Poivron', image: 'poivron.svg'},
-    {id: 13, name: 'Courgette', image: 'courgette.svg'},
-    {id: 14, name: 'Oignon', image: 'oignon.svg'},
-    {id: 15, name: 'Ail', image: 'ail.svg'},
-    {id: 16, name: 'Chou', image: 'chou.svg'},
-    {id: 17, name: 'Brocoli', image: 'brocoli.svg'},
-    {id: 18, name: 'Haricot', image: 'haricot.svg'},
-    {id: 19, name: 'Pois', image: 'pois.svg'},
-    {id: 20, name: 'Fève', image: 'feve.svg'},
-    {id: 21, name: 'Radis', image: 'radis.svg'},
-    {id: 22, name: 'Betterave', image: 'betterave.svg'},
-    {id: 23, name: 'Céleri', image: 'celeri.svg'},
-    {id: 24, name: 'Chou-fleur', image: 'chou_fleur.svg'},
-    {id: 25, name: 'Courge', image: 'courge.svg'},
-    {id: 26, name: 'Potiron', image: 'potiron.svg'},
-]);
+const swapList = ref(props.swapList);
 
 const selectedSwaps = ref([]);
-const userSwaps = ref([
-    {id: 1, name: 'Tomate', image: 'tomate.svg', quantity: 0},
-    {id: 24, name: 'Chou-fleur', image: 'chou_fleur.svg', quantity: 2},
-    {id: 21, name: 'Radis', image: 'radis.svg', quantity: 1},
-
-]);
+const userSwaps = ref(props.swaps);
 
 const updateSelectedSwaps = (values) => {
     selectedSwaps.value = values;
 };
 
-const updateSwapQuantity = (swapId, quantity) => {
-    const swap = swapList.value.find(swap => swap.id === swapId);
-    userSwaps.value.push({...swap, quantity});
-    selectedSwaps.value = [];
-
+const updateSwapQuantity = async (swapId, quantity) => {
+    await updateSwapBack(swapId, quantity).then(
+        response => {
+            if (response) {
+                // Find if the swap is in the userSwaps
+                const swap = userSwaps.value.find(swap => swap.id === swapId);
+                if (swap) {
+                    swap.pivot.quantity = quantity;
+                } else {
+                    let swapInList = swapList.value.find(swap => swap.id === swapId);
+                    swapInList.pivot = {quantity, crop_id: props.crop.id, swap_id: swapId};
+                    userSwaps.value.push(swapInList);
+                    selectedSwaps.value = [];
+                }
+            }
+        }
+    )
 };
+
+const updateSwapBack = async (swapId, quantity) => {
+    const cropId = props.crop.id;
+    // Submit to the back
+    return await axios.post(`/account/crop/${cropId}/swap`, {cropId, swapId, quantity}).then(response => {
+        if (response.data.success) {
+            return true;
+        }
+    }).catch(error => {
+        console.log(error.response.data);
+        return false;
+    });
+}
+
 
 const computedFilteredSwaps = computed(() => {
 // 3 arrays of swaps according to quantity
-    const noSwap = userSwaps.value.filter(swap => swap.quantity === 0);
-    const fewSwap = userSwaps.value.filter(swap => swap.quantity === 1);
-    const lotSwap = userSwaps.value.filter(swap => swap.quantity === 2);
+    const noSwap = userSwaps.value.filter(swap => swap.pivot.quantity === 0);
+    const fewSwap = userSwaps.value.filter(swap => swap.pivot.quantity === 1);
+    const lotSwap = userSwaps.value.filter(swap => swap.pivot.quantity === 2);
 
     // Sorting the arrays by name
     noSwap.sort((a, b) => a.name.localeCompare(b.name));
@@ -259,37 +254,50 @@ const computedFilteredSwaps = computed(() => {
 });
 
 
-const actionSwap = (action, params) => {
+const actionSwap = async (action, params) => {
+    const swapId = params.id;
+    let quantity = null;
+
     switch (action) {
-        case 'delete':
-            userSwaps.value.findIndex((swap, index) => {
-                if (swap.id === params.id) {
-                    userSwaps.value.splice(index, 1);
-                }
-            });
-            break;
         case 'updateNone':
-            userSwaps.value.findIndex((swap, index) => {
-                if (swap.id === params.id) {
-                    userSwaps.value[index].quantity = 0;
-                }
-            });
+            quantity = 0;
             break;
         case 'updateFew':
-            userSwaps.value.findIndex((swap, index) => {
-                if (swap.id === params.id) {
-                    userSwaps.value[index].quantity = 1;
-                }
-            });
+            quantity = 1;
             break;
         case 'updateLot':
-            userSwaps.value.findIndex((swap, index) => {
-                if (swap.id === params.id) {
-                    userSwaps.value[index].quantity = 2;
-                }
-            });
+            quantity = 2;
             break;
     }
+
+    await updateSwapBack(swapId, quantity).then(
+        response => {
+            if (response) {
+                if (action === 'delete') {
+                    userSwaps.value.findIndex((swap, index) => {
+                        if (swap.id === params.id) {
+                            userSwaps.value.splice(index, 1);
+                        }
+                    });
+                } else {
+                    // Find swap in userSwaps
+                    let swap = userSwaps.value.find(swap => swap.id === swapId);
+                    if (swap) {
+                        // Update the quantity
+                        swap.pivot.quantity = quantity;
+                    } else {
+                        // Add pivot data to the swap
+                        let swapInList = swapList.value.find(swap => swap.id === swapId);
+                        swapInList.pivot = {quantity, crop_id: props.crop.id, swap_id: swapId};
+                        userSwaps.value.push(swapInList);
+                    }
+
+                }
+            }
+            selectedSwaps.value = [];
+        }
+    );
+
 };
 
 </script>

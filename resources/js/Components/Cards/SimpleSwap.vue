@@ -45,6 +45,7 @@ const openContext = (event) => {
 
 const emitAction = (actionIndex) => {
     emit('action', actionIndex);
+    openedContext.value = false;
 }
 
 
