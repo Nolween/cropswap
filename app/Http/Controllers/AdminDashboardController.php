@@ -15,6 +15,11 @@ class AdminDashboardController extends Controller
 
     public function index()
     {
+        // Check if the user is an admin
+        if (!Auth::user()->isAdmin()) {
+            return redirect()->route('home');
+        }
+
         // Get the crops count
         $cropsCount = Crop::count();
         // Get the number of messages

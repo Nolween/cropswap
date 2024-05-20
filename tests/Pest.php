@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\Crop;
+use App\Models\CropSwap;
+use App\Models\Swap;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -46,3 +49,19 @@ function something()
 {
     // ..
 }
+
+function generateCropSwaps(int $min = 1, int $max = 10)
+{
+    foreach (Crop::all() as $crop) {
+        // Attach rand min to max swaps to the crop
+        foreach (range(1, rand($min, $max)) as $i) {
+            $swap = Swap::inRandomOrder()->first();
+            $swapExists = CropSwap::where('crop_id', $crop->id)->where('swap_id', $swap->id)->exists();
+            if ($swapExists) {
+                continue;
+            }
+            $crop->swaps()->attach($swap->id, ['quantity' => CropSwap::QUANTITIES[array_rand(CropSwap::QUANTITIES)]]);
+        }
+    }
+}
+

@@ -7,26 +7,18 @@ use App\Models\CropSwap;
 use App\Models\Swap;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Model>
- */
 class CropSwapFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
     public function definition(): array
     {
+        $cropId = null;
+        $swapId = null;
 
-        $cropId = Crop::inRandomOrder()->first()->id;
-        $swapId = Swap::inRandomOrder()->first()->id;
-
-        // If there is already a crop swap with the same crop and swap, return an empty array
-        if (CropSwap::where('crop_id', $cropId)->where('swap_id', $swapId)->exists()) {
-            return [];
-        }
+        // Keep generating crop_id and swap_id until unique ones are found
+        do {
+            $cropId = Crop::inRandomOrder()->first()->id;
+            $swapId = Swap::inRandomOrder()->first()->id;
+        } while (CropSwap::where('crop_id', $cropId)->where('swap_id', $swapId)->exists());
 
         return [
             'crop_id'  => $cropId,
