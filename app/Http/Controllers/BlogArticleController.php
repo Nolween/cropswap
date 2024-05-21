@@ -27,7 +27,7 @@ class BlogArticleController extends Controller
     public function homeBlog(?string $tag = null): InertiaResponse
     {
         return Inertia::render('Blog/Index', [
-            'articlesCount' => BlogArticle::count(),
+            'articlesCount' => $tag ? BlogArticle::whereJsonContains('tags', $tag)->count() : BlogArticle::count(),
             'tag'           => $tag,
         ]);
     }
