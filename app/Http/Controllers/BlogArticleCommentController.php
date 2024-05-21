@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreBlogArticleCommentRequest;
 use App\Http\Requests\UpdateBlogArticleCommentRequest;
 use App\Models\BlogArticleComment;
+use Illuminate\Support\Facades\Auth;
 
 class BlogArticleCommentController extends Controller
 {
@@ -78,6 +79,10 @@ class BlogArticleCommentController extends Controller
      */
     public function destroy(BlogArticleComment $blogArticleComment)
     {
+        if(Auth::user()->isAdmin() === false){
+            return response()->json(['success' => false, 'message' => 'Vous n\'avez pas les droits pour supprimer ce commentaire'], 403);
+        }
+
         $blogArticleComment->delete();
         return response()->json(['success' => true, 'message' => 'Commentaire supprimé']);
     }

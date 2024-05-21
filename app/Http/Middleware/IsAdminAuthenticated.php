@@ -17,7 +17,11 @@ class IsAdminAuthenticated
     {
 
         if (!auth()->check() || !auth()->user()->isAdmin()) {
-            return redirect('/');
+        //    403 Forbidden
+            return response()->json([
+                'message' => 'Forbidden',
+                'success' => false,
+            ], 403);
         }
         return $next($request);
     }
