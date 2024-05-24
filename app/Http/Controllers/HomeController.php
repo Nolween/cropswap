@@ -12,7 +12,9 @@ class HomeController extends Controller
     public function index()
     {
         // Get the 10 latest crop
-        $crops = Crop::orderBy('created_at', 'desc')
+        $crops = Crop::select('id', 'latitude', 'longitude', 'description', 'created_at', 'user_id')
+                     ->with('user:id,name')
+                     ->orderBy('created_at', 'desc')
                      ->take(10)
                      ->get();
 
@@ -27,7 +29,8 @@ class HomeController extends Controller
         });
 
         // Get Latest 5 Blog Articles
-        $articles = BlogArticle::select('id', 'user_id', 'title', 'content', 'image', 'tags')->orderBy('created_at', 'desc')
+        $articles = BlogArticle::select('id', 'user_id', 'title', 'content', 'image', 'tags')
+                               ->orderBy('created_at', 'desc')
                                ->with('user:id,name,image')
                                ->take(5)
                                ->get();
