@@ -26,7 +26,7 @@ class UpdateCropRequest extends FormRequest
     {
         $rules = [
             'name'        => ['required', 'string', 'max:255'],
-            'image'       => ['required', 'string'],
+            'image'       => ['required', 'string', 'min:3'],
             'description' => ['required', 'string'],
         ];
 
