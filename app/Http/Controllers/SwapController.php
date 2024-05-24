@@ -62,7 +62,7 @@ class SwapController extends Controller
         // Moving the image to the right folder
         if ($request->hasFile('imageFile')) {
             $image = $request->file('imageFile');
-            $imageName = Str::snake($request->get('name'))  . '.' . $image->extension();
+            $imageName = Str::snake($request->get('name')) . '.' . $image->extension();
             // Move the image to the right folder
             $image->move(public_path('images/food'), $imageName);
 
@@ -106,7 +106,7 @@ class SwapController extends Controller
         // Moving the image to the right folder
         if ($request->hasFile('imageFile')) {
             $image = $request->file('imageFile');
-            $imageName = Str::snake($request->get('name'))  . '.' . $image->extension();
+            $imageName = Str::snake($request->get('name')) . '.' . $image->extension();
             // Move the image to the right folder
             $image->move(public_path('images/food'), $imageName);
 
