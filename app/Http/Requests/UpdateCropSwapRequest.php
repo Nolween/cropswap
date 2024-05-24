@@ -13,7 +13,8 @@ class UpdateCropSwapRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return Auth::check();
+        $crop = $this->route('crop');
+        return Auth::check() && Auth::id() === $crop->user_id;
     }
 
     /**
