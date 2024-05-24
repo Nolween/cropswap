@@ -100,7 +100,7 @@ class CropController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Crop $crop)
+    public function show()
     {
         // Get the crop with the swaps
         $crop = Crop::with('swaps')->with('user')->where('user_id', Auth::user()->id)->first();
