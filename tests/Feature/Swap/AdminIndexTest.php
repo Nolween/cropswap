@@ -6,7 +6,7 @@ use App\Models\User;
 use Inertia\Testing\AssertableInertia;
 
 beforeEach(function () {
-    $this->user = User::factory()->create();
+    $this->user = User::factory()->create(['role' => 'user']);
     $this->admin = User::factory()->create(['role' => 'admin']);
     $this->swaps = Swap::factory()->count(rand(1, 10))->create();
     $this->categories = SwapCategoryEnum::allTranslated();
