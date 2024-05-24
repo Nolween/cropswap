@@ -22,7 +22,7 @@ class SwapController extends Controller
 
         // Add an url prefix to the image
         $swaps->map(function ($swap) {
-            $swap->image = asset('images/food/' . $swap->image);
+            $swap->image = str_starts_with($swap->image, 'http') ? $swap->image : asset('images/food/' . $swap->image);
             return $swap;
         });
 

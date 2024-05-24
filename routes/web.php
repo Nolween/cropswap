@@ -4,7 +4,6 @@ use App\Http\Controllers\BlogArticleCommentController;
 use App\Http\Controllers\BlogArticleController;
 use App\Http\Controllers\CropController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserMessageController;
 use Illuminate\Foundation\Application;
@@ -26,9 +25,6 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Connected Account
 Route::prefix('account')->middleware(['auth', 'verified'])->group(function () {
-    // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/informations', [UserController::class, 'show'])->name('account.informations');
     Route::put('/informations', [UserController::class, 'update'])->name('account.informations.update');
     Route::get('/crop', [CropController::class, 'show'])->name('account.crop.show');
