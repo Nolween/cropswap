@@ -130,7 +130,7 @@ class SwapController extends Controller
     public function destroy(Swap $swap)
     {
         // Delete the image
-        if ($swap->image !== 'empty.svg') {
+        if ($swap->image !== 'empty.svg' && file_exists(public_path('images/food/' . $swap->image))) {
             unlink(public_path('images/food/' . $swap->image));
         }
 
