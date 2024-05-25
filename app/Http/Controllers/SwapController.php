@@ -114,7 +114,7 @@ class SwapController extends Controller
             $request->merge(['image' => $imageName]);
 
             // Delete the old image
-            if ($swap->image !== 'empty.svg') {
+            if ($swap->image !== 'empty.svg' && file_exists(public_path('images/food/' . $swap->image))) {
                 unlink(public_path('images/food/' . $swap->image));
             }
         }
