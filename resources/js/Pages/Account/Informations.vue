@@ -241,7 +241,7 @@ const updateInformations = async () => {
 }
 
 const confirmUserDelete = async () => {
-    await axios.delete(`/admin/users/${informations.value.id}`).then(response => {
+    await axios.delete(`/account/${informations.value.id}`).then(response => {
         if (response.data.success) {
             window.location.href = route('home');
         }

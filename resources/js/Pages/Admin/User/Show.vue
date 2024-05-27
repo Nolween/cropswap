@@ -165,7 +165,7 @@ const informations = ref({
 const banUser = async () => {
     banModalOpened.value = false;
     // Send userId to the server to ban the user
-    axios.delete(`/admin/users/${props.user.id}`)
+    axios.delete(`/account/${props.user.id}`)
         .then(response => {
             if (response.data.success) {
                 // Redirect to the user index page

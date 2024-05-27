@@ -184,7 +184,7 @@ const openBanModal = (rowIndex) => {
 
 const banUser = async () => {
     if (userToBan.value) {
-        await axios.delete(`/admin/users/${userToBan.value.userId}`).then(response => {
+        await axios.delete(`/account/${userToBan.value.userId}`).then(response => {
             if (response.data.success) {
                 rows.value = rows.value.filter(row => row.userId !== userToBan.value.userId);
                 openBanUserModal.value = false;

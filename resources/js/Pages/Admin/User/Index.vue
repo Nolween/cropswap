@@ -176,7 +176,7 @@ const editUser = (rowIndex) => {
 
 const banUser = async () => {
     // Send the user id to the server to ban the user
-    axios.delete(`/admin/users/${userIdToBan.value}`)
+    axios.delete(`/account/${userIdToBan.value}`)
         .then(response => {
             if (response.data.success) {
                 toaster.delete = true;

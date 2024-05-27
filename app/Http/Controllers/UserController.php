@@ -107,6 +107,10 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        if(Auth::user()->id !== $user->id &&  Auth::user()->role !== 'admin'){
+            return response()->json(['success' => false], 403);
+        }
+
         $user->delete();
 
         // If User Auth is deleted, logout

@@ -30,6 +30,7 @@ Route::prefix('account')->middleware(['auth', 'verified'])->group(function () {
     Route::get('/crop', [CropController::class, 'show'])->name('account.crop.show');
     Route::put('/crop/{crop}', [CropController::class, 'update'])->name('account.crop.update');
     Route::post('/crop/{crop}/swap', [CropController::class, 'updateSwap'])->name('account.crop.swap');
+    Route::delete('/{user}', [UserController::class, 'destroy'])->name('account.user.destroy');
 });
 
 // BLOG ROUTES
