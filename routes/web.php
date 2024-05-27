@@ -63,7 +63,7 @@ Route::group(['prefix' => 'crop'], function () {
 
 
 // MESSAGES PART
-Route::group(['prefix' => 'messages'], function () {
+Route::middleware(['auth', 'verified'])->prefix('messages')->group(function () {
     Route::post('/', [UserMessageController::class, 'store'])->name('messages.store');
     Route::get('/', [UserMessageController::class, 'index'])->name('messages.index');
 });
