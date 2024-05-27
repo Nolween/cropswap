@@ -25,9 +25,9 @@ class UpdateUserRequest extends FormRequest
     {
         return [
             'name'            => ['required', 'string', 'max:255', 'min:3', 'unique:users,name'],
-            'newMail'         => ['nullable', 'string', 'max:255', 'unique:users,email'],
-            'oldPassword'     => ['nullable', 'string'],
-            'newPassword'     => ['nullable', 'string'],
+            'newMail'         => ['nullable', 'email', 'max:255', 'unique:users,email'],
+            'oldPassword'     => ['nullable', 'current_password:web'],
+            'newPassword'     => ['nullable', 'string', 'min:8'],
             'confirmPassword' => ['nullable', 'string', 'same:newPassword'],
             'userId'          => ['required', 'integer', 'exists:users,id'],
         ];
