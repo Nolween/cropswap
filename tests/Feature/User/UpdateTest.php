@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Http\UploadedFile;
 
 beforeEach(function () {
     $this->admin = User::factory()->create(['role' => 'admin']);
@@ -17,6 +18,8 @@ test('update user informations', function () {
             'newPassword'     => 'newpassword',
             'confirmPassword' => 'newpassword',
             'userId'          => $this->user->id,
+            'image'           => 'image.jpg',
+            'imageFile'       => UploadedFile::fake()->image('image.jpg'),
         ]
     );
     $response->assertStatus(200);
@@ -34,6 +37,8 @@ test('cannot update user informations as guest', function () {
             'newPassword'     => 'newpassword',
             'confirmPassword' => 'newpassword',
             'userId'          => $this->user->id,
+            'image'           => 'image.jpg',
+            'imageFile'       => UploadedFile::fake()->image('image.jpg'),
         ]
     );
 
@@ -48,11 +53,13 @@ test('cannot update user informations with wrong informations', function () {
             'newPassword'     => 'pass1',
             'confirmPassword' => 'pass2',
             'userId'          => 0,
+            'image'           => 'image.jpg',
+            'imageFile'       => 'test',
         ]
     );
 
     $response->assertStatus(422);
-    $response->assertJsonValidationErrors(['name', 'newMail', 'oldPassword', 'newPassword', 'confirmPassword', 'userId']);
+    $response->assertJsonValidationErrors(['name', 'newMail', 'oldPassword', 'newPassword', 'confirmPassword', 'userId', 'imageFile']);
 });
 
 
@@ -64,6 +71,8 @@ test('cannot update user as guest', function () {
         'newPassword'     => 'newpassword',
         'confirmPassword' => 'newpassword',
         'userId'          => $this->user->id,
+        'image'           => 'image.jpg',
+        'imageFile'       => UploadedFile::fake()->image('image.jpg'),
     ]);
 
     $response->assertStatus(401);

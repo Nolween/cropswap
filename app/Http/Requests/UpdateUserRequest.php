@@ -24,12 +24,14 @@ class UpdateUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'            => ['required', 'string', 'max:255', 'min:3', 'unique:users,name'],
+            'name'            => ['nullable', 'string', 'max:255', 'min:3', 'unique:users,name'],
             'newMail'         => ['nullable', 'email', 'max:255', 'unique:users,email'],
             'oldPassword'     => ['nullable', 'current_password:web'],
             'newPassword'     => ['nullable', 'string', 'min:8'],
             'confirmPassword' => ['nullable', 'string', 'same:newPassword'],
             'userId'          => ['required', 'integer', 'exists:users,id'],
+            'image'           => ['nullable', 'string'],
+            'imageFile'       => ['nullable', 'file', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
         ];
     }
 }

@@ -87,18 +87,28 @@ class UserController extends Controller
     {
         $user = Auth::user();
 
-        $form = [];
+        // Moving the image to the right folder
+        if ($request->hasFile('imageFile')) {
+            $image = $request->file('imageFile');
+            $imageName = $user->id . '.' . $image->extension();
+            // Move the image to the right folder
+            $image->move(public_path('images/user'), $imageName);
+            // Remove old image
+            unlink(public_path('images/user/' . $user->image));
 
+            $user->image = $imageName;
+        }
         if($request->has('newMail') && $request->newMail !== 'null' && $request->newMail !== $user->email){
-            $form['email'] = $request->newMail;
+            $user->email = $request->newMail;
         }
         if ($request->has('newPassword') && $request->newPassword !== 'null') {
-            $form['password'] = bcrypt($request->newPassword);
+            $user->password = bcrypt($request->newPassword);
         }
         if ($request->has('name') && $request->name !== $user->name) {
-            $form['name'] = $request->name;
+            $user->name = $request->name;
         }
-        $user->update($form);
+        $update = $user->save();
+
         return response()->json(['success' => true]);
     }
 

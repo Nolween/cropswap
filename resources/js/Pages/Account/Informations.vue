@@ -10,7 +10,7 @@
                 </div>
                 <!-- MAIN INFORMATIONS -->
                 <div class="w-full bg-orange-500 flex flex-wrap justify-between items-center">
-                    <img :src="informations.image" alt="User image" class="w-1/3 object-cover"/>
+                    <img :src="imagePathResource(editInformations.image, 'user')" alt="User image" class="w-1/3 object-cover"/>
                     <div class="w-2/3 text-start p-3 space-y-2">
                         <div class="w-full">
                             <div class="text-white font-bold text-3xl">
@@ -62,9 +62,19 @@
                      @close="isOpenedEditionModal = false">
             <template #body>
                 <div class="w-full">
+                    <!-- IMAGE -->
+                    <div>
+                        <label for="image" :class="formErrors.image ?'text-red-500' : 'text-gray-600'">Image de l'article</label>
+                        <input type="file" id="image" name="image" @change="updateImage"
+                               class="w-full p-2 border-2 border-gray-200 rounded-md hidden"/>
+                        <label for="image" class="text-gray-600">
+                            <img :src="imagePathResource(editInformations.image, 'user')" alt="Image principale de l'article"
+                                 class="max-w-80 max-h-80 object-cover mx-auto mb-2 cursor-pointer">
+                        </label>
+                    </div>
                     <!-- NAME INPUT -->
                     <div class="gap-2 flex flex-wrap mb-2">
-                        <label for="informationName" class="w-full text-gray-500">Nom</label>
+                        <label for="informationName" class="w-full" :class="formErrors.name ?'text-red-500' : 'text-gray-600'">Nom</label>
                         <input name="informationName" type="text" v-model="editInformations.name"
                                class="w-full p-2 border-2 text-gray-500 rounded-md border-gray-200 "/>
                     </div>
@@ -76,25 +86,25 @@
                     </div>
                     <!-- NEW EMAIL INPUT -->
                     <div class="gap-2 flex flex-wrap">
-                        <label for="informationEmail" class="text-gray-500">Nouvel Email</label>
+                        <label for="informationEmail" :class="formErrors.newMail ?'text-red-500' : 'text-gray-600'">Nouvel Email</label>
                         <input name="informationEmail" type="text" v-model="editInformations.newMail"
                                class="w-full p-2 border-2 text-gray-500 rounded-md border-gray-200 "/>
                     </div>
                     <!-- OLD PASSWORD INPUT -->
                     <div class="gap-2 flex flex-wrap">
-                        <label for="informationEmail" class="text-gray-500">Ancien mot de passe</label>
+                        <label for="informationEmail" :class="formErrors.oldPassword ?'text-red-500' : 'text-gray-600'">Ancien mot de passe</label>
                         <input name="informationEmail" type="password" v-model="editInformations.oldPassword"
                                class="w-full p-2 border-2 text-gray-500 rounded-md border-gray-200 "/>
                     </div>
                     <!-- NEW PASSWORD INPUT -->
                     <div class="gap-2 flex flex-wrap">
-                        <label for="informationEmail" class="text-gray-500">Nouveau mot de passe</label>
+                        <label for="informationEmail" :class="formErrors.newPassword ?'text-red-500' : 'text-gray-600'">Nouveau mot de passe</label>
                         <input name="informationEmail" type="password" v-model="editInformations.newPassword"
                                class="w-full p-2 border-2 text-gray-500 rounded-md border-gray-200 "/>
                     </div>
                     <!-- NEW PASSWORD INPUT -->
                     <div class="gap-2 flex flex-wrap">
-                        <label for="informationEmail" class="text-gray-500">Confirmation mot de passe</label>
+                        <label for="informationEmail" :class="formErrors.confirmPassword ?'text-red-500' : 'text-gray-600'">Confirmation mot de passe</label>
                         <input name="informationEmail" type="password" v-model="editInformations.confirmPassword"
                                class="w-full p-2 border-2 text-gray-500 rounded-md border-gray-200 "/>
                     </div>
@@ -102,12 +112,12 @@
             </template>
             <template #footer>
                 <div class="w-full flex justify-end space-x-2">
-                    <button class="p-2 bg-gray-300 text-white rounded-lg text-xl font-bold"
-                            @click="isOpenedEditionModal = false">Annuler
+                    <button class="p-2 bg-gray-300 text-white rounded-lg text-xl font-bold hover:bg-white hover:text-gray-300 hover:border-gray-300 border-2 border-transparent"
+                            @click="[isOpenedEditionModal = false, editInformations.image = props.user.image]">Annuler
                     </button>
-                    <button class="p-2 text-white rounded-lg text-xl font-bold"
+                    <button class="p-2 text-white rounded-lg text-xl font-bold border-2 border-transparent"
                             :disabled="unValidForm"
-                            :class="unValidForm ? 'bg-gray-300' : 'bg-blue-500 hover:bg-blue-700'"
+                            :class="unValidForm ? 'bg-gray-300' : 'bg-blue-500 hover:bg-blue-700 border-blue-500 hover:border-blue-500'"
                             @click="updateInformations">Envoyer
                     </button>
                 </div>
@@ -152,6 +162,9 @@ import NavigationMenu from "@/Layouts/NavigationMenu.vue";
 import LeafletMap from "@/Components/Maps/LeafletMap.vue";
 import {Link} from "@inertiajs/vue3";
 import AdminModal from "@/Components/Modal/AdminModal.vue";
+import {useTextTools} from "@/Composables/textTools.js";
+
+const {validateEmail, imagePathResource} = useTextTools();
 
 const props = defineProps({
     user: {
@@ -192,6 +205,8 @@ const informations = ref({
 });
 
 const editInformations = reactive({
+    image: props.user.image,
+    imageFile: null,
     name: props.user.name,
     oldMail: props.user.email,
     newMail: null,
@@ -200,30 +215,60 @@ const editInformations = reactive({
     confirmPassword: null,
 })
 
+const formErrors = computed(() => {
+    let errors = {
+        name: false,
+        newMail: false,
+        oldPassword: false,
+        newPassword: false,
+        confirmPassword: false,
+        image: false,
+    };
+    if(!editInformations.image || editInformations.imageFile?.size > 2000000) {
+        errors.image = true;
+    }
+    if (!editInformations.name) {
+        errors.name = true;
+    }
+    // If newMail is not an email
+    if (editInformations.newMail && !validateEmail(editInformations.newMail)) {
+        errors.newMail = true;
+    }
+    if (editInformations.newPassword && editInformations.confirmPassword && !editInformations.oldPassword) {
+        errors.oldPassword = true;
+    }
+    if(editInformations.oldPassword && !editInformations.newPassword) {
+        errors.newPassword = true;
+    }
+    if (editInformations.newPassword !== editInformations.confirmPassword) {
+        errors.confirmPassword = true;
+    }
+    return errors;
+})
+
 const unValidForm = computed(() => {
-    if (!editInformations.name || editInformations.name === props.user.name) {
-        console.log('name');
-        return true;
-    }
-    if (editInformations.newMail && editInformations.newMail !== editInformations.oldMail) {
-        console.log('mail');
-        return true;
-    }
-    if (editInformations.oldPassword && editInformations.newPassword && editInformations.newPassword !== editInformations.confirmPassword) {
-        console.log('confirm');
-        return true;
-    }
-    return false;
+    // if  formErrors has at least one true value, return true
+    return Object.values(formErrors.value).some(error => error);
 })
 
 const updateInformations = async () => {
 
     const formData = new FormData();
-    formData.append('name', editInformations.name);
-    formData.append('newMail', editInformations.newMail);
-    formData.append('oldPassword', editInformations.oldPassword);
-    formData.append('newPassword', editInformations.newPassword);
-    formData.append('confirmPassword', editInformations.confirmPassword);
+    if(editInformations.name !== props.user.name) {
+        formData.append('name', editInformations.name);
+    }
+    if(editInformations.newMail) {
+        formData.append('newMail', editInformations.newMail);
+    }
+    if(editInformations.oldPassword && editInformations.newPassword && editInformations.confirmPassword) {
+        formData.append('oldPassword', editInformations.oldPassword);
+        formData.append('newPassword', editInformations.newPassword);
+        formData.append('confirmPassword', editInformations.confirmPassword);
+    }
+    if(editInformations.imageFile && editInformations.image !== props.user.image) {
+        formData.append('imageFile', editInformations.imageFile);
+        formData.append('image', editInformations.image);
+    }
     formData.append('userId', informations.value.id);
     formData.append('_method', 'PUT');
 
@@ -248,6 +293,13 @@ const confirmUserDelete = async () => {
     }).catch(error => {
         console.log(error.response.data);
     });
+}
+
+const updateImage = (event) => {
+    if (event.target.files && event.target.files[0]) {
+        editInformations.image = URL.createObjectURL(event.target.files[0]);
+        editInformations.imageFile = event.target.files[0];
+    }
 }
 
 </script>
