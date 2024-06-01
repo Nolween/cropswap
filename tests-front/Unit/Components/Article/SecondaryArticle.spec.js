@@ -1,9 +1,10 @@
 import {mount} from '@vue/test-utils'
 import {describe, expect, it} from "vitest";
-import ArticleCard from '@/Components/Article/ArticleCard.vue'
+import SecondaryArticle from "@/Components/Article/SecondaryArticle.vue";
 
-describe('Article ArticleCard', () => {
-    const Component = mount(ArticleCard, {
+describe('Article SecondaryArticle', () => {
+
+    const Component = mount(SecondaryArticle, {
         props: {
             title: 'Article Title',
             content: 'Article Content',
@@ -12,7 +13,7 @@ describe('Article ArticleCard', () => {
             isLoading: false,
         }
     })
-    it('should render the article card with right props', async () => {
+    it('should render the secondary article with right props', async () => {
         expect(Component.html()).toMatchSnapshot();
         expect(Component.props().title).toBe('Article Title');
         expect(Component.props().content).toBe('Article Content');
@@ -21,8 +22,7 @@ describe('Article ArticleCard', () => {
         expect(Component.props().isLoading).toBe(false);
     })
 
-    it('should emit an event when the article card is clicked', async () => {
-
+    it('should emit an event when the secondary article is clicked', async () => {
         await Component.trigger('click');
         expect(Component.emitted()).toHaveProperty('goToArticle');
 
@@ -30,9 +30,9 @@ describe('Article ArticleCard', () => {
         expect(args).toEqual([1]);
         expect(args[0]).toBe(1);
     });
-
     it('should show skeleton when loading', async () => {
         await Component.setProps({isLoading: true});
         expect(Component.findComponent({name: 'Skeleton'}).exists()).toBe(true);
+
     });
-})
+});

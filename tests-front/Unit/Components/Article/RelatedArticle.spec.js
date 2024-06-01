@@ -28,5 +28,4 @@ describe('Article RelatedArticle', () => {
         expect(args).toEqual([1]);
         expect(args[0]).toBe(1);
     });
-
 });
