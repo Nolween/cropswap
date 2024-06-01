@@ -19,8 +19,8 @@
     </template>
 </template>
 <script setup>
-import {defineProps} from 'vue';
 import Skeleton from "@/Components/Loader/Skeleton.vue";
+import { defineProps, defineEmits } from 'vue';
 
 const props = defineProps({
     title: String,

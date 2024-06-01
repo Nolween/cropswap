@@ -19,3 +19,5 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+# files finishing with .snap (snapshot files of vitest tests)
+*.snap

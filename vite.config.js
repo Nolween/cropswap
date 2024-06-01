@@ -1,3 +1,5 @@
+/// <reference types="vitest" />
+
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
@@ -19,4 +21,8 @@ export default defineConfig({
         }),
         i18n(),
     ],
+    test: {
+        testMatch: ['**/*.spec.js'],
+        environment: 'happy-dom',
+    },
 });
