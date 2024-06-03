@@ -28,11 +28,9 @@ describe('Article SecondaryArticle', () => {
 
         const [args] = Component.emitted().goToArticle;
         expect(args).toEqual([1]);
-        expect(args[0]).toBe(1);
     });
     it('should show skeleton when loading', async () => {
         await Component.setProps({isLoading: true});
         expect(Component.findComponent({name: 'Skeleton'}).exists()).toBe(true);
-
     });
 });

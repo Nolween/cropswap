@@ -28,7 +28,6 @@ describe('Article ArticleCard', () => {
 
         const [args] = Component.emitted().goToArticle;
         expect(args).toEqual([1]);
-        expect(args[0]).toBe(1);
     });
 
     it('should show skeleton when loading', async () => {

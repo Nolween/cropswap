@@ -26,6 +26,5 @@ describe('Article RelatedArticle', () => {
 
         const [args] = Component.emitted().goToArticle;
         expect(args).toEqual([1]);
-        expect(args[0]).toBe(1);
     });
 });

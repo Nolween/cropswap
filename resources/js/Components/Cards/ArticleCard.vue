@@ -5,12 +5,12 @@
         <img :src="props.image" alt="image" class="w-full object-cover mb-4"/>
         <div class="flex flex-wrap gap-1 mb-4">
                         <span v-for="(tag, tagIndex) in props.tags" @click.stop="goToTag(tag)" :key="tagIndex"
-                              class="border-2 border-transparent hover:border-blue-500 hover:text-blue-500 hover:bg-white py-0.5 px-1 rounded-md text-xs bg-blue-500 text-white font-bold">
+                              class="card-tag border-2 border-transparent hover:border-blue-500 hover:text-blue-500 hover:bg-white py-0.5 px-1 rounded-md text-xs bg-blue-500 text-white font-bold">
                             {{ tag }}
                         </span>
         </div>
         <div class="text-black font-bold flex flex-wrap mb-3 text-lg ">{{ props.title }}</div>
-        <div class="font-light text-sm text-justify mb-3"> {{ truncateText(props.content, props.contentLength) }}</div>
+        <div class="article-card-content font-light text-sm text-justify mb-3"> {{ truncateText(props.content, props.contentLength) }}</div>
 
         <div class="w-full flex flex-grow items-center">
             <img :src="props.user?.image" class="w-10 h-10 object-cover rounded-md mr-3" alt=""/>
@@ -46,14 +46,14 @@ const props = defineProps({
     contentLength: {type: Number, default: 150}
 });
 
-const emit = defineEmits(['go-to-article', 'go-to-tag']);
+const emit = defineEmits(['goToArticle', 'goToTag']);
 
 const goToTag = (tag) => {
-    emit('go-to-tag', tag);
+    emit('goToTag', tag);
 }
 
 const goToArticle = () => {
-    emit('go-to-article', props.id);
+    emit('goToArticle', props.id);
 }
 
 </script>
