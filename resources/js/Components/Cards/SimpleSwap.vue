@@ -11,7 +11,7 @@
              :style="{ top: `${contextMenuY}px`, left: `${contextMenuX}px` }">
             <div v-for="(action, actionIndex) in props.actions" :key="actionIndex">
                 <button @click="emitAction(actionIndex)"
-                        class="lg:p-2 align-middle w-full rounded-md text-gray-800 hover:bg-gray-200 hover:text-gray-900 text-sm">
+                        class="action-swap lg:p-2 align-middle w-full rounded-md text-gray-800 hover:bg-gray-200 hover:text-gray-900 text-sm">
                     {{ action }}
                 </button>
             </div>
