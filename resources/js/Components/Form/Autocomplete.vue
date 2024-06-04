@@ -1,14 +1,14 @@
 <template>
     <div class="relative z-30" ref="autocomplete">
-        <input type="text" class="w-full p-2 border-2 border-gray-200 rounded-lg" :placeholder="props.placeholder"
+        <input type="text" class="autocomplete-input w-full p-2 border-2 border-gray-200 rounded-lg" :placeholder="props.placeholder"
                v-model="search" @input="searchValues" @click="isOpenedList = true">
-        <div class="absolute right-3 top-3 cursor-pointer" @click="clearSearch" v-if="search.length > 0">
+        <div class="autocomplete-cross absolute right-3 top-3 cursor-pointer" @click="clearSearch" v-if="search.length > 0">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-5 w-5 text-gray-500">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
         </div>
-        <div v-if="isOpenedList" class="h-40 overflow-auto z-40 absolute t-6 w-full bg-white border-2 border-gray-200 rounded-lg">
-            <div v-for="value in filteredValues" :key="value.id" class="p-2 cursor-pointer hover:bg-gray-100"
+        <div v-if="isOpenedList" class="autocomplete-list h-40 overflow-auto z-40 absolute t-6 w-full bg-white border-2 border-gray-200 rounded-lg">
+            <div v-for="value in filteredValues" :key="value.id" class="autocomplete-value p-2 cursor-pointer hover:bg-gray-100"
                  :class="{ 'bg-blue-100': selectedValues.includes(value) }"
                  @click="selectValue(value)">
                 {{ value.name }}
