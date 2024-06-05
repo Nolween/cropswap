@@ -7,7 +7,7 @@
                     {{ title }}
                 </div>
                 <div class="cursor-pointer">
-                    <close-icon @click="close" size="26"></close-icon>
+                    <close-icon class="close-icon" @click="close" size="26"></close-icon>
                 </div>
             </div>
             <div class="w-full mb-4">
