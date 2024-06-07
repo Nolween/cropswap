@@ -1,5 +1,5 @@
 <template>
-    <tr @click="showLine" class="border-b-2 border-gray-200 cursor-pointer hover:bg-lime-50">
+    <tr @click="showLine" class="back-office-row border-b-2 border-gray-200 cursor-pointer hover:bg-lime-50">
         <template v-for="(value, valueIndex) in values" :key="valueIndex">
             <td v-if="column(valueIndex).type === 'image' && !column(valueIndex).hidden"
                 class="p-2 flex justify-center items-center">

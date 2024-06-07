@@ -6,14 +6,14 @@
                 <template v-for="(header, headerIndex) in props.headers" :key="headerIndex">
                     <th
                         @click="sort(header.column)"
-                        class="p-2 cursor-pointer"
+                        class="p-2 cursor-pointer back-office-header"
 
                         v-if="!header.hidden">
                         <div class="flex flex-nowrap justify-center"
                              :class="sorting.column === header.column ? 'text-blue-400 font-bold' : 'text-gray-500'">
                             <div>{{ header.name }}</div>
-                            <arrow-up-thin-icon v-if="sorting.column === header.column && sorting.asc" size="24"/>
-                            <arrow-down-thin-icon v-if="sorting.column === header.column && !sorting.asc" size="24"/>
+                            <arrow-up-thin-icon v-if="sorting.column === header.column && sorting.asc" :size="24"/>
+                            <arrow-down-thin-icon v-if="sorting.column === header.column && !sorting.asc" :size="24"/>
                         </div>
                     </th>
                 </template>
