@@ -1,5 +1,5 @@
 <template>
-    <div class="toastr cursor-pointer" @click="close">
+    <div v-if="isOpen" class="toastr cursor-pointer" @click="close">
         <!-- IF MEDIA SCREEN IS MD OR LESS, SMALL TOASTR AT TOP CENTER -->
         <div class="p-3 rounded-sm fixed inset-x-0 z-50 md:hidden" :class="`${props.horizontalPosition}-4`">
             <div class="rounded-md shadow-xl bg-white border-4 text-center py-2"
@@ -34,12 +34,12 @@ const props = defineProps({
     duration: {type: Number, default: 3000},
 });
 
+const isOpen = ref(true);
+
 const timer = ref(props.duration);
 
 const close = () => {
-    if (document.querySelector('.toastr')) {
-        document.querySelector('.toastr').remove();
-    }
+    isOpen.value = false;
 };
 
 // A function to reduce timer until 0
